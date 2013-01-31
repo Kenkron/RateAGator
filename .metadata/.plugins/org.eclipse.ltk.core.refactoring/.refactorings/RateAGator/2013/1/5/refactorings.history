@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extracts string &apos;Search&apos; into R.string.search" description="Extracts string &apos;Search&apos; into R.string.search" file="/RateAGator/res/layout/activity_main.xml" flags="6" id="com.android.ide.eclipse.adt.refactoring.extract.string" mode="EDIT_SOURCE" proj="/RateAGator" rplc-all-java="false" rplc-all-xml="false" sel-end="1171" sel-start="1151" stamp="1359595094978" tok-esc="Search" xml-attr-name="android:text"/>
+</session>
