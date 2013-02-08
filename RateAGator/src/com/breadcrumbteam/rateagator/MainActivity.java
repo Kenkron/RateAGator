@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
@@ -22,29 +23,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
-	/**this method is called when the Greet Me button is pressed
-	 * What causes this method to be called?
-	 * 		In the file res/layout/activity_main.xml (Which
-	 * 		is the main UI layout file), I gave the greetMe
-	 * 		button the following property:
-	 * 		android:onClick="greetMe"*/
-	public void greetMe(View v){
-		//You have two options here.  There's the standard
-		//System.out.println:
-		System.out.println("Hello World");
-		//and there's the Android specific Log.println:
-		Log.println(Log.INFO, "Message", "Hello Developer");
-		//the log option has some added benefits such as:
-		//--it can specify the priority/type of the message
-		//--it outputs to a log file that can be reviewed
-		//       if the debugger is not hooked up.
-		
-		//on the emulator (or a connected android)
-		//both of these should display a message in the LogCat
-		//(which should typically be below this window
-		//in the eclipse UI)
-	}
 	
 	/**this method is called when the exit button is pressed
 	 * What causes this method to be called?
@@ -57,9 +35,24 @@ public class MainActivity extends Activity {
 		//I should mention that this may not reset the UI.
 		//Android apps are somewhat designed to act like they
 		//never stop running.
+	}	
+
+	/**this method is called when the search button is pressed
+	 * What causes this method to be called?
+	 * 		In the file res/layout/activity_main.xml (Which
+	 * 		is the main UI layout file), I gave the search
+	 * 		button the following property:
+	 * 		android:onClick="search";*/
+	public void search(View view){  	
+		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
+  	 	Log.println(Log.INFO, "Update", "Searching: "+text);
+  	 	String[] searchResults=getSearchResults(text);
+  	 	for (String result:searchResults){
+  	 		System.out.println(result);
+  	 	}
 	}
 	
-	public String[] search(String input) {
+	public String[] getSearchResults(String input) {
 
 		//initialize names
 		//--- Can be done by prepopulating an array from the database
