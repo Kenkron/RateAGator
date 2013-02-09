@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+//TEST: koceskik
+
 public class MainActivity extends Activity {
 
 	@Override
