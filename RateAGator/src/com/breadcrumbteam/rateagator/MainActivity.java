@@ -2,12 +2,15 @@ package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
 
+import com.breadcrumbteam.rateagator.DBConnector;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -90,6 +93,22 @@ public class MainActivity extends Activity {
 		String[] matchesArray = new String[matches.size()];
 		matches.toArray(matchesArray);
 		return matchesArray;
+	}
+	
+	public void startDBConnection(View view) {
+		String a = "";
+		EditText editText = (EditText) findViewById(R.id.searchBar);
+		String person = editText.getText().toString();
+
+		try {
+			a = DBConnector.getPerson(person);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		TextView textView1 = (TextView) findViewById(R.id.searchButton);
+        textView1.setText(String.valueOf(a));
 	}
 
 }
