@@ -1,4 +1,4 @@
-package com.breadcrumbteam.helloworld;
+package com.breadcrumbteam.rateagator;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,14 +27,20 @@ public class DBConnector {
 	private static String result = null;
 	private static InputStream is = null;
 	private static StringBuilder sb = null;
-	public static String ipAddress = "10.34.183.57";
+	public static String ipAddress = "10.136.105.166";
 	public static String scriptLocation = "http://" + ipAddress + "/home/RateAGator";
 	public static ArrayList<String> names = new ArrayList<String>();
+	public static ArrayList<String> paramList = new ArrayList<String>();
+	public static int count = 0;
+	public static String param = null;
 	
-	public static String getTestConnection() throws InterruptedException {
+	public static String getPerson(String name) throws InterruptedException {
+		names.clear();
+		paramList.clear();
+		paramList.add("fname=" + name.trim());
 		long patience = 4000;
 		long startTime = System.currentTimeMillis();
-		Thread t = new Thread(new TestConnection());
+		Thread t = new Thread(new GetPersonConnect());
         t.start();
 
         //threadMessage("Waiting for MessageLoop thread to finish");
@@ -54,17 +60,50 @@ public class DBConnector {
         return text;
 	}
 	
-	private static class TestConnection implements Runnable {
+	public static String getTestConnection() throws InterruptedException {
+		names.clear();
+		long patience = 4000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new GetPersonConnect());
+        t.start();
+        paramList.add("fname=bermudez");
+        paramList.add("fname=kyle");
+        paramList.add("fname=sean");
+
+        //threadMessage("Waiting for MessageLoop thread to finish");
+        while (t.isAlive()) {	// loop until MessageLoop thread exits
+            //threadMessage("Still waiting...");
+            t.join(1000);		// Wait maximum of 1 second for MessageLoop thread to finish
+            if (((System.currentTimeMillis() - startTime) > patience)
+                  && t.isAlive()) {
+                //threadMessage("Tired of waiting!");
+                t.interrupt();
+                // Shouldn't be long now -- wait indefinitely
+                t.join();
+            }
+        }
+        //threadMessage("Finally!");
+        text = names.toString();
+        count++;
+        return text;
+	}
+	
+	private static class GetPersonConnect implements Runnable {
 		@Override
 		public void run() {
-			ArrayList<NameValuePair> namevaluepairs = new ArrayList<NameValuePair>();
 			try
 			{
 				//http post
 				HttpClient httpclient = new DefaultHttpClient();
 				
-				HttpPost httppost = new HttpPost(scriptLocation + "/test.php");
-				//HttpPost httppost = new HttpPost("http://www.google.com");
+				HttpPost httppost;
+				
+				if(paramList.isEmpty()) {
+					httppost = new HttpPost(scriptLocation + "/getter.php");
+				}
+				else {
+					httppost = new HttpPost(scriptLocation + "/getter.php?" + paramList.get(0));
+				}
 				
 				//httppost.setEntity(new UrlEncodedFormEntity(namevaluepairs));
 				
@@ -112,7 +151,7 @@ public class DBConnector {
 				for(int i=0;i<jArray.length();i++)
 				{
 					json_data = jArray.getJSONObject(i);
-					names.add(json_data.getString("name"));
+					names.add(json_data.getString("age"));
 					result += "\n" + jArray.getJSONObject(i); 
 				}
 			}
