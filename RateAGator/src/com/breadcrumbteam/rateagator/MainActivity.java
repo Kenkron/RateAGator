@@ -2,9 +2,8 @@ package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
 
-import com.breadcrumbteam.rateagator.DBConnector;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -40,26 +39,30 @@ public class MainActivity extends Activity {
 		//never stop running.
 	}	
 
-	/**this method is called when the search button is pressed
-	 * What causes this method to be called?
-	 * 		In the file res/layout/activity_main.xml (Which
-	 * 		is the main UI layout file), I gave the search
-	 * 		button the following property:
-	 * 		android:onClick="search";*/
+	//This method is called when the search button is pressed
 	public void search(View view){  	
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
   	 	Log.println(Log.INFO, "Update", "Searching: "+text);
-  	 	String[] searchResults=getSearchResults(text);
+  	 	
+  	 	ArrayList<String> searchResults=getSearchResults(text);
+  	 	
+  	 	//Prints out the searchresults to LogCat
   	 	for (String result:searchResults){
   	 		System.out.println(result);
   	 	}
+  	 	
+  	 	//switches to search results activity
+  	 	Intent intent = new Intent(this, SearchResults.class);
+  	 	intent.putStringArrayListExtra("names", searchResults);
+  	 	this.startActivity(intent);
 	}
 	
-	public String[] getSearchResults(String input) {
+	public ArrayList<String> getSearchResults(String input) {
 
 		//initialize names
-		//--- Can be done by prepopulating an array from the database
-		//--- when the application is started
+		/* NOTE: this will eventually be done by fetching all the 
+		 * professor names upon application initialization
+		 */
 		String[] names = {
 		"Aaron", "Abbey", "Abbie", "Abby", "Abigail",
 		"Ada", "Adah", "Adaline", "Adam", "Addie",
@@ -79,20 +82,16 @@ public class MainActivity extends Activity {
 			for(int j = 0; j < input.length(); j++) {
 				if (input.charAt(j) == names[i].charAt(j) ) {
 						
-					if(input.length() == (j + 1)) {
-						//System.out.println(names[i]);	
+					if(input.length() == (j + 1)) {	
 						matches.add(names[i]);
 					}
 				}
 				else {
 					break;
 				}
-
 			}
 		}
-		String[] matchesArray = new String[matches.size()];
-		matches.toArray(matchesArray);
-		return matchesArray;
+		return matches;
 	}
 	
 	public void startDBConnection(View view) {
