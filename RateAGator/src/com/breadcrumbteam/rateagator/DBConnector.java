@@ -21,6 +21,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**This object functions as an interface between the remote database and
+ * the software on the local app.*/
 public class DBConnector {
 	static String text = null;
 	private static JSONArray jArray;

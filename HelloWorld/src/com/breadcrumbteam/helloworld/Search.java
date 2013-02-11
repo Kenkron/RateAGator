@@ -1,3 +1,5 @@
+package com.breadcrumbteam.helloworld;
+
 //This search function works by the search parameters being inputted after
 //calling the function
 // --- Example: java Search Ad ---
