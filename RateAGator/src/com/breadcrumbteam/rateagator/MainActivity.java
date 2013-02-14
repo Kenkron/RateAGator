@@ -99,12 +99,13 @@ public class MainActivity extends Activity {
 		EditText editText = (EditText) findViewById(R.id.searchBar);
 		String person = editText.getText().toString();
 
-		try {
+		//the following code was committed to the repository broken
+		/*try {
 			a = DBConnector.getPerson(person);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		TextView textView1 = (TextView) findViewById(R.id.searchButton);
         textView1.setText(String.valueOf(a));

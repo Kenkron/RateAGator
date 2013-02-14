@@ -77,3 +77,160 @@ Command-line arguments:  -os linux -ws gtk -arch x86
 
 !ENTRY org.eclipse.ui 2 2 2013-02-11 13:03:56.927
 !MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-02-13 08:37:32.267 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.core.resources 2 10035 2013-02-13 08:37:49.998
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.ui.ide 4 4 2013-02-13 08:41:51.491
+!MESSAGE Problems occurred refreshing the selected resources.
+!SUBENTRY 1 org.eclipse.core.resources 4 567 2013-02-13 08:41:51.491
+!MESSAGE The project description file (.project) for 'HelloWorld' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY org.eclipse.ui.ide 4 4 2013-02-13 08:42:02.419
+!MESSAGE Problems saving workspace
+
+!ENTRY org.eclipse.ui.ide 2 1 2013-02-13 08:42:02.419
+!MESSAGE Problems occurred while trying to save the state of the workbench.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2013-02-13 08:42:02.419
+!MESSAGE The project description file (.project) for 'HelloWorld' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.ui 2 2 2013-02-13 08:42:02.724
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-02-13 08:42:05.093 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:15.709
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project HelloWorld
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:18.553
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:20.044
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:20.100
+!MESSAGE Failed to finish PrecompilerBuilder#startupOnInitialize()
+!STACK 0
+java.lang.IllegalArgumentException: Path must include project and resource name: /HelloWorld
+	at org.eclipse.core.runtime.Assert.isLegal(Assert.java:63)
+	at org.eclipse.core.internal.resources.Workspace.newResource(Workspace.java:2163)
+	at org.eclipse.core.internal.resources.Container.getFolder(Container.java:222)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.buildSourceFileList(SourceProcessor.java:350)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:97)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:113)
+	at com.android.ide.eclipse.adt.internal.build.AidlProcessor.<init>(AidlProcessor.java:85)
+	at com.android.ide.eclipse.adt.internal.build.builders.PreCompilerBuilder.startupOnInitialize(PreCompilerBuilder.java:800)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:542)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:567)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:237)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:20.119
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:21.157
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:27.718
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 08:42:27.718
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY org.eclipse.ui 2 2 2013-02-13 08:45:51.871
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-02-13 13:41:17.748 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 13:41:40.173
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project HelloWorld
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 13:41:45.837
+!MESSAGE Failed to finish PrecompilerBuilder#startupOnInitialize()
+!STACK 0
+java.lang.IllegalArgumentException: Path must include project and resource name: /HelloWorld
+	at org.eclipse.core.runtime.Assert.isLegal(Assert.java:63)
+	at org.eclipse.core.internal.resources.Workspace.newResource(Workspace.java:2163)
+	at org.eclipse.core.internal.resources.Container.getFolder(Container.java:222)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.buildSourceFileList(SourceProcessor.java:350)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:97)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:113)
+	at com.android.ide.eclipse.adt.internal.build.AidlProcessor.<init>(AidlProcessor.java:85)
+	at com.android.ide.eclipse.adt.internal.build.builders.PreCompilerBuilder.startupOnInitialize(PreCompilerBuilder.java:800)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:542)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:567)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:237)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-13 13:41:49.271
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY org.eclipse.ui 2 2 2013-02-13 19:16:23.020
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-02-14 15:10:55.378 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-14 15:11:09.385
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project HelloWorld
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-14 15:11:27.735
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-14 15:11:29.104
+!MESSAGE Failed to finish PrecompilerBuilder#startupOnInitialize()
+!STACK 0
+java.lang.IllegalArgumentException: Path must include project and resource name: /HelloWorld
+	at org.eclipse.core.runtime.Assert.isLegal(Assert.java:63)
+	at org.eclipse.core.internal.resources.Workspace.newResource(Workspace.java:2163)
+	at org.eclipse.core.internal.resources.Container.getFolder(Container.java:222)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.buildSourceFileList(SourceProcessor.java:350)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:97)
+	at com.android.ide.eclipse.adt.internal.build.SourceProcessor.<init>(SourceProcessor.java:113)
+	at com.android.ide.eclipse.adt.internal.build.AidlProcessor.<init>(AidlProcessor.java:85)
+	at com.android.ide.eclipse.adt.internal.build.builders.PreCompilerBuilder.startupOnInitialize(PreCompilerBuilder.java:800)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:542)
+	at org.eclipse.core.internal.events.BuildManager.getBuilder(BuildManager.java:567)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:237)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:292)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:295)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:351)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:374)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:143)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:241)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.ui 2 2 2013-02-14 15:26:22.422
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)

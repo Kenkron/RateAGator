@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class SearchResults extends Activity {
@@ -27,9 +31,28 @@ public class SearchResults extends Activity {
 		 * create a list of textviews and stuff and lay it out how you want
 		 */
 		
-		TextView t = (TextView) findViewById(R.id.searchResult1);
-		t.setText(searchResults.get(0));
-
+		
+		if (searchResults.size()>0){
+			TextView t = (TextView) findViewById(R.id.searchResult1);
+			t.setText(searchResults.get(0));
+		}
+		if (searchResults.size()>1){
+			TextView t = (TextView) findViewById(R.id.searchResult2);
+			t.setText(searchResults.get(1));
+		}
+		if (searchResults.size()>2){
+			TextView t = (TextView) findViewById(R.id.searchResult3);
+			t.setText(searchResults.get(2));
+		}
+		
+		//ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
+		/*for (String name:searchResults){
+			Log.d("result list", name);
+			Button currentResult=new Button(this);
+			currentResult.setText(name);
+			currentResult.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			resultsList.addView(currentResult);
+		}*/
 	}
 	
 	//This method is called when button is pressed
