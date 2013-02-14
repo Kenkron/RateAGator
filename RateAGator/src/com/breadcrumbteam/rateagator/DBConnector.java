@@ -37,8 +37,9 @@ public class DBConnector {
 	
 	public static ArrayList<String> names = new ArrayList<String>();
 	public static ArrayList<String> paramList = new ArrayList<String>();
+	public static ArrayList<Double> evals = new ArrayList<Double>();
 	
-	public static List<String> allProfessorNames = new ArrayList<String>(); //for autosearch
+	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch
 	
 	public static void setBaseContext(Context basContext) {
 		baseContext = basContext; 
@@ -67,28 +68,6 @@ public class DBConnector {
 			e.printStackTrace();//this would be a fatal error for Nick
 		}
 	}
-	
-	public static String getProfessor(String fName, String lName) throws InterruptedException {
-		names.clear();
-		paramList.clear();
-		if(fName != null) paramList.add("fname=" + fName.trim());
-		if(lName != null) paramList.add("lname=" + lName.trim());
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
-		Thread t = new Thread(new GetProfessorConnect());
-		t.start();
-
-		while (t.isAlive()) {
-			t.join(1000);	//Wait max of 1sec
-			if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
-				t.interrupt();
-				t.join();
-			}
-		}
-        text = names.get(0);
-        return text;
-	}
-	
 	private static class GetAllProfessorNames implements Runnable {
 		@Override
 		public void run() {
@@ -145,7 +124,29 @@ public class DBConnector {
 		}
 	}
 
-	//Tester
+	/*
+	 * get professor names
+	 */
+	public static String getProfessor(String fName, String lName) throws InterruptedException {
+		names.clear();
+		paramList.clear();
+		if(fName != null) paramList.add("fname=" + fName.trim());
+		if(lName != null) paramList.add("lname=" + lName.trim());
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new GetProfessorConnect());
+		t.start();
+
+		while (t.isAlive()) {
+			t.join(1000);	//Wait max of 1sec
+			if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
+				t.interrupt();
+				t.join();
+			}
+		}
+        text = names.get(0);
+        return text;
+	}
 	private static class GetProfessorConnect implements Runnable {
 		@Override
 		public void run() {
@@ -204,12 +205,11 @@ public class DBConnector {
 			
 			//JSON decode, add to list
 			try {
-				//
 				jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				for(int i = 0;i<jArray.length();i++) {
 					json_data = jArray.getJSONObject(i);
-					names.add(json_data.getString("FirstName")); 
+					names.add(json_data.getString("CourseCode"));
 				}
 			}
 			catch(JSONException e1) {
@@ -221,5 +221,103 @@ public class DBConnector {
 		}
 	}
 	
-	
+
+	/*
+	 * get evaluations
+	 */
+	public static void getEvaluations(String fName, String lName, String cCode) throws InterruptedException {//fName, lName, cCode
+		names.clear();
+		paramList.clear();
+		paramList.add("fname=" + fName.trim());
+		paramList.add("lname=" + lName.trim());
+		paramList.add("ccode=" + cCode.trim());
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new GetEvaluationsConnect());
+		t.start();
+
+		while (t.isAlive()) {
+			t.join(1000);	//Wait max of 1sec
+			if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
+				t.interrupt();
+				t.join();
+			}
+		}
+        text = names.get(0);
+	}
+	private static class GetEvaluationsConnect implements Runnable {
+		@Override
+		public void run() {
+			try {
+				//http post
+				HttpClient httpclient = new DefaultHttpClient();
+				
+				HttpPost httppost;
+				
+				String postURL = scriptLocation + "/getEvals.php";
+				
+				//add parameters to the URL
+				if(!paramList.isEmpty()) {
+					postURL += "?";
+					for(int i = 0;i<paramList.size();i++) {
+						postURL += paramList.get(i);
+						if(i+1 < paramList.size()) {
+							postURL += "&";
+						}
+					}
+				}
+				
+				httppost = new HttpPost(postURL);
+				
+				HttpResponse response = httpclient.execute(httppost);
+				
+				HttpEntity entity = response.getEntity();
+				
+				is = entity.getContent();
+				if (response.getStatusLine().getStatusCode() != 200) {
+					Log.d("MyApp", "Server encountered an error");
+				}
+			}
+			catch(Exception e) {
+				Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
+			}
+			
+			//Convert response to String, set result
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
+				sb = new StringBuilder();
+				sb.append(reader.readLine() + "\n");
+				String line = null;
+
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				is.close();
+				result = sb.toString();
+			}
+			catch(Exception e) {
+				Log.e("log_tag", "Error converting result "+e.toString());
+			}
+			
+			//JSON decode, add to list
+			try {
+				jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				for(int i = 0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					evals.clear();
+					for(int j = 1;j<=10;j++) {
+						evals.add(Double.valueOf(json_data.getString("R" + j)));
+					}
+					//TODO: stuff evals into an Evals Object
+				}
+			}
+			catch(JSONException e1) {
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}	
 }
