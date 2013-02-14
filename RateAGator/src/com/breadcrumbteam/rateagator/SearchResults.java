@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -16,6 +17,14 @@ import android.widget.TextView;
 
 public class SearchResults extends Activity {
 
+	/**Identifies the name of the search query string
+	 * in the intent*/
+	public static final String INTENT_QUERY="query";
+	
+	/**Identifies the name of the list of search results
+	 * in the intent*/
+	public static final String INTENT_RESULTS="names";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,36 +32,25 @@ public class SearchResults extends Activity {
 		
 		//Load in search results
 		Bundle b = this.getIntent().getExtras();
-		ArrayList<String> searchResults = b.getStringArrayList("names");
+		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
 		
-		//Set textView value to search results
-		/* Note: this only outputs the first search result, but I feel that working
-		 * more on this will infringe on UI's territory, so it's up to you guys to 
-		 * create a list of textviews and stuff and lay it out how you want
-		 */
+		TextView query=(TextView) findViewById(R.id.searchQueryLabel);
+		query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
 		
-		
-		if (searchResults.size()>0){
-			TextView t = (TextView) findViewById(R.id.searchResult1);
-			t.setText(searchResults.get(0));
-		}
-		if (searchResults.size()>1){
-			TextView t = (TextView) findViewById(R.id.searchResult2);
-			t.setText(searchResults.get(1));
-		}
-		if (searchResults.size()>2){
-			TextView t = (TextView) findViewById(R.id.searchResult3);
-			t.setText(searchResults.get(2));
-		}
-		
-		//ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
-		/*for (String name:searchResults){
+		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
+		for (String name:searchResults){
 			Log.d("result list", name);
 			Button currentResult=new Button(this);
 			currentResult.setText(name);
 			currentResult.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			currentResult.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.d("SearchResults","clicked on "+((Button)v).getText());
+				}
+			});
 			resultsList.addView(currentResult);
-		}*/
+		}
 	}
 	
 	//This method is called when button is pressed
