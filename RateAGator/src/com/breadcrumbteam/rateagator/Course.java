@@ -10,6 +10,21 @@ public class Course {
 	protected String courseName;
 	
 	/**The cryptic number assigned to this course
-	 * usuall three letters followed by four numbers*/
+	 * usually three letters followed by four numbers*/
 	protected String courseNum;
+	
+	/*The professor teaching this particular course*/
+	protected Professor courseProf;
+	
+	public Course(String courseName, String courseNum){
+		this.courseName = courseName;
+		this.courseNum = courseNum;
+	}
+	
+	/*Associates the given professor with this course
+	 * called when this course is added to the professor's courseList
+	 */
+	public void setCourseProf(Professor p){
+		courseProf = p;
+	}
 }
