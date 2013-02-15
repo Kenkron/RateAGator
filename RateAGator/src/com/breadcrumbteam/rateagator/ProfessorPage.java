@@ -10,11 +10,11 @@ public class ProfessorPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//TODO make a layout for ProfessorPage
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.professor_page);
 	}
 	
 	//This method is called when button is pressed
-		public void getCourseData(View view){  	
+	public void getCourseData(View view){  	
 			
 	  	 	//get the information contained in the link you clicked on
 			
@@ -31,5 +31,5 @@ public class ProfessorPage extends Activity {
 			 * 		Intent intent = new Intent(this, SearchResults.class);  	 	
 			 * 		this.startActivity(intent);
 			 */
-		}
+	}
 }

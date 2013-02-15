@@ -42,18 +42,19 @@ public class MainActivity extends Activity {
 	//This method is called when the search button is pressed
 	public void search(View view){  	
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
-  	 	Log.println(Log.INFO, "Update", "Searching: "+text);
+  	 	Log.d("MainActivity", "Searching: "+text);
   	 	
   	 	ArrayList<String> searchResults=getSearchResults(text);
   	 	
   	 	//Prints out the searchresults to LogCat
   	 	for (String result:searchResults){
-  	 		System.out.println(result);
+  	 		Log.d("MainActivity",result);
   	 	}
   	 	
   	 	//switches to search results activity
   	 	Intent intent = new Intent(this, SearchResults.class);
   	 	intent.putStringArrayListExtra("names", searchResults);
+  	 	intent.putExtra("query", text);
   	 	this.startActivity(intent);
 	}
 	
