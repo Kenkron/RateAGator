@@ -16,6 +16,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DBConnector.setBaseContext(this.getBaseContext());
+		DBConnector.initializeAllProfessors();
 		setContentView(R.layout.activity_main);
 	}
 
@@ -60,38 +62,79 @@ public class MainActivity extends Activity {
 	
 	public ArrayList<String> getSearchResults(String input) {
 
-		//initialize names
-		/* NOTE: this will eventually be done by fetching all the 
-		 * professor names upon application initialization
-		 */
-		String[] names = {
-		"Aaron", "Abbey", "Abbie", "Abby", "Abigail",
-		"Ada", "Adah", "Adaline", "Adam", "Addie",
-		"Adela", "Adelaida", "Adelaide", "Adele", "Adelia",
-		"Adelia", "Adelina", "Adeline", "Adell", "Adella",
-		"Adelle", "Adena", "Adina", "Adria", "Adrian", 
-		"Adriana", "Adriane", "Adrianna", "Adrianne", "Adrien" };
-
+		ArrayList<String> names = DBConnector.allProfessorNames;
 		ArrayList<String> matches = new ArrayList<String>();
 
-		//check if input string is subset of any names
-
-		//this loop iterates through all names
-		for(int i = 0; i < names.length; i++) {
-
-			//this loop checks if input is the beginning subset of the name
-			for(int j = 0; j < input.length(); j++) {
-				if (input.charAt(j) == names[i].charAt(j) ) {
-						
-					if(input.length() == (j + 1)) {	
-						matches.add(names[i]);
+		//performs a binary search to find a match with the input characteristics
+		//NOTE: breaks on searches of 'a' and 'z'
+		//NOTE: does not search by first name yet
+		int start = 0;
+		int end = names.size();
+		int current = 0;
+		boolean foundStart = false;
+		boolean keepGoingUp = true;
+		
+		while(!foundStart) {
+			if(end < start) {
+				break;
+			}
+			current = (start + end) / 2;
+			for(int i = 0; i < input.length(); i++) {
+				if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
+					if (i == input.length() -1) {
+						//iterate up until there is no longer a complete match
+						//a good test case for this would to see which "Robert" shows up first
+						while(keepGoingUp) {
+							for(int j = 0; j < input.length(); j++) {
+								if(Character.toLowerCase(names.get(current-1).charAt(j)) == (Character.toLowerCase(input.charAt(j))) ) {
+									if(j == input.length() - 1) {
+										current = current - 1;
+										break;
+									}
+								}
+								else {
+									keepGoingUp = false;
+								}
+							}
+						}
+						foundStart = true;
+						break;
 					}
 				}
+				else if (Character.toLowerCase(names.get(current).charAt(i)) < Character.toLowerCase(input.charAt(i))) {
+					start = current + 1;
+					break;
+				}
 				else {
+					end = current - 1;
 					break;
 				}
 			}
 		}
+		
+		if(!foundStart) {
+			//a match was never found
+		}
+		else {
+			boolean inputMatches = true;
+			while(inputMatches) {
+				for(int i = 0; i < input.length(); i++) {
+					if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
+						if(i == input.length() - 1) {
+							matches.add(names.get(current));
+							current = current + 1;
+							break;
+						}
+					}
+					else {
+						inputMatches = false;
+					}
+				}
+			}
+			//add all names until input does not match
+		}
+		
+		
 		return matches;
 	}
 	
