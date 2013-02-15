@@ -45,8 +45,37 @@ public class MainActivity extends Activity {
 	public void search(View view){  	
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
   	 	Log.d("MainActivity", "Searching: "+text);
+        ArrayList<String> searchResults = new ArrayList<String>;
   	 	
-  	 	ArrayList<String> searchResults=getSearchResults(text);
+        ArrayList<String> lastNames = DBConnector.allProfessorNames;
+        //Eliminate last names from DBConnector.allProfessorNames
+
+        ArrayList<String> firstNames = DBConnector.allProfessorNames;
+        for(int i = 0; i < lastNames.size(); i++) {
+            //splits the lastname, firstname pair by ", " and takes the second section
+            firstNames.add(lastnames.get(i).split(", ")[1]); 
+        }
+        
+        //Spits out all firstnames TODO delete this later
+        for(int i = 0; i < firstNames.size(); i++) {
+            Log.d("MainActivity", firstNames.get(i));
+        }
+        
+
+        //Search last names
+  	 	int[] lSearchResults=getSearchResults(text, lastNames);
+
+        //Search first names
+        int[] fSearchResults=getSearchResults(text, firstNames);
+
+        //Combine results for first and last names
+        //Perhaps for getSearchResults just return ints, combine them into one binary array
+        //and then iterate through and print out results as find 1s in array
+        for(int i = 0; i < DBConnector.size(); i++) {
+            if( (lSearchResults[i] == 1) || (fSearchResults[i] == 1) ) {
+                searchResults.add(DBConnector.allProfessorNames.get(i)); 
+            }
+        }
   	 	
   	 	//Prints out the searchresults to LogCat
   	 	for (String result:searchResults){
@@ -60,10 +89,9 @@ public class MainActivity extends Activity {
   	 	this.startActivity(intent);
 	}
 	
-	public ArrayList<String> getSearchResults(String input) {
+	public int[] getSearchResults(String input, names) {
 
-		ArrayList<String> names = DBConnector.allProfessorNames;
-		ArrayList<String> matches = new ArrayList<String>();
+		int[] matches = new int[names.size()];
 
 		//performs a binary search to find a match with the input characteristics
 		//NOTE: breaks on searches of 'a' and 'z'
@@ -121,7 +149,7 @@ public class MainActivity extends Activity {
 				for(int i = 0; i < input.length(); i++) {
 					if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
 						if(i == input.length() - 1) {
-							matches.add(names.get(current));
+							matches[current] = 1;
 							current = current + 1;
 							break;
 						}
