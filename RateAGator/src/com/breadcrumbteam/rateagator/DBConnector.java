@@ -39,7 +39,9 @@ public class DBConnector {
 	public static ArrayList<String> paramList = new ArrayList<String>();
 	public static ArrayList<Double> evals = new ArrayList<Double>();
 	
-	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch
+	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
+	private static Professor theProfessor = null;	//returned in getProfessor()
+	private static Course theCourse = null;			//might be returned in getCourses()
 	
 	public static void setBaseContext(Context basContext) {
 		baseContext = basContext; 
@@ -127,7 +129,7 @@ public class DBConnector {
 	/*
 	 * get professor names
 	 */
-	public static String getProfessor(String fName, String lName) throws InterruptedException {
+	public static Professor getProfessor(String fName, String lName) throws InterruptedException {
 		names.clear();
 		paramList.clear();
 		if(fName != null) paramList.add("fname=" + fName.trim());
@@ -144,8 +146,7 @@ public class DBConnector {
 				t.join();
 			}
 		}
-        text = names.get(0);
-        return text;
+		return theProfessor;
 	}
 	private static class GetProfessorConnect implements Runnable {
 		@Override
@@ -170,11 +171,8 @@ public class DBConnector {
 				}
 				
 				httppost = new HttpPost(postURL);
-				
 				//httppost.setEntity(new UrlEncodedFormEntity(namevaluepairs));
-				
 				HttpResponse response = httpclient.execute(httppost);
-				
 				HttpEntity entity = response.getEntity();
 				
 				is = entity.getContent();
@@ -207,9 +205,24 @@ public class DBConnector {
 			try {
 				jArray = new JSONArray(result);
 				JSONObject json_data = null;
-				for(int i = 0;i<jArray.length();i++) {
-					json_data = jArray.getJSONObject(i);
-					names.add(json_data.getString("CourseCode"));
+				if(jArray.length() > 0) {
+					theProfessor = new Professor(paramList.get(0), paramList.get(1));	//create the Professor
+					for(int i = 0;i<jArray.length();i++) {
+						json_data = jArray.getJSONObject(i);
+						String courseName = json_data.getString("CourseName");
+						Course currentCourse;
+						if(courseName.equals("NULL")) {
+							currentCourse = new Course(null, json_data.getString("CourseCode"));
+						}
+						else {
+							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
+						}
+							
+						theProfessor.addCourse(currentCourse);
+					}
+				}
+				else {
+					theProfessor = null;
 				}
 			}
 			catch(JSONException e1) {
