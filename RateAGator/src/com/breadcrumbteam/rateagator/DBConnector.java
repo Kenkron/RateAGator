@@ -209,9 +209,15 @@ public class DBConnector {
 					theProfessor = new Professor(paramList.get(0), paramList.get(1));	//create the Professor
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
-						//TODO: getProfessor.php needs to output courseName
-						//Course currentCourse = new Course(json_data.getString("CourseName"), json_data.getString("CourseCode"));
-						Course currentCourse = new Course("CourseName", json_data.getString("CourseCode"));
+						String courseName = json_data.getString("CourseName");
+						Course currentCourse;
+						if(courseName.equals("NULL")) {
+							currentCourse = new Course(null, json_data.getString("CourseCode"));
+						}
+						else {
+							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
+						}
+							
 						theProfessor.addCourse(currentCourse);
 					}
 				}
