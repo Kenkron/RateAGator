@@ -34,8 +34,8 @@ public class SearchResults extends Activity {
 		Bundle b = this.getIntent().getExtras();
 		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
 		
-		TextView query=(TextView) findViewById(R.id.searchQueryLabel);
-		query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
+		//TextView query=(TextView) findViewById(R.id.searchQueryLabel);
+		//query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
 		
 		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
 		for (String name:searchResults){
