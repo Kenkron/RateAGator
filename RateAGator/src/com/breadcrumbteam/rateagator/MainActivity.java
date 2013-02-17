@@ -1,6 +1,7 @@
 package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,42 +46,46 @@ public class MainActivity extends Activity {
 	public void search(View view){  	
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
   	 	Log.d("MainActivity", "Searching: "+text);
-        ArrayList<String> searchResults = new ArrayList<String>;
-  	 	
+        ArrayList<String> searchResults = new ArrayList<String>();
+  	 	boolean[] fNameMatches = new boolean[DBConnector.allProfessorNames.size()];
+  	 	boolean[] lNameMatches = new boolean[DBConnector.allProfessorNames.size()];
+        
         ArrayList<String> lastNames = DBConnector.allProfessorNames;
         //Eliminate last names from DBConnector.allProfessorNames
 
-        ArrayList<String> firstNames = DBConnector.allProfessorNames;
+        ArrayList<String> firstNames = new ArrayList<String>();
         for(int i = 0; i < lastNames.size(); i++) {
             //splits the lastname, firstname pair by ", " and takes the second section
-            firstNames.add(lastnames.get(i).split(", ")[1]); 
+            firstNames.add(lastNames.get(i).split(", ")[1]);
         }
-        
-        //Spits out all firstnames TODO delete this later
-        for(int i = 0; i < firstNames.size(); i++) {
-            Log.d("MainActivity", firstNames.get(i));
-        }
-        
 
         //Search last names
-  	 	int[] lSearchResults=getSearchResults(text, lastNames);
+  	 	lNameMatches = getSearchResults(text, lastNames);
+  	 	for(int i = 0; i < DBConnector.allProfessorNames.size(); i++) {
+        	if(lNameMatches[i]) {
+        		searchResults.add(DBConnector.allProfessorNames.get(i));
+        	}
+        }
 
-        //Search first names
-        int[] fSearchResults=getSearchResults(text, firstNames);
-
-        //Combine results for first and last names
-        //Perhaps for getSearchResults just return ints, combine them into one binary array
-        //and then iterate through and print out results as find 1s in array
-        for(int i = 0; i < DBConnector.size(); i++) {
-            if( (lSearchResults[i] == 1) || (fSearchResults[i] == 1) ) {
-                searchResults.add(DBConnector.allProfessorNames.get(i)); 
-            }
+        //Search first names -- Super naive approach  
+        for(int i = 0; i < firstNames.size(); i++) {
+        	for(int j = 0; j < Math.min(text.length(), firstNames.get(i).length()); j++) {
+        		if(Character.toLowerCase(text.charAt(j)) == Character.toLowerCase(firstNames.get(i).charAt(j) )) {
+        			if(j == text.length() - 1) {
+        				searchResults.add(DBConnector.allProfessorNames.get(i));
+        			}
+        		}
+        		else {
+        			break;
+        		}
+        	}
         }
   	 	
-  	 	//Prints out the searchresults to LogCat
+  	 	/*Prints out the searchresults to LogCat
   	 	for (String result:searchResults){
   	 		Log.d("MainActivity",result);
   	 	}
+  	 	*/
   	 	
   	 	//switches to search results activity
   	 	Intent intent = new Intent(this, SearchResults.class);
@@ -89,16 +94,16 @@ public class MainActivity extends Activity {
   	 	this.startActivity(intent);
 	}
 	
-	public int[] getSearchResults(String input, names) {
-
-		int[] matches = new int[names.size()];
+	public boolean[] getSearchResults(String input, ArrayList<String> names) {
 
 		//performs a binary search to find a match with the input characteristics
 		//NOTE: breaks on searches of 'a' and 'z'
 		//NOTE: does not search by first name yet
+		
 		int start = 0;
 		int end = names.size();
 		int current = 0;
+		boolean[] matches = new boolean[names.size()];
 		boolean foundStart = false;
 		boolean keepGoingUp = true;
 		
@@ -114,6 +119,10 @@ public class MainActivity extends Activity {
 						//a good test case for this would to see which "Robert" shows up first
 						while(keepGoingUp) {
 							for(int j = 0; j < input.length(); j++) {
+								if(current == 0) {
+									keepGoingUp = false;
+									break; // should fix 'a' problem
+								}
 								if(Character.toLowerCase(names.get(current-1).charAt(j)) == (Character.toLowerCase(input.charAt(j))) ) {
 									if(j == input.length() - 1) {
 										current = current - 1;
@@ -149,7 +158,11 @@ public class MainActivity extends Activity {
 				for(int i = 0; i < input.length(); i++) {
 					if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
 						if(i == input.length() - 1) {
-							matches[current] = 1;
+							matches[current] = true;
+							if(current == matches.length - 1) {
+								inputMatches = false;
+								break;
+							}
 							current = current + 1;
 							break;
 						}
@@ -159,7 +172,6 @@ public class MainActivity extends Activity {
 					}
 				}
 			}
-			//add all names until input does not match
 		}
 		
 		
