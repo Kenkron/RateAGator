@@ -43,6 +43,10 @@ public class DBConnector {
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static Course theCourse = null;			//might be returned in getCourses()
 	
+	private static String fName;
+	private static String lName;
+	private static String cCode;
+	
 	public static void setBaseContext(Context basContext) {
 		baseContext = basContext; 
 	}
@@ -66,8 +70,8 @@ public class DBConnector {
 			}
 		}
 		catch(InterruptedException e) {
-			Log.d("RateAGator DBConnector", "Server encountered an error");
-			e.printStackTrace();//this would be a fatal error for Nick
+			Log.d("DBConnector.initializeAllProfessors()", "Server encountered an error");
+			e.printStackTrace();
 		}
 	}
 	private static class GetAllProfessorNames implements Runnable {
@@ -88,6 +92,7 @@ public class DBConnector {
 				}
 			}
 			catch(Exception e) {
+				Log.d("DBConnector.GetAllProfessorNames", "Server encountered an error");
 				Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 			}
 			
@@ -132,8 +137,10 @@ public class DBConnector {
 	public static Professor getProfessor(String fName, String lName) throws InterruptedException {
 		names.clear();
 		paramList.clear();
-		if(fName != null) paramList.add("fname=" + fName.trim());
-		if(lName != null) paramList.add("lname=" + lName.trim());
+		if(fName != null) paramList.add("name1=" + fName.trim());
+		if(lName != null) paramList.add("name2=" + lName.trim());
+		DBConnector.fName = fName;
+		DBConnector.lName = lName;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetProfessorConnect());
@@ -206,7 +213,7 @@ public class DBConnector {
 				jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
-					theProfessor = new Professor(paramList.get(0), paramList.get(1));	//create the Professor
+					theProfessor = new Professor(fName, lName);	//create the Professor
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
 						String courseName = json_data.getString("CourseName");

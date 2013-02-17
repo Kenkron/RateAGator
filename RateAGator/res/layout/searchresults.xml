@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/searchResultsList" >
+    android:id="@+id/searchResultsPage"	 >
 
     <TextView
         android:id="@+id/searchQueryLabel"
@@ -12,12 +12,17 @@
         android:text="Search Query"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <LinearLayout
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" 
-        android:id="@+id/searchResultsList">
+        android:layout_height="match_parent">"
 
-    </LinearLayout>
-    
+        <LinearLayout
+            android:id="@+id/searchResultsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

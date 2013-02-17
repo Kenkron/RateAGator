@@ -34,8 +34,8 @@ public class SearchResults extends Activity {
 		Bundle b = this.getIntent().getExtras();
 		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
 		
-		TextView query=(TextView) findViewById(R.id.searchQueryLabel);
-		query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
+		//TextView query=(TextView) findViewById(R.id.searchQueryLabel);
+		//query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
 		
 		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
 		for (String name:searchResults){
@@ -46,11 +46,33 @@ public class SearchResults extends Activity {
 			currentResult.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d("SearchResults","clicked on "+((Button)v).getText());
+					String text=((Button)v).getText().toString();
+					Log.d("SearchResults","clicked on "+text);
+					
+					String lastName;
+					String firstName;
+					
+					try{
+					lastName=text.substring(0,text.indexOf(", "));
+					firstName=text.substring(text.lastIndexOf(", ")+1,text.length());
+					}catch (Exception E){
+						Log.d("SearchResults", "could not parse the first and last name in the button");
+						return;
+					}
+					
+					goToProfessor(firstName, lastName);
+					
 				}
 			});
 			resultsList.addView(currentResult);
 		}
+	}
+	
+	public void goToProfessor(String firstName,String lastName){
+		Intent intent=new Intent(this,ProfessorPage.class);
+		intent.putExtra(ProfessorPage.INTENT_FIRST_NAME, firstName);
+		intent.putExtra(ProfessorPage.INTENT_LAST_NAME, lastName);
+		this.startActivity(intent);
 	}
 	
 	//This method is called when button is pressed
