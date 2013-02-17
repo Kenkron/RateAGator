@@ -27,6 +27,10 @@
  		    android:name="SearchResults"
  		    android:label="Search Results" >
  		</activity>
+ 		<activity
+ 		    android:name="ProfessorPage"
+ 		    android:label="Professor Page" >
+ 		</activity>
         </application>
 
 </manifest>
