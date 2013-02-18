@@ -1,7 +1,6 @@
 package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -47,39 +46,26 @@ public class MainActivity extends Activity {
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
   	 	Log.d("MainActivity", "Searching: "+text);
         ArrayList<String> searchResults = new ArrayList<String>();
-  	 	boolean[] fNameMatches = new boolean[DBConnector.allProfessorNames.size()];
-  	 	boolean[] lNameMatches = new boolean[DBConnector.allProfessorNames.size()];
         
         ArrayList<String> lastNames = DBConnector.allProfessorNames;
-        //Eliminate last names from DBConnector.allProfessorNames
 
+        //Search last names
+  	 	this.getSearchResults(text, lastNames, searchResults);
+  	 	
+        //Create firstNames list
         ArrayList<String> firstNames = new ArrayList<String>();
         for(int i = 0; i < lastNames.size(); i++) {
             //splits the lastname, firstname pair by ", " and takes the second section
             firstNames.add(lastNames.get(i).split(", ")[1]);
         }
 
-        //Search last names
-  	 	lNameMatches = getSearchResults(text, lastNames);
-  	 	for(int i = 0; i < DBConnector.allProfessorNames.size(); i++) {
-        	if(lNameMatches[i]) {
-        		searchResults.add(DBConnector.allProfessorNames.get(i));
-        	}
-        }
-
-        //Search first names -- Super naive approach  
-        for(int i = 0; i < firstNames.size(); i++) {
-        	for(int j = 0; j < Math.min(text.length(), firstNames.get(i).length()); j++) {
-        		if(Character.toLowerCase(text.charAt(j)) == Character.toLowerCase(firstNames.get(i).charAt(j) )) {
-        			if(j == text.length() - 1) {
-        				searchResults.add(DBConnector.allProfessorNames.get(i));
-        			}
-        		}
-        		else {
-        			break;
-        		}
-        	}
-        }
+  	 	//Search first names
+  	 	for(int i = 0; i < firstNames.size(); i++) {
+  	 		if(firstNames.get(i).toLowerCase().startsWith(text.toLowerCase())) {
+  	 			searchResults.add(DBConnector.allProfessorNames.get(i));
+  	 		}
+  	 	}
+        
   	 	
   	 	/*Prints out the searchresults to LogCat
   	 	for (String result:searchResults){
@@ -94,7 +80,7 @@ public class MainActivity extends Activity {
   	 	this.startActivity(intent);
 	}
 	
-	public boolean[] getSearchResults(String input, ArrayList<String> names) {
+	public void getSearchResults(String input, ArrayList<String> names, ArrayList<String> searchResults) {
 
 		//performs a binary search to find a match with the input characteristics
 		//NOTE: breaks on searches of 'a' and 'z'
@@ -103,7 +89,6 @@ public class MainActivity extends Activity {
 		int start = 0;
 		int end = names.size();
 		int current = 0;
-		boolean[] matches = new boolean[names.size()];
 		boolean foundStart = false;
 		boolean keepGoingUp = true;
 		
@@ -119,6 +104,7 @@ public class MainActivity extends Activity {
 						//a good test case for this would to see which "Robert" shows up first
 						while(keepGoingUp) {
 							for(int j = 0; j < input.length(); j++) {
+								//if its at the first index, avoids arrayOutOfBoundsException
 								if(current == 0) {
 									keepGoingUp = false;
 									break; // should fix 'a' problem
@@ -158,8 +144,9 @@ public class MainActivity extends Activity {
 				for(int i = 0; i < input.length(); i++) {
 					if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
 						if(i == input.length() - 1) {
-							matches[current] = true;
-							if(current == matches.length - 1) {
+							searchResults.add(DBConnector.allProfessorNames.get(current));
+							//if its at the last index, avoids arrayOutOfBoundsException
+							if(current == DBConnector.allProfessorNames.size() - 1) {
 								inputMatches = false;
 								break;
 							}
@@ -173,9 +160,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
-		
-		
-		return matches;
+		return;
 	}
 	
 	public void startDBConnection(View view) {
