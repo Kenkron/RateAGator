@@ -35,13 +35,13 @@ public class DBConnector {
 	private static InputStream is = null;
 	private static StringBuilder sb = null;
 	
-	public static ArrayList<String> names = new ArrayList<String>();
-	public static ArrayList<String> paramList = new ArrayList<String>();
-	public static ArrayList<Double> evals = new ArrayList<Double>();
+	//private static ArrayList<String> names = new ArrayList<String>();
+	//private static ArrayList<String> paramList = new ArrayList<String>();
 	
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static Course theCourse = null;			//might be returned in getCourses()
+	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	
 	private static String fName;
 	private static String lName;
@@ -53,6 +53,46 @@ public class DBConnector {
 	public static Context getBaseContext() {
 		return baseContext;
 	}
+	//http post
+	private static InputStream httpPost(String postURL) {
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(postURL);
+			//httppost.setEntity(new UrlEncodedFormEntity(namevaluepairs));
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			
+			is = entity.getContent();
+			if (response.getStatusLine().getStatusCode() != 200) {
+				Log.d("DBConnector", "HTTP Post server error: bad response");
+			}
+		}
+		catch(Exception e) {
+			Log.d("DBConnector", "HTTP Post server error: death");
+			Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
+		}
+		return is;//this isn't necessarily needed since it can be accessed statically
+	}
+	//Convert response to String
+	private static String convertResponseToString(InputStream is) {
+		String responseString = null;
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
+			sb = new StringBuilder();
+			sb.append(reader.readLine() + "\n");
+			String line = null;
+
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			responseString = sb.toString();
+		}
+		catch(Exception e) {
+			Log.e("log_tag", "Error converting result "+e.toString());
+		}
+		return responseString;
+	}
 	
 	public static void initializeAllProfessors() {
 		try {
@@ -61,9 +101,9 @@ public class DBConnector {
 			Thread t = new Thread(new GetAllProfessorNames());
 			t.start();
 
-			while (t.isAlive()) {
-				t.join(1000);	//Wait max of 1sec
-				if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
+			while(t.isAlive()) {
+				t.join(2000);	//Wait max of 2sec
+				if(((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
 					t.interrupt();
 					t.join();
 				}
@@ -77,41 +117,11 @@ public class DBConnector {
 	private static class GetAllProfessorNames implements Runnable {
 		@Override
 		public void run() {
-			try {
-				//http post
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpPost httppost;
-				httppost = new HttpPost(scriptLocation + "/getAllProfessorNames.php");
-				
-				HttpResponse response = httpclient.execute(httppost);
-				HttpEntity entity = response.getEntity();
-				
-				is = entity.getContent();
-				if (response.getStatusLine().getStatusCode() != 200) {
-					Log.d("RateAGator DBConnector.GetAllProfessorNames", "Server encountered an error");
-				}
-			}
-			catch(Exception e) {
-				Log.d("DBConnector.GetAllProfessorNames", "Server encountered an error");
-				Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
-			}
-			
-			//Convert response to String, set result
-			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
-				sb = new StringBuilder();
-				sb.append(reader.readLine() + "\n");
-				String line = null;
+			String postURL = scriptLocation + "/getAllProfessorNames.php";
 
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				}
-				is.close();
-				result = sb.toString();
-			}
-			catch(Exception e) {
-				Log.e("log_tag", "Error converting result "+e.toString());
-			}
+			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			
+			result = convertResponseToString(is);
 			
 			//JSON decode, add to list
 			try {
@@ -135,15 +145,9 @@ public class DBConnector {
 	 * get professor names
 	 */
 	public static Professor getProfessor(String fName, String lName) throws InterruptedException {
-		names.clear();
-		paramList.clear();
-		if(fName != null) paramList.add("name1=" + fName.trim());
-		if(lName != null) paramList.add("name2=" + lName.trim());
-		DBConnector.fName = fName;
-		DBConnector.lName = lName;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
-		Thread t = new Thread(new GetProfessorConnect());
+		Thread t = new Thread(new GetProfessorConnect(fName, lName));
 		t.start();
 
 		while (t.isAlive()) {
@@ -156,57 +160,28 @@ public class DBConnector {
 		return theProfessor;
 	}
 	private static class GetProfessorConnect implements Runnable {
+		private static ArrayList<String> nameList = new ArrayList<String>();
+		public GetProfessorConnect(String fName, String lName) {
+			if(fName != null) nameList.add("name1=" + fName.trim());
+			if(lName != null) nameList.add("name2=" + lName.trim());
+		}
 		@Override
 		public void run() {
-			try {
-				//http post
-				HttpClient httpclient = new DefaultHttpClient();
-				
-				HttpPost httppost;
-				
-				String postURL = scriptLocation + "/getProfessor.php";
-				
-				//add parameters to the URL
-				if(!paramList.isEmpty()) {
-					postURL += "?";
-					for(int i = 0;i<paramList.size();i++) {
-						postURL += paramList.get(i);
-						if(i+1 < paramList.size()) {
-							postURL += "&";
-						}
+			String postURL = scriptLocation + "/getProfessor.php";
+			//add parameters to the URL
+			if(!nameList.isEmpty()) {
+				postURL += "?";
+				for(int i = 0;i<nameList.size();i++) {
+					postURL += nameList.get(i);
+					if(i+1 < nameList.size()) {
+						postURL += "&";
 					}
 				}
-				
-				httppost = new HttpPost(postURL);
-				//httppost.setEntity(new UrlEncodedFormEntity(namevaluepairs));
-				HttpResponse response = httpclient.execute(httppost);
-				HttpEntity entity = response.getEntity();
-				
-				is = entity.getContent();
-				if (response.getStatusLine().getStatusCode() != 200) {
-					Log.d("MyApp", "Server encountered an error");
-				}
-			}
-			catch(Exception e) {
-				Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 			}
 			
-			//Convert response to String, set result
-			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
-				sb = new StringBuilder();
-				sb.append(reader.readLine() + "\n");
-				String line = null;
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				}
-				is.close();
-				result = sb.toString();
-			}
-			catch(Exception e) {
-				Log.e("log_tag", "Error converting result "+e.toString());
-			}
+			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			
+			result = convertResponseToString(is);
 			
 			//JSON decode, add to list
 			try {
@@ -245,15 +220,10 @@ public class DBConnector {
 	/*
 	 * get evaluations
 	 */
-	public static void getEvaluations(String fName, String lName, String cCode) throws InterruptedException {//fName, lName, cCode
-		names.clear();
-		paramList.clear();
-		paramList.add("fname=" + fName.trim());
-		paramList.add("lname=" + lName.trim());
-		paramList.add("ccode=" + cCode.trim());
+	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) throws InterruptedException {//fName, lName, cCode
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
-		Thread t = new Thread(new GetEvaluationsConnect());
+		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));
 		t.start();
 
 		while (t.isAlive()) {
@@ -263,73 +233,44 @@ public class DBConnector {
 				t.join();
 			}
 		}
-        text = names.get(0);
+        return evals;
 	}
 	private static class GetEvaluationsConnect implements Runnable {
+		private static ArrayList<String> paramList = new ArrayList<String>();
+		public GetEvaluationsConnect(String fName, String lName, String cCode) {
+			paramList.add("fname=" + fName.trim());
+			paramList.add("lname=" + lName.trim());
+			paramList.add("ccode=" + cCode.trim());
+		}
 		@Override
 		public void run() {
-			try {
-				//http post
-				HttpClient httpclient = new DefaultHttpClient();
-				
-				HttpPost httppost;
-				
-				String postURL = scriptLocation + "/getEvals.php";
-				
-				//add parameters to the URL
-				if(!paramList.isEmpty()) {
-					postURL += "?";
-					for(int i = 0;i<paramList.size();i++) {
-						postURL += paramList.get(i);
-						if(i+1 < paramList.size()) {
-							postURL += "&";
-						}
+			String postURL = scriptLocation + "/getEvals.php";
+			if(!paramList.isEmpty()) {	//add parameters to the URL
+				postURL += "?";
+				for(int i = 0;i<paramList.size();i++) {
+					postURL += paramList.get(i);
+					if(i+1 < paramList.size()) {
+						postURL += "&";
 					}
 				}
-				
-				httppost = new HttpPost(postURL);
-				
-				HttpResponse response = httpclient.execute(httppost);
-				
-				HttpEntity entity = response.getEntity();
-				
-				is = entity.getContent();
-				if (response.getStatusLine().getStatusCode() != 200) {
-					Log.d("MyApp", "Server encountered an error");
-				}
-			}
-			catch(Exception e) {
-				Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 			}
 			
-			//Convert response to String, set result
-			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
-				sb = new StringBuilder();
-				sb.append(reader.readLine() + "\n");
-				String line = null;
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				}
-				is.close();
-				result = sb.toString();
-			}
-			catch(Exception e) {
-				Log.e("log_tag", "Error converting result "+e.toString());
-			}
+			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			
+			result = convertResponseToString(is);
 			
 			//JSON decode, add to list
 			try {
 				jArray = new JSONArray(result);
 				JSONObject json_data = null;
+				evals.clear();
 				for(int i = 0;i<jArray.length();i++) {
 					json_data = jArray.getJSONObject(i);
-					evals.clear();
+					Evaluation currentEvaluation = new Evaluation(json_data.getInt("Responded"));
 					for(int j = 1;j<=10;j++) {
-						evals.add(Double.valueOf(json_data.getString("R" + j)));
+						currentEvaluation.addResponseValue(json_data.getDouble("R" + j));
 					}
-					//TODO: stuff evals into an Evals Object
+					evals.add(currentEvaluation);
 				}
 			}
 			catch(JSONException e1) {
@@ -339,5 +280,5 @@ public class DBConnector {
 				e1.printStackTrace();
 			}
 		}
-	}	
+	}
 }
