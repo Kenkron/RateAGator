@@ -162,8 +162,8 @@ public class DBConnector {
 	private static class GetProfessorConnect implements Runnable {
 		private static ArrayList<String> nameList = new ArrayList<String>();
 		public GetProfessorConnect(String fName, String lName) {
-			if(fName != null) nameList.add("name1=" + fName.trim());
-			if(lName != null) nameList.add("name2=" + lName.trim());
+			if(fName != null) nameList.add("name1=" + fName.trim().replaceAll(" ", "%20"));
+			if(lName != null) nameList.add("name2=" + lName.trim().replaceAll(" ", "%20"));
 		}
 		@Override
 		public void run() {
@@ -238,9 +238,9 @@ public class DBConnector {
 	private static class GetEvaluationsConnect implements Runnable {
 		private static ArrayList<String> paramList = new ArrayList<String>();
 		public GetEvaluationsConnect(String fName, String lName, String cCode) {
-			paramList.add("fname=" + fName.trim());
-			paramList.add("lname=" + lName.trim());
-			paramList.add("ccode=" + cCode.trim());
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
 		}
 		@Override
 		public void run() {
