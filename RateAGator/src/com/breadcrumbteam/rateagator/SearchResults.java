@@ -11,8 +11,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class SearchResults extends Activity {
@@ -34,8 +32,8 @@ public class SearchResults extends Activity {
 		Bundle b = this.getIntent().getExtras();
 		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
 		
-		//TextView query=(TextView) findViewById(R.id.searchQueryLabel);
-		//query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
+		TextView query=(TextView) findViewById(R.id.searchQueryLabel);
+		query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
 		
 		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
 		for (String name:searchResults){
@@ -73,26 +71,6 @@ public class SearchResults extends Activity {
 		intent.putExtra(ProfessorPage.INTENT_FIRST_NAME, firstName);
 		intent.putExtra(ProfessorPage.INTENT_LAST_NAME, lastName);
 		this.startActivity(intent);
-	}
-	
-	//This method is called when button is pressed
-	public void getCourseData(View view){  	
-		
-  	 	//get the information contained in the link you clicked on
-		
-		//getEvaluations
-	
-		//getRatings and getComments will be in the second sprint
-  	 	
-  	 	//switches to courseData activity
-  	 	
-		/*		This is just how I started the SearchResults activity from MainActivity
-		 * 		There's probably a better name than CourseData for that class so going to
-		 * 		get input from group
-		 * 
-		 * 		Intent intent = new Intent(this, SearchResults.class);  	 	
-		 * 		this.startActivity(intent);
-		 */
 	}
 
 }

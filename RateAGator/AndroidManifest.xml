@@ -31,6 +31,10 @@
  		    android:name="ProfessorPage"
  		    android:label="Professor Page" >
  		</activity>
+ 		<activity
+ 		    android:name="EvaluationPage"
+ 		    android:label="Evaluation Page" >
+ 		</activity>
         </application>
 
 </manifest>
