@@ -1,0 +1,9 @@
+An overview of guidelines to follow when making/using the UI.
+It will be expanded as more guidelines are created
+
+1)  When a new activity needs to retrieve data from an Intent,
+	the id strings should be constants stored in the activity
+	class, not magic strings.  The names of these constant 
+	Strings should be in all caps, and start with INTENT_
+	This ensures that the id strings cannot be misspelled or 
+	confusing.
