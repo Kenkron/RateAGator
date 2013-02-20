@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class ProfessorPage extends Activity {
 
@@ -43,8 +44,11 @@ public class ProfessorPage extends Activity {
 			// I have no Idea how to handle an interrupted exception
 		}
 
+		//label the professor in the course list
+		((TextView)this.findViewById(R.id.professorPageLabel)).setText(fname+" "+lname);
+		
 		ViewGroup resultsList = (ViewGroup) findViewById(R.id.professorEvalList);
-
+		
 		for (Course c : currentProfessor.courseList) {
 			Log.d("ProfessorPage", "CourseList: " + c.courseName);
 			Button currentResult = new Button(this);
