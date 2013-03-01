@@ -3,6 +3,7 @@ package com.breadcrumbteam.rateagator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +46,17 @@ public class MainActivity extends Activity {
 	public void search(View view){  	
 		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
   	 	Log.d("MainActivity", "Searching: "+text);
+  	 	
+  	 	//checks if search contains unacceptable characters
+  	 	for(int i = 0; i < text.length(); i++) {
+  	 		if(!Character.isLetterOrDigit(text.charAt(i))) {
+  	 			new AlertDialog.Builder(this).setTitle("Oops").setMessage(
+  	 					"Search value contains a non alphanumeric character. Revise your search and try again"
+  	 					).setNeutralButton("Close", null).show();
+  	 			return;
+  	 		}
+  	 	}
+  	 	
         ArrayList<String> searchResults = new ArrayList<String>();
         
         ArrayList<String> lastNames = DBConnector.allProfessorNames;
@@ -65,13 +77,6 @@ public class MainActivity extends Activity {
   	 			searchResults.add(DBConnector.allProfessorNames.get(i));
   	 		}
   	 	}
-        
-  	 	
-  	 	/*Prints out the searchresults to LogCat
-  	 	for (String result:searchResults){
-  	 		Log.d("MainActivity",result);
-  	 	}
-  	 	*/
   	 	
   	 	//switches to search results activity
   	 	Intent intent = new Intent(this, SearchResults.class);
@@ -83,7 +88,6 @@ public class MainActivity extends Activity {
 	public void getSearchResults(String input, ArrayList<String> names, ArrayList<String> searchResults) {
 
 		//performs a binary search to find a match with the input characteristics
-		//NOTE: breaks on searches of 'a' and 'z'
 		//NOTE: does not search by first name yet
 		
 		int start = 0;
