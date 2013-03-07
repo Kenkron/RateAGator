@@ -57,26 +57,24 @@ public class MainActivity extends Activity {
   	 		}
   	 	}
   	 	
+  	 	//initialize all the arrayLists
         ArrayList<String> searchResults = new ArrayList<String>();
-        
-        ArrayList<String> lastNames = DBConnector.allProfessorNames;
-
-        //Search last names
-  	 	this.getSearchResults(text, lastNames, searchResults);
+        ArrayList<String[]> lastNames = new ArrayList<String[]>();
+        ArrayList<String[]> firstNames = new ArrayList<String[]>();
   	 	
-        //Create firstNames list
-        ArrayList<String> firstNames = new ArrayList<String>();
-        for(int i = 0; i < lastNames.size(); i++) {
-            //splits the lastname, firstname pair by ", " and takes the second section
-            firstNames.add(lastNames.get(i).split(", ")[1]);
-        }
+        //fills in the first and last name arrayLists
+        for(int i = 0; i < DBConnector.allProfessorNames.size(); i++) {
+        	lastNames.add(new String[]{DBConnector.allProfessorNames.get(i), Integer.toString(i)});
+            //splits the lastName pair by ", " to make the firstName arrayList
+        	firstNames.add(new String[]{lastNames.get(i)[0].split(", ")[1], Integer.toString(i)});
+        }        
 
-  	 	//Search first names
-  	 	for(int i = 0; i < firstNames.size(); i++) {
-  	 		if(firstNames.get(i).toLowerCase().startsWith(text.toLowerCase())) {
-  	 			searchResults.add(DBConnector.allProfessorNames.get(i));
-  	 		}
-  	 	}
+        //sorts the firstName (lastName is already sorted)
+        firstNames = mergeSort(firstNames);
+        
+        //generates the searchResults and puts them in searchResults array
+        this.getSearchResults(text, lastNames, searchResults);
+        this.getSearchResults(text, firstNames, searchResults);        
   	 	
   	 	//switches to search results activity
   	 	Intent intent = new Intent(this, SearchResults.class);
@@ -85,7 +83,59 @@ public class MainActivity extends Activity {
   	 	this.startActivity(intent);
 	}
 	
-	public void getSearchResults(String input, ArrayList<String> names, ArrayList<String> searchResults) {
+	public static ArrayList<String[]> mergeSort(ArrayList<String[]> array) {
+		if(array.size() <= 1) {
+			return array;
+		}
+		int middle = array.size() / 2;
+		ArrayList<String[]> left = new ArrayList<String[]>();
+		ArrayList<String[]> right = new ArrayList<String[]>();
+		ArrayList<String[]> returnList = new ArrayList<String[]>();
+		
+		//copy elements to left and right array
+		for(int i = 0; i < middle; i++) {
+			left.add(array.get(i));
+		}
+		for(int i = middle; i < array.size(); i++) {
+			right.add(array.get(i));
+		}
+		
+		
+		left = mergeSort(left);
+		right = mergeSort(right);
+		returnList = merge(left, right);
+		for(int i = 0; i < returnList.size(); i++) {
+			Log.d("mergedList" + Integer.toString(i), returnList.get(i)[0] );
+		}
+		return returnList;
+	}
+	
+	private static ArrayList<String[]> merge(ArrayList<String[]> left, ArrayList<String[]> right) {
+		ArrayList<String[]> result = new ArrayList<String[]>();
+		int i = 0;
+		int j = 0;
+		while(i < left.size() && j < right.size() ) {
+			if(left.get(i)[0].compareToIgnoreCase(right.get(j)[0]) <= 0) {
+				result.add(left.get(i));
+				i++;
+			}
+			else {
+				result.add(right.get(j));
+				j++;
+			}
+		}
+		while(i < left.size() ) {
+			result.add(left.get(i));
+			i++;
+		}
+		while(j < right.size() ) {
+			result.add(right.get(j));
+			j++;
+		}
+		return result;
+	}
+	
+	public void getSearchResults(String input, ArrayList<String[]> names, ArrayList<String> searchResults) {
 
 		//performs a binary search to find a match with the input characteristics
 		//NOTE: does not search by first name yet
@@ -102,7 +152,7 @@ public class MainActivity extends Activity {
 			}
 			current = (start + end) / 2;
 			for(int i = 0; i < input.length(); i++) {
-				if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
+				if(Character.toLowerCase(names.get(current)[0].charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
 					if (i == input.length() -1) {
 						//iterate up until there is no longer a complete match
 						//a good test case for this would to see which "Robert" shows up first
@@ -113,7 +163,7 @@ public class MainActivity extends Activity {
 									keepGoingUp = false;
 									break; // should fix 'a' problem
 								}
-								if(Character.toLowerCase(names.get(current-1).charAt(j)) == (Character.toLowerCase(input.charAt(j))) ) {
+								if(Character.toLowerCase(names.get(current-1)[0].charAt(j)) == (Character.toLowerCase(input.charAt(j))) ) {
 									if(j == input.length() - 1) {
 										current = current - 1;
 										break;
@@ -128,7 +178,7 @@ public class MainActivity extends Activity {
 						break;
 					}
 				}
-				else if (Character.toLowerCase(names.get(current).charAt(i)) < Character.toLowerCase(input.charAt(i))) {
+				else if (Character.toLowerCase(names.get(current)[0].charAt(i)) < Character.toLowerCase(input.charAt(i))) {
 					start = current + 1;
 					break;
 				}
@@ -145,10 +195,11 @@ public class MainActivity extends Activity {
 		else {
 			boolean inputMatches = true;
 			while(inputMatches) {
-				for(int i = 0; i < input.length(); i++) {
-					if(Character.toLowerCase(names.get(current).charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
-						if(i == input.length() - 1) {
-							searchResults.add(DBConnector.allProfessorNames.get(current));
+				int maxCharacters = Math.min(input.length(), names.get(current)[0].length());
+				for(int i = 0; i < maxCharacters; i++) {
+					if(Character.toLowerCase(names.get(current)[0].charAt(i)) == (Character.toLowerCase(input.charAt(i))) ) {
+						if(i == maxCharacters - 1) {
+							searchResults.add(DBConnector.allProfessorNames.get(Integer.parseInt(names.get(current)[1])));
 							//if its at the last index, avoids arrayOutOfBoundsException
 							if(current == DBConnector.allProfessorNames.size() - 1) {
 								inputMatches = false;
