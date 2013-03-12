@@ -362,3 +362,33 @@ Java Model Exception: Java Model Status [Timed out while retrieving the attached
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
 !SUBENTRY 1 org.eclipse.jdt.core 4 1012 2013-02-20 09:19:50.063
 !MESSAGE Timed out while retrieving the attached javadoc for Activity [in Activity.class [in android.app [in /home/chrisotpher/android-sdks/platforms/android-17/android.jar]]] 
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-20 20:58:19.854
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+!SESSION 2013-02-22 12:53:48.985 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_13
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86 -data /home/chrisotpher/workspaces/RateAGator
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-22 12:53:57.704
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project HelloWorld
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-02-22 12:54:09.790
+!MESSAGE Failed to load properties file for project 'HelloWorld'
+!SESSION 2013-03-12 15:56:09.189 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_15
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.core.resources 2 10035 2013-03-12 15:56:20.202
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-03-12 15:56:23.117
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project HelloWorld
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-03-12 15:56:30.880
+!MESSAGE Failed to load properties file for project 'HelloWorld'
