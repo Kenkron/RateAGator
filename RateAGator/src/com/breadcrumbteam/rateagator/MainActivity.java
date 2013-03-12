@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setProgressBarIndeterminateVisibility(false);
 		DBConnector.setBaseContext(this.getBaseContext());
-		DBConnector.initializeAllProfessors();
+		DBConnector.initProfessorsAndCourses();
 		setContentView(R.layout.activity_main);
 	}
 
