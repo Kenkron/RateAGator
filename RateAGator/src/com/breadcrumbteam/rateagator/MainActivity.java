@@ -42,15 +42,19 @@ public class MainActivity extends Activity {
 		//never stop running.
 	}	
 
-	//This method is called when the search button is pressed
-	public void search(View view){  	
-		String text=((EditText)findViewById(R.id.searchBar)).getText().toString();	  	
+	public void search(View view){
+		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
+		MainActivity.performSearch(view, text, this);
+	}
+	
+	/**This method is called when the search button is pressed*/
+	public static void performSearch(View view, String text, Activity parent){ 	
   	 	Log.d("MainActivity", "Searching: "+text);
   	 	
   	 	//checks if search contains unacceptable characters
   	 	for(int i = 0; i < text.length(); i++) {
   	 		if(!Character.isLetterOrDigit(text.charAt(i))) {
-  	 			new AlertDialog.Builder(this).setTitle("Oops").setMessage(
+  	 			new AlertDialog.Builder(parent).setTitle("Oops").setMessage(
   	 					"Search value contains a non alphanumeric character. Revise your search and try again"
   	 					).setNeutralButton("Close", null).show();
   	 			return;
@@ -73,14 +77,14 @@ public class MainActivity extends Activity {
         firstNames = mergeSort(firstNames);
         
         //generates the searchResults and puts them in searchResults array
-        this.getSearchResults(text, lastNames, searchResults);
-        this.getSearchResults(text, firstNames, searchResults);        
+        getSearchResults(text, lastNames, searchResults);
+        getSearchResults(text, firstNames, searchResults);        
   	 	
   	 	//switches to search results activity
-  	 	Intent intent = new Intent(this, SearchResults.class);
+  	 	Intent intent = new Intent(parent, SearchResults.class);
   	 	intent.putStringArrayListExtra("names", searchResults);
   	 	intent.putExtra("query", text);
-  	 	this.startActivity(intent);
+  	 	parent.startActivity(intent);
 	}
 	
 	public static ArrayList<String[]> mergeSort(ArrayList<String[]> array) {
@@ -135,7 +139,12 @@ public class MainActivity extends Activity {
 		return result;
 	}
 	
-	public void getSearchResults(String input, ArrayList<String[]> names, ArrayList<String> searchResults) {
+	
+	////////Static Methods////////
+	
+	/**Fills the given array lists ('names and 'SearchResults')
+	 * based on the */
+	public static void getSearchResults(String input, ArrayList<String[]> names, ArrayList<String> searchResults) {
 
 		//performs a binary search to find a match with the input characteristics
 		//NOTE: does not search by first name yet
@@ -216,23 +225,6 @@ public class MainActivity extends Activity {
 			}
 		}
 		return;
-	}
-	
-	public void startDBConnection(View view) {
-		String a = "";
-		EditText editText = (EditText) findViewById(R.id.searchBar);
-		String person = editText.getText().toString();
-
-		//the following code was committed to the repository broken
-		/*try {
-			a = DBConnector.getPerson(person);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		TextView textView1 = (TextView) findViewById(R.id.searchButton);
-        textView1.setText(String.valueOf(a));
 	}
 
 }

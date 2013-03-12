@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 public class SearchResults extends Activity {
 
@@ -32,8 +32,8 @@ public class SearchResults extends Activity {
 		Bundle b = this.getIntent().getExtras();
 		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
 		
-		TextView query=(TextView) findViewById(R.id.searchQueryLabel);
-		query.setText("Searched for: "+this.getIntent().getStringExtra(INTENT_QUERY));
+		EditText query=(EditText) findViewById(R.id.searchBar);
+		query.setText(this.getIntent().getStringExtra(INTENT_QUERY));
 		
 		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
 		for (String name:searchResults){
@@ -64,6 +64,11 @@ public class SearchResults extends Activity {
 			});
 			resultsList.addView(currentResult);
 		}
+	}
+	
+	public void search(View view){
+		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
+		MainActivity.performSearch(view, text, this);
 	}
 	
 	public void goToProfessor(String firstName,String lastName){

@@ -1,21 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searchResultsPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/searchResultsPage"	 >
+    android:orientation="vertical" >
 
-    <TextView
+    <!--
+        <TextView
         android:id="@+id/searchQueryLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Search Query"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/searchButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/searchButton"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Professor/Course name"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:onClick="search"
+            android:text="@string/search" />
+    
+    </LinearLayout>
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">"
+        android:layout_height="match_parent" >
+"
 
         <LinearLayout
             android:id="@+id/searchResultsList"

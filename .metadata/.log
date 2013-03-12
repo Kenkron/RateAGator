@@ -392,3 +392,6 @@ Command-line arguments:  -os linux -ws gtk -arch x86
 
 !ENTRY com.android.ide.eclipse.adt 4 0 2013-03-12 15:56:30.880
 !MESSAGE Failed to load properties file for project 'HelloWorld'
+
+!ENTRY org.eclipse.ui 2 2 2013-03-12 16:37:21.807
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
