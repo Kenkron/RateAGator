@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,14 +30,17 @@ public class DBConnector {
 	
 	public static String text = null;//my standard returner
 	private static JSONArray jArray;
-	private static String result = null;
+	//private static String result = null;
 	private static InputStream is = null;
 	private static StringBuilder sb = null;
+	
+	private static boolean errorOccurred = false; 
 	
 	//private static ArrayList<String> names = new ArrayList<String>();
 	//private static ArrayList<String> paramList = new ArrayList<String>();
 	
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
+	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static Course theCourse = null;			//might be returned in getCourses()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
@@ -54,7 +56,8 @@ public class DBConnector {
 		return baseContext;
 	}
 	//http post
-	private static InputStream httpPost(String postURL) {
+	private static synchronized InputStream httpPost(String postURL) {
+		InputStream is = null;
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost(postURL);
@@ -68,13 +71,14 @@ public class DBConnector {
 			}
 		}
 		catch(Exception e) {
+			errorOccurred = true;
 			Log.d("DBConnector", "HTTP Post server error: death");
 			Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 		}
 		return is;//this isn't necessarily needed since it can be accessed statically
 	}
 	//Convert response to String
-	private static String convertResponseToString(InputStream is) {
+	private static synchronized String convertResponseToString(InputStream is) {
 		String responseString = null;
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
@@ -89,43 +93,72 @@ public class DBConnector {
 			responseString = sb.toString();
 		}
 		catch(Exception e) {
+			errorOccurred = true;
 			Log.e("log_tag", "Error converting result "+e.toString());
 		}
 		return responseString;
 	}
 	
-	public static void initializeAllProfessors() {
-		try {
-			long patience = 5000;
-			long startTime = System.currentTimeMillis();
-			Thread t = new Thread(new GetAllProfessorNames());
-			t.start();
+	public static void initProfessorsAndCourses() {
+		do {
+			errorOccurred = false;
+			try {
+				long patience = 5000;
+				long startTime = System.currentTimeMillis();
+				Thread t1 = new Thread(new GetAllProfessorNames());
+				Thread t2 = new Thread(new GetAllCourseCodes());
+				t1.start();
+				t2.start();
 
-			while(t.isAlive()) {
-				t.join(2000);	//Wait max of 2sec
-				if(((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
-					t.interrupt();
-					t.join();
+				t1.join();
+				t2.join();
+				/*
+			while(t1.isAlive()) {
+				t1.join(2000);	//Wait max of 2sec
+				if(((System.currentTimeMillis() - startTime) > patience) && t1.isAlive()) {//if it outlasts patience, auto join()
+					t1.interrupt();
+					t1.join();
 				}
 			}
-		}
-		catch(InterruptedException e) {
-			Log.d("DBConnector.initializeAllProfessors()", "Server encountered an error");
-			e.printStackTrace();
-		}
+			while(t2.isAlive()) {
+				t2.join(2000);	//Wait max of 2sec
+				if(((System.currentTimeMillis() - startTime) > patience) && t2.isAlive()) {//if it outlasts patience, auto join()
+					t2.interrupt();
+					t2.join();
+				}
+			}*/
+			}
+			catch(InterruptedException e) {
+				errorOccurred = true;
+				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error");
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				//IGNORE
+				e.printStackTrace();
+			}
+		} while(errorOccurred);
 	}
 	private static class GetAllProfessorNames implements Runnable {
 		@Override
 		public void run() {
 			String postURL = scriptLocation + "/getAllProfessorNames.php";
 
-			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			if(errorOccurred) {
+				return;
+			}
 			
-			result = convertResponseToString(is);
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
 			
 			//JSON decode, add to list
 			try {
-				jArray = new JSONArray(result);
+				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data=null;
 				for(int i=0;i<jArray.length();i++) {
 					json_data = jArray.getJSONObject(i);
@@ -133,9 +166,45 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+		}
+	}
+	private static class GetAllCourseCodes implements Runnable {
+		@Override
+		public void run() {
+			String postURL = scriptLocation + "/getAllCourseCodes.php";
+
+			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			if(errorOccurred) {
+				return;
+			}
+			
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data=null;
+				for(int i=0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					allCourseCodes.add(json_data.getString("CourseCode")); 
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 		}
@@ -156,6 +225,10 @@ public class DBConnector {
 				t.interrupt();
 				t.join();
 			}
+		}
+		if(errorOccurred) {//return a null object if an errorOccurred
+			errorOccurred = false;
+			return null;
 		}
 		return theProfessor;
 	}
@@ -179,13 +252,19 @@ public class DBConnector {
 				}
 			}
 			
-			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			if(errorOccurred) {
+				return;
+			}
 			
-			result = convertResponseToString(is);
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
 			
 			//JSON decode, add to list
 			try {
-				jArray = new JSONArray(result);
+				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
 					theProfessor = new Professor(fName, lName);	//create the Professor
@@ -208,9 +287,11 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 			catch (ParseException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 		}
@@ -232,6 +313,10 @@ public class DBConnector {
 				t.interrupt();
 				t.join();
 			}
+		}
+		if(errorOccurred) {
+			errorOccurred = false;
+			return null;
 		}
         return evals;
 	}
@@ -255,13 +340,19 @@ public class DBConnector {
 				}
 			}
 			
-			httpPost(postURL);//returns InputStream is, but is accessed statically next
+			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			if(errorOccurred) {
+				return;
+			}
 			
-			result = convertResponseToString(is);
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
 			
 			//JSON decode, add to list
 			try {
-				jArray = new JSONArray(result);
+				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				evals.clear();
 				for(int i = 0;i<jArray.length();i++) {
@@ -274,9 +365,11 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 			catch (ParseException e1) {
+				errorOccurred = true;
 				e1.printStackTrace();
 			}
 		}
