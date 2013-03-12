@@ -66,6 +66,11 @@ public class SearchResults extends Activity {
 		}
 	}
 	
+	@Override
+	protected void onRestart() {
+		((EditText)this.findViewById(R.id.searchBar)).clearFocus();
+	}
+	
 	public void search(View view){
 		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
 		MainActivity.performSearch(view, text, this);

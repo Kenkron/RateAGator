@@ -9,19 +9,27 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setProgressBarIndeterminateVisibility(false);
 		DBConnector.setBaseContext(this.getBaseContext());
 		DBConnector.initializeAllProfessors();
 		setContentView(R.layout.activity_main);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setProgressBarIndeterminateVisibility(false);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -43,6 +51,7 @@ public class MainActivity extends Activity {
 	}	
 
 	public void search(View view){
+		setProgressBarIndeterminateVisibility(true);
 		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
 		MainActivity.performSearch(view, text, this);
 	}
@@ -108,9 +117,7 @@ public class MainActivity extends Activity {
 		left = mergeSort(left);
 		right = mergeSort(right);
 		returnList = merge(left, right);
-		for(int i = 0; i < returnList.size(); i++) {
-			Log.d("mergedList" + Integer.toString(i), returnList.get(i)[0] );
-		}
+		
 		return returnList;
 	}
 	
