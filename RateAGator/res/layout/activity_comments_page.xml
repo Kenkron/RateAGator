@@ -1,0 +1,134 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CommentsPage" >
+    
+        <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/commentsList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+   		android:layout_height="match_parent"
+   		android:layout_weight="1">
+        <LinearLayout
+	    android:layout_width="match_parent"
+   		android:layout_height="match_parent"
+    	android:orientation="vertical">
+
+	    <TextView
+        android:id="@+id/testComment1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a test comment!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/testComment2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This was the best professor I have ever had!!!!!!!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/testComment3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DO NOT TAKE THIS PROFESSOR. 0/10"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Try scrolling these comments!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="this prof was like rly good n hottt"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="rgisgrjoiuerhgoiajglkjanrlgijhsrgahatj"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test test test test test"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a test comment!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a test comment!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a test comment!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/testComment11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Did the comment scrolling work?"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+	</LinearLayout>
+    </ScrollView>
+	
+
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="1" >
+
+	        <EditText
+	            android:id="@+id/commentBox"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            android:ems="10"
+	            android:hint="Type a comment!"
+	            android:inputType="text" />
+
+    <Button
+        android:id="@+id/addCommentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addComment"
+        android:text="Submit" />
+	</LinearLayout>
+
+
+
+
+</LinearLayout>

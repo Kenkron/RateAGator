@@ -3,6 +3,7 @@ package com.breadcrumbteam.rateagator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
 
 public class EvaluationPage extends Activity{
 
@@ -75,6 +77,11 @@ public class EvaluationPage extends Activity{
 					container.addView(fullEval);
 			}
 		}
+	}
+	
+	public void goToComments(View view) {
+		Intent intent = new Intent(this, CommentsPage.class);
+  	 	this.startActivity(intent);
 	}
 	
 }

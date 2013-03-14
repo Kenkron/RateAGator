@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+        <Button
+            android:id="@+id/goToCommentsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:onClick="goToComments"
+            android:text="Comments" />
 
     <TextView
         android:id="@+id/professorEvalLabel"
@@ -32,5 +40,7 @@
             
         </LinearLayout>
     </ScrollView>
+    
+
 
 </LinearLayout>

@@ -6,5 +6,6 @@
     <string name="menu_settings">Settings</string>
     <string name="search">Search</string>
     <string name="results">Results:</string>
+    <string name="title_activity_comments_page">CommentsPage</string>
 
 </resources>

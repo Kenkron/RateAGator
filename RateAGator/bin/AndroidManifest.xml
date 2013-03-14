@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,18 +24,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
- 		<activity
- 		    android:name="SearchResults"
- 		    android:label="Search Results" >
- 		</activity>
- 		<activity
- 		    android:name="ProfessorPage"
- 		    android:label="Professor Page" >
- 		</activity>
- 		<activity
- 		    android:name="EvaluationPage"
- 		    android:label="Evaluation Page" >
- 		</activity>
-        </application>
+        <activity
+            android:name="com.breadcrumbteam.rateagator.SearchResults"
+            android:label="Search Results" >
+        </activity>
+        <activity
+            android:name="com.breadcrumbteam.rateagator.ProfessorPage"
+            android:label="Professor Page" >
+        </activity>
+        <activity
+            android:name="com.breadcrumbteam.rateagator.EvaluationPage"
+            android:label="Evaluation Page" >
+        </activity>
+        <activity
+            android:name="com.breadcrumbteam.rateagator.CommentsPage"
+            android:label="@string/title_activity_comments_page"
+            android:parentActivityName="com.breadcrumbteam.rateagator.EvaluationPage" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.breadcrumbteam.rateagator.EvaluationPage" />
+        </activity>
+    </application>
 
 </manifest>
