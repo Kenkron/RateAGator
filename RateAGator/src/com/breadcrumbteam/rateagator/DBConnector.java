@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.net.ConnectivityManager;
 import android.net.ParseException;
 import android.util.Log;
 import android.widget.TextView;
@@ -28,8 +29,8 @@ public class DBConnector {
 	private static final String scriptLocation = "http://sgiordano.com/rateAgator/";
 	private static Context baseContext = null;
 	
-	public static String text = null;//my standard returner
-	private static JSONArray jArray;
+	//public static String text = null;//my standard returner
+	//private static JSONArray jArray;
 	//private static String result = null;
 	private static InputStream is = null;
 	private static StringBuilder sb = null;
@@ -44,6 +45,7 @@ public class DBConnector {
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static Course theCourse = null;			//might be returned in getCourses()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
+	private static ArrayList<Professor> professors = new ArrayList<Professor>();
 	
 	private static String fName;
 	private static String lName;
@@ -66,14 +68,14 @@ public class DBConnector {
 			HttpEntity entity = response.getEntity();
 			
 			is = entity.getContent();
-			if (response.getStatusLine().getStatusCode() != 200) {
+			if(response.getStatusLine().getStatusCode() != 200) {
 				Log.d("DBConnector", "HTTP Post server error: bad response");
 			}
 		}
 		catch(Exception e) {
 			errorOccurred = true;
 			Log.d("DBConnector", "HTTP Post server error: death");
-			Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
+			//Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 		}
 		return is;//this isn't necessarily needed since it can be accessed statically
 	}
@@ -98,6 +100,28 @@ public class DBConnector {
 		}
 		return responseString;
 	}
+	private static String convertParamList(ArrayList<String> x) {
+		String paramURL = "";
+		if(!x.isEmpty()) {
+			paramURL += "?";
+			for(int i = 0;i<x.size();i++) {
+				paramURL += x.get(i);
+				if(i+1 < x.size()) {
+					paramURL += "&";
+				}
+			}
+		}
+		return paramURL;
+	}
+	
+	public static boolean CheckInternet(Context context) 
+	{
+	    ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    android.net.NetworkInfo wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	    android.net.NetworkInfo mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+	    return wifi.isConnected() || mobile.isConnected();
+	}
 	
 	public static void initProfessorsAndCourses() {
 		do {
@@ -113,31 +137,39 @@ public class DBConnector {
 				t1.join();
 				t2.join();
 				/*
-			while(t1.isAlive()) {
-				t1.join(2000);	//Wait max of 2sec
-				if(((System.currentTimeMillis() - startTime) > patience) && t1.isAlive()) {//if it outlasts patience, auto join()
-					t1.interrupt();
-					t1.join();
+				while(t1.isAlive()) {
+					t1.join(2000);	//Wait max of 2sec
+					if(((System.currentTimeMillis() - startTime) > patience) && t1.isAlive()) {//if it outlasts patience, auto join()
+						t1.interrupt();
+						t1.join();
+					}
 				}
-			}
-			while(t2.isAlive()) {
-				t2.join(2000);	//Wait max of 2sec
-				if(((System.currentTimeMillis() - startTime) > patience) && t2.isAlive()) {//if it outlasts patience, auto join()
-					t2.interrupt();
-					t2.join();
-				}
-			}*/
+				while(t2.isAlive()) {
+					t2.join(2000);	//Wait max of 2sec
+					if(((System.currentTimeMillis() - startTime) > patience) && t2.isAlive()) {//if it outlasts patience, auto join()
+						t2.interrupt();
+						t2.join();
+					}
+				}*/
 			}
 			catch(InterruptedException e) {
 				errorOccurred = true;
-				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error");
+				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error interrupted");
 				e.printStackTrace();
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				//IGNORE
+			catch(Exception e) {
+				errorOccurred = true;
+				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error exception");
 				e.printStackTrace();
+			}
+			
+			if(errorOccurred) {
+				try {
+					Thread.sleep(1000);
+				}
+				catch(InterruptedException e) {
+					/* IGNORE */
+				}
 			}
 		} while(errorOccurred);
 	}
@@ -210,47 +242,32 @@ public class DBConnector {
 		}
 	}
 
-	/*
-	 * get professor names
-	 */
+	//
+	//get Professor
+	//
 	public static Professor getProfessor(String fName, String lName) throws InterruptedException {
+		errorOccurred = false;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetProfessorConnect(fName, lName));
 		t.start();
 
-		while (t.isAlive()) {
-			t.join(1000);	//Wait max of 1sec
-			if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
-				t.interrupt();
-				t.join();
-			}
-		}
+		t.join();
 		if(errorOccurred) {//return a null object if an errorOccurred
-			errorOccurred = false;
 			return null;
 		}
 		return theProfessor;
 	}
 	private static class GetProfessorConnect implements Runnable {
-		private static ArrayList<String> nameList = new ArrayList<String>();
+		private ArrayList<String> paramList = new ArrayList<String>();
 		public GetProfessorConnect(String fName, String lName) {
-			if(fName != null) nameList.add("name1=" + fName.trim().replaceAll(" ", "%20"));
-			if(lName != null) nameList.add("name2=" + lName.trim().replaceAll(" ", "%20"));
+			if(fName != null) paramList.add("name1=" + fName.trim().replaceAll(" ", "%20"));
+			if(lName != null) paramList.add("name2=" + lName.trim().replaceAll(" ", "%20"));
 		}
 		@Override
 		public void run() {
-			String postURL = scriptLocation + "/getProfessor.php";
 			//add parameters to the URL
-			if(!nameList.isEmpty()) {
-				postURL += "?";
-				for(int i = 0;i<nameList.size();i++) {
-					postURL += nameList.get(i);
-					if(i+1 < nameList.size()) {
-						postURL += "&";
-					}
-				}
-			}
+			String postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
 			
 			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
 			if(errorOccurred) {
@@ -296,32 +313,100 @@ public class DBConnector {
 			}
 		}
 	}
-	
+	//
+	// get Course
+	//
+	public static ArrayList<Professor> getCourse(String cCode) throws InterruptedException {
+		errorOccurred = false;
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		professors.clear();
+		Thread t = new Thread(new GetCourseConnect(cCode));
+		t.start();
 
-	/*
-	 * get evaluations
-	 */
+		t.join();
+		if(errorOccurred) {//return a null object if an errorOccurred
+			return null;
+		}
+		return professors;
+	}
+	private static class GetCourseConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		public GetCourseConnect(String cCode) {
+			if(cCode != null) paramList.add("name1=" + cCode.trim().replaceAll(" ", "%20"));
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
+
+			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			if(errorOccurred) {
+				return;
+			}
+			
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+			
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				if(jArray.length() > 0) {
+					for(int i = 0;i<jArray.length();i++) {
+						json_data = jArray.getJSONObject(i);
+						String fName = json_data.getString("FirstName");
+						String lName = json_data.getString("LastName");
+						theProfessor = new Professor(fName, lName);//create the Professor
+						
+						String courseName = json_data.getString("CourseName");
+						Course currentCourse;
+						if(courseName.equals("NULL")) {
+							currentCourse = new Course(null, json_data.getString("CourseCode"));
+						}
+						else {
+							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
+						}
+							
+						theProfessor.addCourse(currentCourse);
+						professors.add(theProfessor);
+					}
+				}
+				else {
+					professors = null;
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	//
+	//get Evaluations
+	//
 	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) throws InterruptedException {//fName, lName, cCode
+		errorOccurred = false;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));
 		t.start();
 
-		while (t.isAlive()) {
-			t.join(1000);	//Wait max of 1sec
-			if (((System.currentTimeMillis() - startTime) > patience) && t.isAlive()) {//if it outlasts patience, auto join()
-				t.interrupt();
-				t.join();
-			}
-		}
+		t.join();
 		if(errorOccurred) {
-			errorOccurred = false;
 			return null;
 		}
         return evals;
 	}
 	private static class GetEvaluationsConnect implements Runnable {
-		private static ArrayList<String> paramList = new ArrayList<String>();
+		private ArrayList<String> paramList = new ArrayList<String>();
 		public GetEvaluationsConnect(String fName, String lName, String cCode) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
@@ -329,18 +414,10 @@ public class DBConnector {
 		}
 		@Override
 		public void run() {
-			String postURL = scriptLocation + "/getEvals.php";
-			if(!paramList.isEmpty()) {	//add parameters to the URL
-				postURL += "?";
-				for(int i = 0;i<paramList.size();i++) {
-					postURL += paramList.get(i);
-					if(i+1 < paramList.size()) {
-						postURL += "&";
-					}
-				}
-			}
+			//add parameters to the URL
+			String postURL = scriptLocation + "/getEvals.php" + convertParamList(paramList);
 			
-			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
@@ -374,4 +451,38 @@ public class DBConnector {
 			}
 		}
 	}
+	
+	//
+	//postComment
+	//
+	public static void addComment(String fName, String lName, String cCode, String comment) throws InterruptedException {
+		errorOccurred = false;
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new AddCommentConnect(fName, lName, cCode, comment));
+		t.start();
+
+		t.join();
+		if(errorOccurred) {
+			return;//TODO: test for fail
+		}
+	}
+	private static class AddCommentConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		public AddCommentConnect(String fName, String lName, String cCode, String comment) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			paramList.add("comment=" + comment.trim().replaceAll(" ", "%20").replaceAll("&", "%26"));
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/addComment.php" + convertParamList(paramList);
+			
+			InputStream is = httpPost(postURL);
+		}
+	}
+	
+	
 }
