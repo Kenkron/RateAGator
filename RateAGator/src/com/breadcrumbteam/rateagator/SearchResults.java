@@ -68,6 +68,7 @@ public class SearchResults extends Activity {
 	
 	@Override
 	protected void onRestart() {
+		super.onRestart();
 		((EditText)this.findViewById(R.id.searchBar)).clearFocus();
 	}
 	
