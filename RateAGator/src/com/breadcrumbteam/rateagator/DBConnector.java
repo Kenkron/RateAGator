@@ -392,7 +392,7 @@ public class DBConnector {
 	//
 	//get Evaluations
 	//
-	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) throws InterruptedException {//fName, lName, cCode
+	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) throws InterruptedException {
 		errorOccurred = false;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
@@ -451,6 +451,66 @@ public class DBConnector {
 			}
 		}
 	}
+	
+	//
+	//getComments
+	//
+	public static ArrayList<String> getComments(String fName, String lName, String cCode) throws InterruptedException {
+		ArrayList<String> comments = new ArrayList<String>();
+		errorOccurred = false;
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new GetCommentsConnect(fName, lName, cCode, comments));
+		t.start();
+
+		t.join();
+		if(errorOccurred) {
+			return null;//TODO: test for fail
+		}
+		return comments;
+	}
+	private static class GetCommentsConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		private ArrayList<String> comments = null;
+		public GetCommentsConnect(String fName, String lName, String cCode, ArrayList<String> comments) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			this.comments = comments;
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/getComments.php" + convertParamList(paramList);
+			
+			InputStream is = httpPost(postURL);
+
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+			
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				for(int i = 0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					String currentComment = json_data.getString("Comment");
+					comments.add(currentComment);
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+		}
+	}
+	
 	
 	//
 	//postComment
