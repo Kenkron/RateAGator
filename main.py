@@ -39,10 +39,10 @@ def getIsbns(book_page_links):
             if len(bookISBNs) != 0:
                 #write to file
                 with open("log.txt", "a") as myfile:
-                    myfile.write(previousCode)
+                    myfile.write(previousCode.encode('utf-8'))
                     for member in bookISBNs:
-                        myfile.write(" " + member)
-                    myfile.write("\n")
+                        myfile.write((" " + member).encode('utf-8'))
+                    myfile.write("\n".encode('utf-8'))
             print previousCode + " is complete!"
             previousCode = currentCode
             bookISBNs = list()
