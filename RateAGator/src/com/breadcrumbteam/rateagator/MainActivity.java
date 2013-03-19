@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 
 	public void search(View view){
 		setProgressBarIndeterminateVisibility(true);
-		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
+		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString().trim();
 		MainActivity.performSearch(view, text, this);
 	}
 	
