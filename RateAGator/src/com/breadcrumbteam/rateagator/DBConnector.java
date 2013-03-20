@@ -453,6 +453,114 @@ public class DBConnector {
 	}
 	
 	//
+	//getRatings
+	//
+	public static ArrayList<Rating> getRatings(String fName, String lName, String cCode) throws InterruptedException {
+		ArrayList<Rating> ratings = new ArrayList<Rating>();
+		errorOccurred = false;
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new GetRatingsConnect(fName, lName, cCode, ratings));
+		t.start();
+
+		t.join();
+		if(errorOccurred) {
+			return null;
+		}
+        return ratings;
+	}
+	private static class GetRatingsConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		private ArrayList<Rating> ratings = null;
+		public GetRatingsConnect(String fName, String lName, String cCode, ArrayList<Rating> ratings) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			this.ratings = ratings;
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/getRatings.php" + convertParamList(paramList);
+			
+			InputStream is = httpPost(postURL);
+			if(errorOccurred) {
+				return;
+			}
+			
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+			
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				for(int i = 0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					Rating currentRating = new Rating(json_data.getInt("Responded"));
+					
+					for(int j = 0;j<=Rating.DB_FIELD_NAMES.length;j++) {
+						currentRating.addResponseValue(json_data.getDouble(Rating.DB_FIELD_NAMES[j]));
+					}
+					ratings.add(currentRating);
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	//
+	//setRatings
+	//
+	public static void setRatings(String fName, String lName, String cCode, Rating newRating, Rating oldRating) throws InterruptedException {
+		errorOccurred = false;
+		long patience = 5000;
+		long startTime = System.currentTimeMillis();
+		Thread t = new Thread(new SetRatingsConnect(fName, lName, cCode, newRating, oldRating));
+		t.start();
+
+		t.join();
+		if(errorOccurred) {
+			return;//TODO: test for fail
+		}
+	}
+	private static class SetRatingsConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		public SetRatingsConnect(String fName, String lName, String cCode, Rating newRating, Rating oldRating) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			
+			int responseCount = oldRating.getTotalRatingResponses();
+			paramList.add("Response=" + (responseCount+1));
+			for(int i = 0;i<Rating.DB_FIELD_NAMES.length;i++) {
+				double oldVal = oldRating.getRatingResponses()[i];
+				double newVal = (oldVal * responseCount + newRating.getRatingResponses()[i]) / (responseCount+1);
+				paramList.add(Rating.DB_FIELD_NAMES[i] + "=" + newVal);
+			}
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/addRatings.php" + convertParamList(paramList);
+			
+			InputStream is = httpPost(postURL);
+			if(errorOccurred) {
+				return;
+			}
+		}
+	}
+	
+	//
 	//getComments
 	//
 	public static ArrayList<String> getComments(String fName, String lName, String cCode) throws InterruptedException {
@@ -465,7 +573,7 @@ public class DBConnector {
 
 		t.join();
 		if(errorOccurred) {
-			return null;//TODO: test for fail
+			return null;
 		}
 		return comments;
 	}
