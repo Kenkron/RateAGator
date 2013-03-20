@@ -18,16 +18,28 @@ package com.breadcrumbteam.rateagator;
  */
 
 public class Rating {
+	public static final String[] DB_FIELD_NAMES = 
+		{
+			"OverallRating",
+			"Language",
+			"Work",
+			"Difficulty",
+			"Book",
+			"Hotness",
+			"Clarity",
+			"Helpfulness",
+			"Relevance"
+		};
 	public static final String[] FIELD_NAMES=
 		{
-			"OverallRating ",
-			"Language Proficiency ",
-			"Work Load ",
-			"Difficulty ",
-			"Book ",
-			"Hotness ",
-			"Clarity Helpfulness ",
-			"Course Relevance "
+			"Overall Rating",
+			"Language Proficiency",
+			"Work Load",
+			"Difficulty",
+			"Book",
+			"Hotness",
+			"Clarity Helpfulness",
+			"Course Relevance"
 		};
 	
 	private int totalResponses;
