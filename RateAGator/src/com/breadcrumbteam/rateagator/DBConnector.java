@@ -544,5 +544,7 @@ public class DBConnector {
 		}
 	}
 	
-	
+	public static boolean hasErrorOccurred(){
+		return errorOccurred;
+	}
 }
