@@ -187,7 +187,6 @@ public class MainActivity extends Activity {
 
 		// performs a binary search to find a match with the input
 		// characteristics
-		// NOTE: does not search by first name yet
 
 		int start = 0;
 		int end = names.size();
