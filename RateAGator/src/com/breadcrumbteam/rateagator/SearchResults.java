@@ -15,14 +15,16 @@ import android.widget.EditText;
 
 public class SearchResults extends Activity {
 
-	/**Identifies the name of the search query string
-	 * in the intent*/
-	public static final String INTENT_QUERY="query";
-	
-	/**Identifies the name of the list of search results
-	 * in the intent*/
-	public static final String INTENT_RESULTS="names";
-	
+	/**
+	 * Identifies the name of the search query string in the intent
+	 */
+	public static final String INTENT_QUERY = "query";
+
+	/**
+	 * Identifies the name of the list of search results in the intent
+	 */
+	public static final String INTENT_RESULTS = "names";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,42 +47,46 @@ public class SearchResults extends Activity {
 				@Override
 				public void onClick(View v) {
 					String text=((Button)v).getText().toString();
-					Log.d("SearchResults","clicked on "+text);
-					
-					String lastName;
-					String firstName;
-					
-					try{
-					lastName=text.substring(0,text.indexOf(", "));
-					firstName=text.substring(text.lastIndexOf(", ")+1,text.length());
-					}catch (Exception E){
-						Log.d("SearchResults", "could not parse the first and last name in the button");
-						return;
+					if(text.contains(", ")) {
+						Log.d("SearchResults","clicked on "+text);
+						
+						String[] nameArray = text.split(", ");
+						
+						//nameArray[1] is last name, [0] is first name
+						goToProfessor(nameArray[1], nameArray[0]);
 					}
-					
-					goToProfessor(firstName, lastName);
+					else {
+						goToCourse(text);
+					}
 					
 				}
 			});
 			resultsList.addView(currentResult);
 		}
 	}
-	
+
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		((EditText)this.findViewById(R.id.searchBar)).clearFocus();
+		((EditText) this.findViewById(R.id.searchBar)).clearFocus();
 	}
-	
-	public void search(View view){
-		String text=((EditText)this.findViewById(R.id.searchBar)).getText().toString();
+
+	public void search(View view) {
+		String text = ((EditText) this.findViewById(R.id.searchBar)).getText()
+				.toString();
 		MainActivity.performSearch(view, text, this);
 	}
+
+	public void goToProfessor(String firstName, String lastName) {
+		Intent intent = new Intent(this, ListPage.class);
+		intent.putExtra(ListPage.INTENT_FIRST_NAME, firstName);
+		intent.putExtra(ListPage.INTENT_LAST_NAME, lastName);
+		this.startActivity(intent);
+	}
 	
-	public void goToProfessor(String firstName,String lastName){
-		Intent intent=new Intent(this,ProfessorPage.class);
-		intent.putExtra(ProfessorPage.INTENT_FIRST_NAME, firstName);
-		intent.putExtra(ProfessorPage.INTENT_LAST_NAME, lastName);
+	public void goToCourse(String courseCode) {
+		Intent intent = new Intent(this, ListPage.class);
+		intent.putExtra(ListPage.INTENT_COURSE_CODE, courseCode);
 		this.startActivity(intent);
 	}
 
