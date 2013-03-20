@@ -30,8 +30,8 @@
             android:label="Search Results" >
         </activity>
         <activity
-            android:name="com.breadcrumbteam.rateagator.ProfessorPage"
-            android:label="Professor Page" >
+            android:name="com.breadcrumbteam.rateagator.ListPage"
+            android:label="List Page" >
         </activity>
         <activity
             android:name="com.breadcrumbteam.rateagator.EvaluationPage"
