@@ -127,8 +127,6 @@ public class DBConnector {
 		do {
 			errorOccurred = false;
 			try {
-				long patience = 5000;
-				long startTime = System.currentTimeMillis();
 				Thread t1 = new Thread(new GetAllProfessorNames());
 				Thread t2 = new Thread(new GetAllCourseCodes());
 				t1.start();
@@ -136,21 +134,6 @@ public class DBConnector {
 
 				t1.join();
 				t2.join();
-				/*
-				while(t1.isAlive()) {
-					t1.join(2000);	//Wait max of 2sec
-					if(((System.currentTimeMillis() - startTime) > patience) && t1.isAlive()) {//if it outlasts patience, auto join()
-						t1.interrupt();
-						t1.join();
-					}
-				}
-				while(t2.isAlive()) {
-					t2.join(2000);	//Wait max of 2sec
-					if(((System.currentTimeMillis() - startTime) > patience) && t2.isAlive()) {//if it outlasts patience, auto join()
-						t2.interrupt();
-						t2.join();
-					}
-				}*/
 			}
 			catch(InterruptedException e) {
 				errorOccurred = true;
@@ -245,14 +228,18 @@ public class DBConnector {
 	//
 	//get Professor
 	//
-	public static Professor getProfessor(String fName, String lName) throws InterruptedException {
+	public static Professor getProfessor(String fName, String lName) {
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetProfessorConnect(fName, lName));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {//return a null object if an errorOccurred
 			return null;
 		}
@@ -316,15 +303,19 @@ public class DBConnector {
 	//
 	// get Course
 	//
-	public static ArrayList<Professor> getCourse(String cCode) throws InterruptedException {
+	public static ArrayList<Professor> getCourse(String cCode) {
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		professors.clear();
 		Thread t = new Thread(new GetCourseConnect(cCode));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {//return a null object if an errorOccurred
 			return null;
 		}
@@ -340,42 +331,12 @@ public class DBConnector {
 		@Override
 		public void run() {
 			//add parameters to the URL
-			String postURL = scriptLocation + "/getTextbooks.php" + convertParamList(ccodeList);
+			String postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
 			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
 			String result = convertResponseToString(is);
-			if(errorOccurred) {
-				return;
-			}
-
-			ArrayList<String> textbooks = new ArrayList<String>();
-			//JSON decode, add to list
-			try {
-				JSONArray jArray = new JSONArray(result);
-				JSONObject json_data = null;
-				for(int i = 0;i<jArray.length();i++) {
-					json_data = jArray.getJSONObject(i);
-					textbooks.add(json_data.getString("Book"));
-				}
-			}
-			catch(JSONException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			catch (ParseException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			//DON'T check errorOccurred because some courses don't have books and return a null-->generates error on JSONArray(result)
-			
-			postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
-			is = httpPost(postURL);
-			if(errorOccurred) {
-				return;
-			}
-			result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
@@ -397,10 +358,8 @@ public class DBConnector {
 						}
 						else {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
-							
 						}
 
-						currentCourse.setTextbook(textbooks);
 						currentProfessor.addCourse(currentCourse);
 						professors.add(currentProfessor);
 					}
@@ -423,14 +382,18 @@ public class DBConnector {
 	//
 	//get Evaluations
 	//
-	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) throws InterruptedException {
+	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) {
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {
 			return null;
 		}
@@ -485,15 +448,19 @@ public class DBConnector {
 	//
 	//getRatings
 	//
-	public static Rating getRating(String fName, String lName, String cCode) throws InterruptedException {
+	public static Rating getRating(String fName, String lName, String cCode) {
 		Rating rating = null;
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode, rating));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {
 			return null;
 		}
@@ -549,16 +516,20 @@ public class DBConnector {
 	//
 	//setRatings
 	//
-	public static void setRatings(String fName, String lName, String cCode, Rating newRating, Rating oldRating) throws InterruptedException {
+	public static void setRatings(String fName, String lName, String cCode, Rating newRating, Rating oldRating) {
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new SetRatingsConnect(fName, lName, cCode, newRating, oldRating));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {
-			return;//TODO: test for fail
+			return;
 		}
 	}
 	private static class SetRatingsConnect implements Runnable {
@@ -582,24 +553,25 @@ public class DBConnector {
 			String postURL = scriptLocation + "/addRatings.php" + convertParamList(paramList);
 
 			InputStream is = httpPost(postURL);
-			if(errorOccurred) {
-				return;
-			}
 		}
 	}
 
 	//
 	//getComments
 	//
-	public static ArrayList<String> getComments(String fName, String lName, String cCode) throws InterruptedException {
+	public static ArrayList<String> getComments(String fName, String lName, String cCode) {
 		ArrayList<String> comments = new ArrayList<String>();
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new GetCommentsConnect(fName, lName, cCode, comments));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {
 			return null;
 		}
@@ -620,6 +592,9 @@ public class DBConnector {
 			String postURL = scriptLocation + "/getComments.php" + convertParamList(paramList);
 
 			InputStream is = httpPost(postURL);
+			if(errorOccurred) {
+				return;
+			}
 
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
@@ -651,16 +626,20 @@ public class DBConnector {
 	//
 	//postComment
 	//
-	public static void addComment(String fName, String lName, String cCode, String comment) throws InterruptedException {
+	public static void addComment(String fName, String lName, String cCode, String comment) {
 		errorOccurred = false;
-		long patience = 5000;
-		long startTime = System.currentTimeMillis();
 		Thread t = new Thread(new AddCommentConnect(fName, lName, cCode, comment));
 		t.start();
 
-		t.join();
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
 		if(errorOccurred) {
-			return;//TODO: test for fail
+			return;
 		}
 	}
 	private static class AddCommentConnect implements Runnable {
@@ -682,5 +661,69 @@ public class DBConnector {
 
 	public static boolean hasErrorOccurred(){
 		return errorOccurred;
+	}
+	
+	
+	
+	
+	public static ArrayList<String> getTextbooks(String cCode) {
+		ArrayList<String> textbooks = new ArrayList<String>();
+		errorOccurred = false;
+		Thread t = new Thread(new GetTextbooksConnect(cCode, textbooks));
+		t.start();
+
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
+		if(errorOccurred) {
+			return null;
+		}
+		return textbooks;
+	}
+	private static class GetTextbooksConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		private ArrayList<String> textbooks = null;
+		public GetTextbooksConnect(String cCode, ArrayList<String> textbooks) {
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			this.textbooks = textbooks;
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/getTextbooks.php" + convertParamList(paramList);
+
+			InputStream is = httpPost(postURL);
+			if(errorOccurred) {
+				return;
+			}
+
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				for(int i = 0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					String currentComment = json_data.getString("Book");
+					textbooks.add(currentComment);
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+		}
 	}
 }
