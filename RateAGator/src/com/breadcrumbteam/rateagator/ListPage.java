@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -128,5 +129,34 @@ public class ListPage extends Activity {
 		intent.putExtra(EvaluationPage.INTENT_PROFESSOR_LAST_NAME, lname);
 		this.startActivity(intent);
 	}
+	/**
+	 * This are methods for bottom bar
+	 * 
+	 */
+	public void home(View v) {
+		Intent intent = new Intent(ListPage.this, MainActivity.class);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
+	    startActivity(intent);
+	}
+	
+	public void isis(View v) {
+		Uri uri = Uri.parse("https://www.isis.ufl.edu/");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	
+	public void registrar(View v) {
+		Uri uri = Uri.parse("http://www.registrar.ufl.edu/soc/");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	public void help(View v) {
+		Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	/**
+	 * ^
+	 */
 
 }

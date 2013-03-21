@@ -11,17 +11,60 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" >
     </TextView>
-
+   
+     <RelativeLayout 
+    android:layout_height="wrap_content"
+  	android:layout_width="fill_parent"
+   	android:layout_alignParentBottom="true">
+    <LinearLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:layout_alignParentBottom="true"
+	    style="@android:style/ButtonBar">
+	    
+	        <Button android:layout_alignParentBottom="true"
+	            android:layout_alignParentLeft="true"    
+	            android:text="Home"
+	            android:onClick="home" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" android:layout_weight="1"/>
+	        
+	        <Button android:layout_alignParentBottom="true"
+	            android:layout_alignParentLeft="true"           
+	            android:onClick="registrar"
+	            android:text="Courses" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" android:layout_weight="1"/>
+	        
+	        <Button android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" 
+	            android:layout_alignParentBottom="true"
+	            android:layout_alignParentRight="true"
+	            android:onClick="isis"
+	            android:text="ISIS" android:layout_weight="1"/>
+	        
+	        <Button android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" 
+	            android:layout_alignParentBottom="true"
+	            android:layout_alignParentRight="true"
+	            android:onClick="help"
+	            android:text="Help" android:layout_weight="1"/>
+    </LinearLayout >
+    
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" 
+        android:layout_marginBottom="65dip">
 
         <LinearLayout
             android:id="@+id/professorEvalList"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
+    </RelativeLayout>
 
 </LinearLayout>

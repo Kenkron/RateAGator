@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -56,6 +57,39 @@ public class MainActivity extends Activity {
 				.toString().trim();
 		MainActivity.performSearch(view, text, this);
 	}
+	/**
+	 * This are methods for bottom bar
+	 * 
+	 */
+	//Basically useless while still in main activity, testing for now
+	public void home(View v) {
+		/*
+		Intent intent = new Intent(MainActivity.this, MainActivity.class);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
+	    startActivity(intent);
+	    */ 
+		
+	}
+	
+	public void isis(View v) {
+		Uri uri = Uri.parse("https://www.isis.ufl.edu/");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	
+	public void registrar(View v) {
+		Uri uri = Uri.parse("http://www.registrar.ufl.edu/soc/");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	public void help(View v) {
+		Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(intent);
+	}
+	/**
+	 * ^
+	 */
 
 	/** This method is called when the search button is pressed */
 	public static void performSearch(View view, String text, Activity parent) {
