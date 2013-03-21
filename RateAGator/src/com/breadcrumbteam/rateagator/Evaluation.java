@@ -1,5 +1,7 @@
 package com.breadcrumbteam.rateagator;
 
+import java.util.ArrayList;
+
 public class Evaluation {
 	
 	/**an ordered list of the labels for the fields*/
@@ -37,5 +39,22 @@ public class Evaluation {
 	
 	public double[] getResponses() {
 		return responses;
+	}
+	
+	public static Evaluation mergeEvaluations(ArrayList<Evaluation> evals) {
+		int totalResponses = 0;
+		double[] responses = new double[10];
+		for(Evaluation e : evals) {
+			totalResponses += e.getTotalResponses();
+			for(int i = 0;i<10;i++) {
+				responses[i] += e.getResponses()[i] * e.getTotalResponses();
+			}
+		}
+		
+		Evaluation combinedEval = new Evaluation(totalResponses);
+		for(int i = 0;i<10;i++) {
+			combinedEval.addResponseValue(responses[i]/totalResponses);
+		}
+		return combinedEval;
 	}
 }
