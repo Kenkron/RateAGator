@@ -27,36 +27,18 @@ import android.content.Context;
  * the software on the local app.*/
 public class DBConnector {
 	private static final String scriptLocation = "http://sgiordano.com/rateAgator/";
-	private static Context baseContext = null;
 
-	//public static String text = null;//my standard returner
-	//private static JSONArray jArray;
-	//private static String result = null;
-	private static InputStream is = null;
-	private static StringBuilder sb = null;
-
-	private static boolean errorOccurred = false; 
-
-	//private static ArrayList<String> names = new ArrayList<String>();
-	//private static ArrayList<String> paramList = new ArrayList<String>();
+	private static boolean errorOccurred = false;
+	public static boolean hasErrorOccurred(){
+		return errorOccurred;
+	}
 
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
 	private static Professor theProfessor = null;	//returned in getProfessor()
-	private static Course theCourse = null;			//might be returned in getCourses()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<Professor> professors = new ArrayList<Professor>();
 
-	private static String fName;
-	private static String lName;
-	private static String cCode;
-
-	public static void setBaseContext(Context basContext) {
-		baseContext = basContext; 
-	}
-	public static Context getBaseContext() {
-		return baseContext;
-	}
 	//http post
 	private static synchronized InputStream httpPost(String postURL) {
 		InputStream is = null;
@@ -84,7 +66,7 @@ public class DBConnector {
 		String responseString = null;
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF8"));
-			sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			sb.append(reader.readLine() + "\n");
 			String line = null;
 
@@ -247,9 +229,12 @@ public class DBConnector {
 	}
 	private static class GetProfessorConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
+		private String fName, lName;
 		public GetProfessorConnect(String fName, String lName) {
 			if(fName != null) paramList.add("name1=" + fName.trim().replaceAll(" ", "%20"));
 			if(lName != null) paramList.add("name2=" + lName.trim().replaceAll(" ", "%20"));
+			this.fName = fName;
+			this.lName = lName;
 		}
 		@Override
 		public void run() {
@@ -658,14 +643,10 @@ public class DBConnector {
 			InputStream is = httpPost(postURL);
 		}
 	}
-
-	public static boolean hasErrorOccurred(){
-		return errorOccurred;
-	}
 	
-	
-	
-	
+	//
+	//getTextbooks
+	//
 	public static ArrayList<String> getTextbooks(String cCode) {
 		ArrayList<String> textbooks = new ArrayList<String>();
 		errorOccurred = false;
