@@ -45,11 +45,9 @@ public class ListPage extends Activity {
 			fname=getIntent().getStringExtra(INTENT_FIRST_NAME);
 			lname=getIntent().getStringExtra(INTENT_LAST_NAME);
 			
-			try {
-				currentProfessor = DBConnector.getProfessor(fname, lname);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+			currentProfessor = DBConnector.getProfessor(fname, lname);
+			//TODO: check DBConnector.hasErrorOccurred()
 
 			//Set the header to professor name
 			((TextView)this.findViewById(R.id.professorPageLabel)).setText(fname+" "+lname);
@@ -57,12 +55,10 @@ public class ListPage extends Activity {
 		else { //it's a course list
 			isCourse = true;
 			courseCode = extras.getString(INTENT_COURSE_CODE);
-			try {
-				professorList = DBConnector.getCourse(courseCode);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
+
+			professorList = DBConnector.getCourse(courseCode);
+			//TODO: check DBConnector.hasErrorOccurred()
+
 			//Set the header to course name
 			((TextView)this.findViewById(R.id.professorPageLabel)).setText(courseCode);
 		}
