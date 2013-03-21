@@ -28,29 +28,29 @@ import android.content.Context;
 public class DBConnector {
 	private static final String scriptLocation = "http://sgiordano.com/rateAgator/";
 	private static Context baseContext = null;
-	
+
 	//public static String text = null;//my standard returner
 	//private static JSONArray jArray;
 	//private static String result = null;
 	private static InputStream is = null;
 	private static StringBuilder sb = null;
-	
+
 	private static boolean errorOccurred = false; 
-	
+
 	//private static ArrayList<String> names = new ArrayList<String>();
 	//private static ArrayList<String> paramList = new ArrayList<String>();
-	
+
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static Course theCourse = null;			//might be returned in getCourses()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<Professor> professors = new ArrayList<Professor>();
-	
+
 	private static String fName;
 	private static String lName;
 	private static String cCode;
-	
+
 	public static void setBaseContext(Context basContext) {
 		baseContext = basContext; 
 	}
@@ -66,7 +66,7 @@ public class DBConnector {
 			//httppost.setEntity(new UrlEncodedFormEntity(namevaluepairs));
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity entity = response.getEntity();
-			
+
 			is = entity.getContent();
 			if(response.getStatusLine().getStatusCode() != 200) {
 				Log.d("DBConnector", "HTTP Post server error: bad response");
@@ -113,16 +113,16 @@ public class DBConnector {
 		}
 		return paramURL;
 	}
-	
+
 	public static boolean CheckInternet(Context context) 
 	{
-	    ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    android.net.NetworkInfo wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    android.net.NetworkInfo mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		android.net.NetworkInfo wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		android.net.NetworkInfo mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-	    return wifi.isConnected() || mobile.isConnected();
+		return wifi.isConnected() || mobile.isConnected();
 	}
-	
+
 	public static void initProfessorsAndCourses() {
 		do {
 			errorOccurred = false;
@@ -162,7 +162,7 @@ public class DBConnector {
 				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error exception");
 				e.printStackTrace();
 			}
-			
+
 			if(errorOccurred) {
 				try {
 					Thread.sleep(1000);
@@ -182,12 +182,12 @@ public class DBConnector {
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -216,7 +216,7 @@ public class DBConnector {
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
@@ -268,17 +268,17 @@ public class DBConnector {
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -295,7 +295,7 @@ public class DBConnector {
 						else {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
 						}
-							
+
 						theProfessor.addCourse(currentCourse);
 					}
 				}
@@ -344,12 +344,12 @@ public class DBConnector {
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -360,7 +360,7 @@ public class DBConnector {
 						String fName = json_data.getString("FirstName");
 						String lName = json_data.getString("LastName");
 						theProfessor = new Professor(fName, lName);//create the Professor
-						
+
 						String courseName = json_data.getString("CourseName");
 						Course currentCourse;
 						if(courseName.equals("NULL")) {
@@ -369,7 +369,7 @@ public class DBConnector {
 						else {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
 						}
-							
+
 						theProfessor.addCourse(currentCourse);
 						professors.add(theProfessor);
 					}
@@ -388,7 +388,7 @@ public class DBConnector {
 			}
 		}
 	}
-	
+
 	//
 	//get Evaluations
 	//
@@ -403,7 +403,7 @@ public class DBConnector {
 		if(errorOccurred) {
 			return null;
 		}
-        return evals;
+		return evals;
 	}
 	private static class GetEvaluationsConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
@@ -416,17 +416,17 @@ public class DBConnector {
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/getEvals.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -451,60 +451,58 @@ public class DBConnector {
 			}
 		}
 	}
-	
+
 	//
 	//getRatings
 	//
-	public static ArrayList<Rating> getRatings(String fName, String lName, String cCode) throws InterruptedException {
-		ArrayList<Rating> ratings = new ArrayList<Rating>();
+	public static Rating getRating(String fName, String lName, String cCode) throws InterruptedException {
+		Rating rating = null;
 		errorOccurred = false;
 		long patience = 5000;
 		long startTime = System.currentTimeMillis();
-		Thread t = new Thread(new GetRatingsConnect(fName, lName, cCode, ratings));
+		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode, rating));
 		t.start();
 
 		t.join();
 		if(errorOccurred) {
 			return null;
 		}
-        return ratings;
+		return rating;
 	}
-	private static class GetRatingsConnect implements Runnable {
+	private static class GetRatingConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
-		private ArrayList<Rating> ratings = null;
-		public GetRatingsConnect(String fName, String lName, String cCode, ArrayList<Rating> ratings) {
+		private Rating rating = null;
+		public GetRatingConnect(String fName, String lName, String cCode, Rating rating) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			this.ratings = ratings;
+			this.rating = rating;
 		}
 		@Override
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/getRatings.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
-				for(int i = 0;i<jArray.length();i++) {
-					json_data = jArray.getJSONObject(i);
-					Rating currentRating = new Rating(json_data.getInt("Responded"));
-					
-					for(int j = 0;j<=Rating.DB_FIELD_NAMES.length;j++) {
-						currentRating.addResponseValue(json_data.getDouble(Rating.DB_FIELD_NAMES[j]));
-					}
-					ratings.add(currentRating);
+				//Only one Rating should be returned
+				json_data = jArray.getJSONObject(0);
+				rating = new Rating(json_data.getInt("Responded"));
+
+				for(int j = 0;j<=Rating.DB_FIELD_NAMES.length;j++) {
+					rating.addResponseValue(json_data.getDouble(Rating.DB_FIELD_NAMES[j]));
 				}
 			}
 			catch(JSONException e1) {
@@ -517,7 +515,7 @@ public class DBConnector {
 			}
 		}
 	}
-	
+
 	//
 	//setRatings
 	//
@@ -539,7 +537,7 @@ public class DBConnector {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			
+
 			int responseCount = oldRating.getTotalRatingResponses();
 			paramList.add("Response=" + (responseCount+1));
 			for(int i = 0;i<Rating.DB_FIELD_NAMES.length;i++) {
@@ -552,14 +550,14 @@ public class DBConnector {
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/addRatings.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
 		}
 	}
-	
+
 	//
 	//getComments
 	//
@@ -590,14 +588,14 @@ public class DBConnector {
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/getComments.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);
 
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
-			
+
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -618,8 +616,8 @@ public class DBConnector {
 			}
 		}
 	}
-	
-	
+
+
 	//
 	//postComment
 	//
@@ -647,11 +645,11 @@ public class DBConnector {
 		public void run() {
 			//add parameters to the URL
 			String postURL = scriptLocation + "/addComment.php" + convertParamList(paramList);
-			
+
 			InputStream is = httpPost(postURL);
 		}
 	}
-	
+
 	public static boolean hasErrorOccurred(){
 		return errorOccurred;
 	}
