@@ -18,9 +18,6 @@ public class Course {
 	/*The professor teaching this particular course*/
 	protected Professor courseProf;
 	
-	/*ArrayList of strings of textbook URLs or ISBN*/
-	protected ArrayList<String> textbook;
-	
 	public Course(String courseName, String courseNum){
 		this.courseName = courseName;
 		this.courseNum = courseNum;
@@ -31,12 +28,5 @@ public class Course {
 	 */
 	public void setCourseProf(Professor p){
 		courseProf = p;
-	}
-	
-	public void setTextbook(ArrayList<String> t) {
-		this.textbook = t;
-	}
-	public static boolean isURL(String txtbk) {
-		return txtbk.startsWith("http");
 	}
 }
