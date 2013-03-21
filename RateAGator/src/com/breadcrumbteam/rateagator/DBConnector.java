@@ -332,24 +332,53 @@ public class DBConnector {
 	}
 	private static class GetCourseConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
+		private ArrayList<String> ccodeList = new ArrayList<String>();
 		public GetCourseConnect(String cCode) {
 			if(cCode != null) paramList.add("name1=" + cCode.trim().replaceAll(" ", "%20"));
+			if(cCode != null) ccodeList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
 		}
 		@Override
 		public void run() {
 			//add parameters to the URL
-			String postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
-
-			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
+			String postURL = scriptLocation + "/getTextbooks.php" + convertParamList(ccodeList);
+			InputStream is = httpPost(postURL);
 			if(errorOccurred) {
 				return;
 			}
-
 			String result = convertResponseToString(is);
 			if(errorOccurred) {
 				return;
 			}
 
+			ArrayList<String> textbooks = new ArrayList<String>();
+			//JSON decode, add to list
+			try {
+				JSONArray jArray = new JSONArray(result);
+				JSONObject json_data = null;
+				for(int i = 0;i<jArray.length();i++) {
+					json_data = jArray.getJSONObject(i);
+					textbooks.add(json_data.getString("Book"));
+				}
+			}
+			catch(JSONException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			catch (ParseException e1) {
+				errorOccurred = true;
+				e1.printStackTrace();
+			}
+			//DON'T check errorOccurred because some courses don't have books and return a null-->generates error on JSONArray(result)
+			
+			postURL = scriptLocation + "/getProfessor.php" + convertParamList(paramList);
+			is = httpPost(postURL);
+			if(errorOccurred) {
+				return;
+			}
+			result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
 			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
@@ -359,7 +388,7 @@ public class DBConnector {
 						json_data = jArray.getJSONObject(i);
 						String fName = json_data.getString("FirstName");
 						String lName = json_data.getString("LastName");
-						theProfessor = new Professor(fName, lName);//create the Professor
+						Professor currentProfessor = new Professor(fName, lName);//create the Professor
 
 						String courseName = json_data.getString("CourseName");
 						Course currentCourse;
@@ -368,10 +397,12 @@ public class DBConnector {
 						}
 						else {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
+							
 						}
 
-						theProfessor.addCourse(currentCourse);
-						professors.add(theProfessor);
+						currentCourse.setTextbook(textbooks);
+						currentProfessor.addCourse(currentCourse);
+						professors.add(currentProfessor);
 					}
 				}
 				else {
@@ -427,7 +458,6 @@ public class DBConnector {
 				return;
 			}
 
-			//JSON decode, add to list
 			try {
 				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
