@@ -29,7 +29,7 @@ public class EvaluationPage extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
 		ArrayList<Evaluation> evals=null;
-		try {
+		
 			Log.d("EvaluationPage","name (first): "+getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME));
 			Log.d("EvaluationPage","name (last): "+getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME));
 			Log.d("EvaluationPage","course: "+getIntent().getStringExtra(INTENT_COURSE_NUMBER));
@@ -37,10 +37,8 @@ public class EvaluationPage extends Activity{
 					getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME),
 					getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME), 
 					getIntent().getStringExtra(INTENT_COURSE_NUMBER));
+			//TODO: check DBConnector.hasErrorOccurred()
 			
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		if (evals==null||evals.size()==0){
 			Toast.makeText(getBaseContext(), "Error Accessing Evaluations Database", Toast.LENGTH_LONG).show();
 			finish();
