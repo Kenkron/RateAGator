@@ -87,9 +87,6 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		startActivity(intent);
 	}
-	/**
-	 * ^
-	 */
 
 	/** This method is called when the search button is pressed */
 	public static void performSearch(View view, String text, Activity parent) {
