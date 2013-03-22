@@ -62,54 +62,6 @@
         
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-
-        <LinearLayout
-            style="@android:style/ButtonBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#FA5B00" >
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_weight="1"
-                android:onClick="home"
-                android:text="Home" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_weight="1"
-                android:onClick="registrar"
-                android:text="Courses" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:onClick="isis"
-                android:text="ISIS" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:onClick="help"
-                android:text="Help" />
-        </LinearLayout>
-    </RelativeLayout>
+    <include  layout="@layout/bottom_buttons" android:id="@+id/bottom_buttons" />
 
 </RelativeLayout>
