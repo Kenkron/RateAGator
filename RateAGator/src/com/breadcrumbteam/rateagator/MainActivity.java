@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,30 +63,29 @@ public class MainActivity extends Activity {
 	 * 
 	 */
 	//Basically useless while still in main activity, testing for now
-	public void home(View v) {
-		/*
-		Intent intent = new Intent(MainActivity.this, MainActivity.class);
-	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
-	    startActivity(intent);
-	    */ 
-		
-	}
-	
-	public void isis(View v) {
-		Uri uri = Uri.parse("https://www.isis.ufl.edu/");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
-	
-	public void registrar(View v) {
-		Uri uri = Uri.parse("http://www.registrar.ufl.edu/soc/");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
-	public void help(View v) {
-		Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
+	public static void goToLink(View v) {
+		int vId = v.getId();
+		Context c = v.getContext();
+		if (vId == R.id.goCourses){
+			Uri uri = Uri.parse("http://www.registrar.ufl.edu/soc/");
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			c.startActivity(intent);
+		}
+		else if (vId == R.id.goHelp) {
+			Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			c.startActivity(intent);
+		}
+		else if (vId == R.id.goHome) {
+			Intent intent = new Intent(c, MainActivity.class);
+		    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
+		    c.startActivity(intent);
+		}
+		else if (vId == R.id.goIsis) {
+			Uri uri = Uri.parse("https://www.isis.ufl.edu/");
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			c.startActivity(intent);
+		}
 	}
 
 	/** This method is called when the search button is pressed */

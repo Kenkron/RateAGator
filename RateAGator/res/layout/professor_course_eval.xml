@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-        <Button
-            android:id="@+id/goToCommentsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:onClick="goToComments"
-            android:text="Comments" />
+
+    <Button
+        android:id="@+id/goToCommentsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:onClick="goToComments"
+        android:text="Comments" />
 
     <TextView
         android:id="@+id/professorEvalLabel"
@@ -27,26 +27,51 @@
         android:text="Evaluations"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-     <RelativeLayout 
-    android:layout_height="wrap_content"
-  	android:layout_width="fill_parent"
-   	android:layout_alignParentBottom="true">
-   	
-    <include  layout="@layout/bottom_buttons" android:id="@+id/bottom_buttons" />
-    
-    <ScrollView
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" 
-        android:layout_marginBottom="65dip" >
+        android:layout_alignParentBottom="true" >
 
-        <LinearLayout 
-            android:id="@+id/evaluationFieldList"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="65dip" >
+
+                <LinearLayout
+                    android:id="@+id/evaluationFieldList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_below="@id/evaluationFieldList"
+                android:layout_marginBottom="65dip" >
+
+                <LinearLayout
+                    android:id="@+id/textbookList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
-    </ScrollView>
-  </RelativeLayout>
+
+        <include
+            android:id="@+id/bottom_buttons"
+            layout="@layout/bottom_buttons" />
+    </RelativeLayout>
+
 </LinearLayout>
