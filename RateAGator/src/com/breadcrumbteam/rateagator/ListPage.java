@@ -49,7 +49,7 @@ public class ListPage extends Activity {
 			//TODO: check DBConnector.hasErrorOccurred()
 
 			//Set the header to professor name
-			((TextView)this.findViewById(R.id.professorPageLabel)).setText(fname+" "+lname);
+			((TextView)this.findViewById(R.id.professorPageLabel)).setText("Professor: "+fname+" "+lname);
 		}
 		else { //it's a course list
 			isCourse = true;
