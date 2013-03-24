@@ -1,7 +1,5 @@
 package com.breadcrumbteam.rateagator;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,22 +26,20 @@ public class EvaluationPage extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
-		ArrayList<Evaluation> evals=null;
 		
 			Log.d("EvaluationPage","name (first): "+getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME));
 			Log.d("EvaluationPage","name (last): "+getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME));
 			Log.d("EvaluationPage","course: "+getIntent().getStringExtra(INTENT_COURSE_NUMBER));
-			evals=DBConnector.getEvaluations(
+			shownEvaluation=DBConnector.getEvaluations(
 					getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME),
 					getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME), 
 					getIntent().getStringExtra(INTENT_COURSE_NUMBER));
 			//TODO: check DBConnector.hasErrorOccurred()
 			
-		if (evals==null||evals.size()==0){
+		if (shownEvaluation==null||DBConnector.hasErrorOccurred()){
 			Toast.makeText(getBaseContext(), "Error Accessing Evaluations Database", Toast.LENGTH_LONG).show();
 			finish();
 		}else{
-			shownEvaluation=evals.get(0);
 			
 			((TextView)findViewById(R.id.professorEvalLabel)).setText(
 					getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME)+" "+
@@ -55,6 +51,7 @@ public class EvaluationPage extends Activity{
 			
 			for (int i=0;i<shownEvaluation.getResponses().length;i++){
 				double rating=shownEvaluation.getResponses()[i];
+				rating = ((int)(rating*100))/100.0;//only show 2 decimal points
 				
 				ViewGroup container=(ViewGroup)(findViewById(R.id.evaluationFieldList));
 				
