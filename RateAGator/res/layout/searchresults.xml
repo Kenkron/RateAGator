@@ -58,7 +58,7 @@
     android:layout_height="wrap_content"
   	android:layout_width="fill_parent"
    	android:layout_alignParentBottom="true"
-   	android:background="#0000FF"
+   	android:background="#4FD5D6"
    	>
     
 	<include  layout="@layout/bottom_buttons" android:id="@+id/bottom_buttons" />
