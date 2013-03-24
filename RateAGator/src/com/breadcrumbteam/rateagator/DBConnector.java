@@ -51,15 +51,15 @@ public class DBConnector {
 
 			is = entity.getContent();
 			if(response.getStatusLine().getStatusCode() != 200) {
-				Log.d("DBConnector", "HTTP Post server error: bad response");
+				Log.w("DBConnector", "HTTP Post server error: bad response");
 			}
 		}
 		catch(Exception e) {
 			errorOccurred = true;
-			Log.d("DBConnector", "HTTP Post server error: death");
+			Log.e("DBConnector", "HTTP Post server error: death");
 			//Toast.makeText(getBaseContext(),e.toString() ,Toast.LENGTH_LONG).show();
 		}
-		return is;//this isn't necessarily needed since it can be accessed statically
+		return is;
 	}
 	//Convert response to String
 	private static synchronized String convertResponseToString(InputStream is) {
@@ -78,7 +78,7 @@ public class DBConnector {
 		}
 		catch(Exception e) {
 			errorOccurred = true;
-			Log.e("log_tag", "Error converting result "+e.toString());
+			Log.e("DBConnector log_tag", "Error converting result " + e.toString());
 		}
 		return responseString;
 	}
@@ -96,8 +96,7 @@ public class DBConnector {
 		return paramURL;
 	}
 
-	public static boolean CheckInternet(Context context) 
-	{
+	public static boolean CheckInternet(Context context) {
 		ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		android.net.NetworkInfo wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		android.net.NetworkInfo mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -106,7 +105,7 @@ public class DBConnector {
 	}
 
 	public static void initProfessorsAndCourses() {
-		do {
+		do {//used to ensure that we get results before displaying page
 			errorOccurred = false;
 			try {
 				Thread t1 = new Thread(new GetAllProfessorNames());
@@ -119,12 +118,7 @@ public class DBConnector {
 			}
 			catch(InterruptedException e) {
 				errorOccurred = true;
-				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error interrupted");
-				e.printStackTrace();
-			}
-			catch(Exception e) {
-				errorOccurred = true;
-				Log.d("DBConnector.initProfessorsAndCourses()", "Server encountered an error exception");
+				Log.e("DBConnector.initProfessorsAndCourses()", "Thread interrupted");
 				e.printStackTrace();
 			}
 
@@ -166,10 +160,6 @@ public class DBConnector {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
-			catch (ParseException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
 		}
 	}
 	private static class GetAllCourseCodes implements Runnable {
@@ -197,10 +187,6 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			catch (ParseException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
@@ -279,10 +265,6 @@ public class DBConnector {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
-			catch (ParseException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
 		}
 	}
 	//
@@ -357,17 +339,13 @@ public class DBConnector {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
-			catch (ParseException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
 		}
 	}
 
 	//
 	//get Evaluations
 	//
-	public static ArrayList<Evaluation> getEvaluations(String fName, String lName, String cCode) {
+	public static Evaluation getEvaluations(String fName, String lName, String cCode) {
 		errorOccurred = false;
 		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));
 		t.start();
@@ -382,7 +360,7 @@ public class DBConnector {
 		if(errorOccurred) {
 			return null;
 		}
-		return evals;
+		return Evaluation.mergeEvaluations(evals);
 	}
 	private static class GetEvaluationsConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
@@ -420,10 +398,6 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			catch (ParseException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
@@ -488,10 +462,6 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			catch (ParseException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
@@ -600,10 +570,6 @@ public class DBConnector {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
-			catch (ParseException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
 		}
 	}
 
@@ -633,7 +599,7 @@ public class DBConnector {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			paramList.add("comment=" + comment.trim().replaceAll(" ", "%20").replaceAll("&", "%26"));
+			paramList.add("comment=" + comment.trim().replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\"", "%22"));
 		}
 		@Override
 		public void run() {
@@ -698,10 +664,6 @@ public class DBConnector {
 				}
 			}
 			catch(JSONException e1) {
-				errorOccurred = true;
-				e1.printStackTrace();
-			}
-			catch (ParseException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
 			}
