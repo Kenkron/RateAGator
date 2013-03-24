@@ -32,6 +32,7 @@ public class DBConnector {
 	public static boolean hasErrorOccurred(){
 		return errorOccurred;
 	}
+	public static boolean interrupted = false;
 
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
@@ -132,20 +133,17 @@ public class DBConnector {
 			}
 		} while(errorOccurred);
 	}
-	private static class GetAllProfessorNames implements Runnable {
+	public static class GetAllProfessorNames implements Runnable {
 		@Override
 		public void run() {
 			String postURL = scriptLocation + "/getAllProfessorNames.php";
 
-			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
-			if(errorOccurred) {
-				return;
-			}
+			errorOccurred = false;
+			InputStream is = httpPost(postURL);
+			if(errorOccurred) return;
 
 			String result = convertResponseToString(is);
-			if(errorOccurred) {
-				return;
-			}
+			if(errorOccurred) return;
 
 			//JSON decode, add to list
 			try {
@@ -162,20 +160,17 @@ public class DBConnector {
 			}
 		}
 	}
-	private static class GetAllCourseCodes implements Runnable {
+	public static class GetAllCourseCodes implements Runnable {
 		@Override
 		public void run() {
 			String postURL = scriptLocation + "/getAllCourseCodes.php";
 
-			InputStream is = httpPost(postURL);//returns InputStream is, but is accessed statically next
-			if(errorOccurred) {
-				return;
-			}
+			errorOccurred = false;
+			InputStream is = httpPost(postURL);
+			if(errorOccurred) return;
 
 			String result = convertResponseToString(is);
-			if(errorOccurred) {
-				return;
-			}
+			if(errorOccurred) return;
 
 			//JSON decode, add to list
 			try {
@@ -609,7 +604,7 @@ public class DBConnector {
 			InputStream is = httpPost(postURL);
 		}
 	}
-	
+
 	//
 	//getTextbooks
 	//
@@ -644,7 +639,7 @@ public class DBConnector {
 			String postURL = scriptLocation + "/getTextbooks.php" + convertParamList(paramList);
 
 			InputStream is = httpPost(postURL);
-			
+
 			if(errorOccurred) {
 				return;
 			}
