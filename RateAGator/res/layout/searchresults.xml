@@ -19,7 +19,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        style="@android:style/ButtonBar"
+        android:background="#FA5B00">>
 
         <EditText
             android:id="@+id/searchBar"
@@ -32,7 +34,10 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Professor/Course name"
-            android:inputType="text" >
+            android:inputType="text"
+            android:textCursorDrawable="@null"
+            android:textColorHint="#FFFFFF"
+            android:textColor="#FFFFFF" >
         </EditText>
 
         <Button
@@ -41,66 +46,39 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="4dip"
             android:onClick="search"
-            android:text="@string/search" />
+            android:text="@string/search"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/gator_buttons" />
     
     </LinearLayout>
 
     <RelativeLayout 
     android:layout_height="wrap_content"
   	android:layout_width="fill_parent"
-   	android:layout_alignParentBottom="true">
-    <LinearLayout 
-	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent"
-	    android:layout_alignParentBottom="true"
-	    style="@android:style/ButtonBar">
-	    
-	        <Button android:layout_alignParentBottom="true"
-	            android:layout_alignParentLeft="true"    
-	            android:text="Home"
-	            android:onClick="home" 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" android:layout_weight="1"/>
-	        
-	        <Button android:layout_alignParentBottom="true"
-	            android:layout_alignParentLeft="true"           
-	            android:onClick="registrar"
-	            android:text="Courses" 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" android:layout_weight="1"/>
-	        
-	        <Button android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" 
-	            android:layout_alignParentBottom="true"
-	            android:layout_alignParentRight="true"
-	            android:onClick="isis"
-	            android:text="ISIS" android:layout_weight="1"/>
-	        
-	        <Button android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" 
-	            android:layout_alignParentBottom="true"
-	            android:layout_alignParentRight="true"
-	            android:onClick="help"
-	            android:text="Help" android:layout_weight="1"/>
-    </LinearLayout >
+   	android:layout_alignParentBottom="true"
+   	android:background="#0000FF"
+   	>
+    
+	<include  layout="@layout/bottom_buttons" android:id="@+id/bottom_buttons" />
     
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" 
-        android:layout_marginBottom="65dip">
-
+        android:layout_marginBottom="65dip"
+        >
+        
         <LinearLayout
             android:id="@+id/searchResultsList"
             android:gravity="top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-         >
-        </LinearLayout>
+            
+        ></LinearLayout>
     </ScrollView>
   </RelativeLayout>
 

@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,7 +49,7 @@ public class ListPage extends Activity {
 			//TODO: check DBConnector.hasErrorOccurred()
 
 			//Set the header to professor name
-			((TextView)this.findViewById(R.id.professorPageLabel)).setText(fname+" "+lname);
+			((TextView)this.findViewById(R.id.professorPageLabel)).setText("Professor: "+fname+" "+lname);
 		}
 		else { //it's a course list
 			isCourse = true;
@@ -125,34 +124,9 @@ public class ListPage extends Activity {
 		intent.putExtra(EvaluationPage.INTENT_PROFESSOR_LAST_NAME, lname);
 		this.startActivity(intent);
 	}
-	/**
-	 * This are methods for bottom bar
-	 * 
-	 */
-	public void home(View v) {
-		Intent intent = new Intent(ListPage.this, MainActivity.class);
-	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
-	    startActivity(intent);
-	}
 	
-	public void isis(View v) {
-		Uri uri = Uri.parse("https://www.isis.ufl.edu/");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
+	public void goToLink(View v) {
+		MainActivity.goToLink(v);
 	}
-	
-	public void registrar(View v) {
-		Uri uri = Uri.parse("http://www.registrar.ufl.edu/soc/");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
-	public void help(View v) {
-		Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
-	/**
-	 * ^
-	 */
 
 }

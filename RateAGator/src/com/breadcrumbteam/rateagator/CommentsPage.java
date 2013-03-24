@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,19 +26,28 @@ public class CommentsPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comments_page);
-
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		comments = DBConnector.getComments(getIntent().getStringExtra("fName"),
 				getIntent().getStringExtra("lName"), getIntent().getStringExtra("courseNum"));
 		//TODO: check DBConnector.hasErrorOccurred()
 
 
-		ViewGroup commentsList = (ViewGroup)findViewById(R.id.commentsList);
+ViewGroup commentsList = (ViewGroup)findViewById(R.id.commentsList);
+		
+		if (comments == null) {
+			TextView noComments = new TextView(this);
+			noComments.setText("No comments yet.");
+			noComments.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			commentsList.addView(noComments);
+		}
+		else {
 		for (int i = 0; i < comments.size(); i++) {
 			TextView newComment = new TextView(this);
 			newComment.setText(comments.get(i));
 			newComment.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			commentsList.addView(newComment);
+		}
 		}
 
 	}

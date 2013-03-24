@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@android:style/ButtonBar"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="#FA5B00" >
+
+    <Button
+        android:id="@+id/goEvals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToEvals"
+        android:text="UF EVALS"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="4dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginBottom="4dip"
+        android:background="@drawable/gator_buttons" />
+
+    <Button
+        android:id="@+id/goRatings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToRatings"
+        android:text="Ratings"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="4dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginBottom="4dip"
+        android:background="@drawable/gator_buttons" />
+
+    <Button
+        android:id="@+id/goComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToComments"
+        android:text="Comments"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="4dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginBottom="4dip"
+        android:background="@drawable/gator_buttons" />
+
+    <Button
+        android:id="@+id/goBooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToBooks"
+        android:text="Books"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="4dip"
+        android:layout_marginLeft="4dip"
+        android:layout_marginBottom="4dip"
+        android:background="@drawable/gator_buttons" />
+
+</LinearLayout>

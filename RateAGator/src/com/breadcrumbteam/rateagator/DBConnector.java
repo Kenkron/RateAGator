@@ -644,6 +644,7 @@ public class DBConnector {
 			String postURL = scriptLocation + "/getTextbooks.php" + convertParamList(paramList);
 
 			InputStream is = httpPost(postURL);
+			
 			if(errorOccurred) {
 				return;
 			}
