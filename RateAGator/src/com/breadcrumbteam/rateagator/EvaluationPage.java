@@ -61,6 +61,7 @@ public class EvaluationPage extends Activity {
 
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
 				double rating = shownEvaluation.getResponses()[i];
+				rating = ((int) (rating*100))/100.0;
 
 				ViewGroup container = (ViewGroup) (findViewById(R.id.evaluationFieldList));
 
