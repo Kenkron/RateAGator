@@ -2,6 +2,9 @@ package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
 
+import com.breadcrumbteam.rateagator.DBConnector.GetAllCourseCodes;
+import com.breadcrumbteam.rateagator.DBConnector.GetAllProfessorNames;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,16 +16,24 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static ArrayList<String> searchResults;
+	private Thread t1 = null;
+	private Thread t2 = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setProgressBarIndeterminateVisibility(false);
-		DBConnector.initProfessorsAndCourses();
+		//DBConnector.initProfessorsAndCourses();
+		t1 = new Thread(new DBConnector.GetAllProfessorNames());
+		t2 = new Thread(new DBConnector.GetAllCourseCodes());
+		t1.start();
+		t2.start();
+
 		setContentView(R.layout.activity_main);
 	}
 
@@ -56,7 +67,37 @@ public class MainActivity extends Activity {
 		setProgressBarIndeterminateVisibility(true);
 		String text = ((EditText) this.findViewById(R.id.searchBar)).getText()
 				.toString().trim();
-		MainActivity.performSearch(view, text, this);
+		try {
+			t1.interrupt();
+			t2.interrupt();
+			Log.d("a","s");
+			DBConnector.interrupted = true;
+			Log.d("a","s");
+			t1.join();
+			t2.join();
+			Log.d("a","s");
+			DBConnector.interrupted = false;
+			Log.d("a","s");
+		}
+		catch(InterruptedException e) {
+			Log.d("x","s");
+			e.printStackTrace();
+		}
+		if(DBConnector.allCourseCodes.size() > 0 && DBConnector.allCourseCodes.size() > 0) {
+			Log.d("i","s");
+			MainActivity.performSearch(view, text, this);
+		}
+		else {
+			Log.d("adas","s");
+			Toast.makeText(getBaseContext(), "Error Accessing Database", Toast.LENGTH_LONG).show();
+			Log.d("adsassadgdf","s");
+			t1 = new Thread(new DBConnector.GetAllProfessorNames());
+			t2 = new Thread(new DBConnector.GetAllCourseCodes());
+			Log.d("adsassgkdnllkgndkjengkergkadgdf","s");
+			t1.start();
+			t2.start();
+			Log.d("jfpegorogerp","s");
+		}
 	}
 	/**
 	 * This are methods for bottom bar
