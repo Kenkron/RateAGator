@@ -21,6 +21,7 @@ public class CommentsPage extends Activity {
 	
 
 	public ArrayList<String> comments;
+	TextView noComments = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class CommentsPage extends Activity {
 ViewGroup commentsList = (ViewGroup)findViewById(R.id.commentsList);
 		
 		if (comments == null) {
-			TextView noComments = new TextView(this);
+			noComments = new TextView(this);
 			noComments.setText("No comments yet.");
 			noComments.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			commentsList.addView(noComments);
@@ -57,6 +58,10 @@ ViewGroup commentsList = (ViewGroup)findViewById(R.id.commentsList);
 		ViewGroup commentsList = (ViewGroup)findViewById(R.id.commentsList);
 		EditText box = (EditText)findViewById(R.id.commentBox);
 		String comment = box.getText().toString();
+		
+		if (noComments != null) {
+			commentsList.removeView(noComments);
+		}
 		
 		TextView addedComment = new TextView(this);
 		addedComment.setText(comment);
