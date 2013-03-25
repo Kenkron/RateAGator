@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -93,11 +95,16 @@ public class EvaluationPage extends Activity {
 			LinearLayout ll = (LinearLayout) findViewById(R.id.textbookList);
 			TextView tv;
 			for (int i = 0; i < textbooks.size(); i++) {
-				tv = new TextView(this);
-				tv.setText(textbooks.get(i));
-				tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-						LayoutParams.WRAP_CONTENT));
-				ll.addView(tv);
+				String currentLink = textbooks.get(i);
+				if(currentLink.charAt(0) == 'h') {
+					tv = new TextView(this);
+					String linkFormat = "<a href=\"" + currentLink + "\">" + currentLink + "</a>";
+					tv.setText(Html.fromHtml(linkFormat));
+					tv.setMovementMethod(LinkMovementMethod.getInstance());
+					tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT));
+					ll.addView(tv);
+				}
 			}
 		}
 	}
