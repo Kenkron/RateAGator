@@ -29,36 +29,37 @@ public class SearchResults extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.searchresults);
-		
-		//Load in search results
+
+		// Load in search results
 		Bundle b = this.getIntent().getExtras();
 		ArrayList<String> searchResults = b.getStringArrayList(INTENT_RESULTS);
-		
-		EditText query=(EditText) findViewById(R.id.searchBar);
+
+		EditText query = (EditText) findViewById(R.id.searchBar);
 		query.setText(this.getIntent().getStringExtra(INTENT_QUERY));
-		
-		ViewGroup resultsList=(ViewGroup) findViewById(R.id.searchResultsList);
-		for (String name:searchResults){
+
+		ViewGroup resultsList = (ViewGroup) findViewById(R.id.searchResultsList);
+		for (String name : searchResults) {
 			Log.d("result list", name);
-			Button currentResult=new Button(this);
+			Button currentResult = new Button(this);
 			currentResult.setText(name);
-			currentResult.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			currentResult.setLayoutParams(new LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					ViewGroup.LayoutParams.WRAP_CONTENT));
 			currentResult.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					String text=((Button)v).getText().toString();
-					if(text.contains(", ")) {
-						Log.d("SearchResults","clicked on "+text);
-						
+					String text = ((Button) v).getText().toString();
+					if (text.contains(", ")) {
+						Log.d("SearchResults", "clicked on " + text);
+
 						String[] nameArray = text.split(", ");
-						
-						//nameArray[1] is last name, [0] is first name
+
+						// nameArray[1] is last name, [0] is first name
 						goToProfessor(nameArray[1], nameArray[0]);
-					}
-					else {
+					} else {
 						goToCourse(text);
 					}
-					
+
 				}
 			});
 			resultsList.addView(currentResult);
@@ -79,17 +80,16 @@ public class SearchResults extends Activity {
 
 	public void goToProfessor(String firstName, String lastName) {
 		Intent intent = new Intent(this, ListPage.class);
-		intent.putExtra(ListPage.INTENT_FIRST_NAME, firstName);
-		intent.putExtra(ListPage.INTENT_LAST_NAME, lastName);
+		intent.putExtra(ListPage.INTENT_COURSE_SET, DBConnector.getProfessor(firstName, lastName));
 		this.startActivity(intent);
 	}
-	
+
 	public void goToCourse(String courseCode) {
 		Intent intent = new Intent(this, ListPage.class);
-		intent.putExtra(ListPage.INTENT_COURSE_CODE, courseCode);
+		intent.putExtra(ListPage.INTENT_COURSE_SET, courseCode);
 		this.startActivity(intent);
 	}
-	
+
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}

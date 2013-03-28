@@ -18,10 +18,11 @@ import android.widget.Toast;
 
 public class EvaluationPage extends Activity {
 
-	public static final String INTENT_PROFESSOR_FIRST_NAME = "first name";
-	public static final String INTENT_PROFESSOR_LAST_NAME = "last name";
-	public static final String INTENT_COURSE_NUMBER = "course number";
+	public static final String INTENT_COURSE="course";
 
+	/**the course for which data is shown*/
+	Course currentCourse;
+	
 	/** displays the evaluation currently on display */
 	Evaluation shownEvaluation;
 
@@ -30,20 +31,21 @@ public class EvaluationPage extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
 
+		currentCourse=((Course)getIntent().getSerializableExtra(INTENT_COURSE));
+		
 		Log.d("EvaluationPage",
 				"name (first): "
-						+ getIntent().getStringExtra(
-								INTENT_PROFESSOR_FIRST_NAME));
+						+ currentCourse.professorFirstName);
 		Log.d("EvaluationPage",
 				"name (last): "
-						+ getIntent()
-								.getStringExtra(INTENT_PROFESSOR_LAST_NAME));
+						+ currentCourse.professorLastName);
 		Log.d("EvaluationPage",
-				"course: " + getIntent().getStringExtra(INTENT_COURSE_NUMBER));
+				"course: " 
+						+ currentCourse.courseNum);
 		shownEvaluation = DBConnector.getEvaluations(
-				getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME),
-				getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME),
-				getIntent().getStringExtra(INTENT_COURSE_NUMBER));
+				currentCourse.professorFirstName,
+				currentCourse.professorLastName,
+				currentCourse.courseNum);
 
 		if (shownEvaluation == null || DBConnector.hasErrorOccurred()) {
 			Toast.makeText(getBaseContext(),
@@ -52,14 +54,12 @@ public class EvaluationPage extends Activity {
 			finish();
 		} else {
 
-			((TextView) findViewById(R.id.professorEvalLabel))
-					.setText(getIntent().getStringExtra(
-							INTENT_PROFESSOR_FIRST_NAME)
+			((TextView) findViewById(R.id.professorLabel))
+					.setText(currentCourse.professorFirstName
 							+ " "
-							+ getIntent().getStringExtra(
-									INTENT_PROFESSOR_LAST_NAME));
-			((TextView) findViewById(R.id.courseEvalLabel)).setText(getIntent()
-					.getStringExtra(INTENT_COURSE_NUMBER));
+							+ currentCourse.professorLastName);
+			
+			((TextView) findViewById(R.id.courseLabel)).setText(currentCourse.courseNum);
 
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
 				double rating = shownEvaluation.getResponses()[i];
@@ -87,8 +87,7 @@ public class EvaluationPage extends Activity {
 		}
 
 		// fill out textbooks part
-		ArrayList<String> textbooks = DBConnector.getTextbooks(getIntent()
-				.getStringExtra(INTENT_COURSE_NUMBER));
+		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.courseNum);
 		if (textbooks != null) {
 			//makes sure there are textbooks before loading them
 			Log.i("testing", textbooks.toString());
@@ -112,12 +111,9 @@ public class EvaluationPage extends Activity {
 
 	public void goToComments(View view) {
 		Intent intent = new Intent(this, CommentsPage.class);
-		intent.putExtra("courseNum",
-				getIntent().getStringExtra(INTENT_COURSE_NUMBER));
-		intent.putExtra("fName",
-				getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME));
-		intent.putExtra("lName",
-				getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME));
+		intent.putExtra("courseNum",currentCourse.courseNum);
+		intent.putExtra("fName",currentCourse.professorFirstName);
+		intent.putExtra("lName",currentCourse.professorLastName);
 		this.startActivity(intent);
 	}
 

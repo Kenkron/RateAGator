@@ -1,6 +1,7 @@
 com.android.ide.eclipse.adt.fixLegacyEditors=1
 com.android.ide.eclipse.adt.palette=PREVIEW
 com.android.ide.eclipse.adt.sdk=/home/chrisotpher/android-sdks
+com.android.ide.eclipse.adt.xmlEditor=true
 design.palette.flyout.width=278
 design.structure.flyout.width=183
 eclipse.preferences.version=1

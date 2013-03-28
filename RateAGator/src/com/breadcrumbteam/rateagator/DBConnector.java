@@ -36,9 +36,9 @@ public class DBConnector {
 
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
-	private static Professor theProfessor = null;	//returned in getProfessor()
+	private static CourseSet theProfessor = null;	//returned in getProfessor()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
-	private static ArrayList<Professor> professors = new ArrayList<Professor>();
+	private static ArrayList<CourseSet> professors = new ArrayList<CourseSet>();
 
 	//http post
 	private static synchronized InputStream httpPost(String postURL) {
@@ -191,7 +191,7 @@ public class DBConnector {
 	//
 	//get Professor
 	//
-	public static Professor getProfessor(String fName, String lName) {
+	public static CourseSet getProfessor(String fName, String lName) {
 		errorOccurred = false;
 		Thread t = new Thread(new GetProfessorConnect(fName, lName));
 		t.start();
@@ -237,7 +237,7 @@ public class DBConnector {
 				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
-					theProfessor = new Professor(fName, lName);	//create the Professor
+					theProfessor = new CourseSet(fName+" "+lName);	//create the Professor
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
 						String courseName = json_data.getString("CourseName");
@@ -249,6 +249,8 @@ public class DBConnector {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
 						}
 
+						currentCourse.setCourseProfessor(fName, lName);
+						
 						theProfessor.addCourse(currentCourse);
 					}
 				}
@@ -265,7 +267,7 @@ public class DBConnector {
 	//
 	// get Course
 	//
-	public static ArrayList<Professor> getCourse(String cCode) {
+	public static ArrayList<CourseSet> getCourse(String cCode) {
 		errorOccurred = false;
 		professors.clear();
 		Thread t = new Thread(new GetCourseConnect(cCode));
@@ -311,7 +313,7 @@ public class DBConnector {
 						json_data = jArray.getJSONObject(i);
 						String fName = json_data.getString("FirstName");
 						String lName = json_data.getString("LastName");
-						Professor currentProfessor = new Professor(fName, lName);//create the Professor
+						CourseSet currentProfessor = new CourseSet(fName+" "+lName);//create the Professor
 
 						String courseName = json_data.getString("CourseName");
 						Course currentCourse;
@@ -337,9 +339,7 @@ public class DBConnector {
 		}
 	}
 
-	//
-	//get Evaluations
-	//
+	/**merges multiple evaluations into one average evaluation*/
 	public static Evaluation getEvaluations(String fName, String lName, String cCode) {
 		errorOccurred = false;
 		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));
@@ -357,6 +357,8 @@ public class DBConnector {
 		}
 		return Evaluation.mergeEvaluations(evals);
 	}
+	
+	
 	private static class GetEvaluationsConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
 		public GetEvaluationsConnect(String fName, String lName, String cCode) {

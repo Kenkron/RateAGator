@@ -1,20 +1,21 @@
 package com.breadcrumbteam.rateagator;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**this class represents the data associated with a professor
  * It includes the name of the professor, a list of the courses
  * that the professor teaches, and a single evaluation object 
  * representing the average evaluations for this professor*/
-public class Professor {
+public class CourseSet implements Serializable{
 	
-	protected String fName;
-	protected String lName;
+	private static final long serialVersionUID = 8846792087777183741L;
+
+	protected String setName;
 	
 	protected ArrayList<Course> courseList;
 	
-	public Professor(String fName, String lName){
-		this.fName = fName;
-		this.lName = lName;
+	public CourseSet(String setName){
+		this.setName = setName;
 		courseList = new ArrayList<Course>();
 	}
 	
@@ -23,7 +24,6 @@ public class Professor {
 	 */
 	public void addCourse(Course c) {
 		courseList.add(c);
-		c.setCourseProf(this);
 	}
 	
 
