@@ -39,6 +39,7 @@ public class DBConnector {
 	private static Professor theProfessor = null;	//returned in getProfessor()
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<Professor> professors = new ArrayList<Professor>();
+	private static Rating rating = null;
 
 	//http post
 	private static synchronized InputStream httpPost(String postURL) {
@@ -403,9 +404,8 @@ public class DBConnector {
 	//getRatings
 	//
 	public static Rating getRating(String fName, String lName, String cCode) {
-		Rating rating = null;
 		errorOccurred = false;
-		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode, rating));
+		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode));
 		t.start();
 
 		try {
@@ -422,12 +422,10 @@ public class DBConnector {
 	}
 	private static class GetRatingConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
-		private Rating rating = null;
-		public GetRatingConnect(String fName, String lName, String cCode, Rating rating) {
+		public GetRatingConnect(String fName, String lName, String cCode) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			this.rating = rating;
 		}
 		@Override
 		public void run() {
@@ -452,7 +450,7 @@ public class DBConnector {
 				json_data = jArray.getJSONObject(0);
 				rating = new Rating(json_data.getInt("Responded"));
 
-				for(int j = 0;j<=Rating.DB_FIELD_NAMES.length;j++) {
+				for(int j = 0;j<Rating.DB_FIELD_NAMES.length;j++) {
 					rating.addResponseValue(json_data.getDouble(Rating.DB_FIELD_NAMES[j]));
 				}
 			}
