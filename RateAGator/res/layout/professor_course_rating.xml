@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FA5B00"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+     android:background="#FA5B00" >
 
     <include
-        android:id="@+id/top_navigation_bar"
-        layout="@layout/top_navigation_bar" />
-
+     android:id="@+id/top_navigation_bar"
+     layout="@layout/top_navigation_bar" />
+    
     <TextView
         android:id="@+id/professorEvalLabel"
         android:layout_width="wrap_content"
@@ -42,34 +42,22 @@
                 android:layout_marginBottom="65dip" >
 
                 <LinearLayout
-                    android:id="@+id/evaluationFieldList"
+                    android:id="@+id/ratingFieldList"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
                 </LinearLayout>
             </ScrollView>
-            
-            <TextView
-                    android:id="@+id/textbookEvalLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="Textbook Links"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <ScrollView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_below="@id/ratingFieldList"
                 android:layout_marginBottom="65dip" >
 
-                <LinearLayout
-                    android:id="@+id/textbookList"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/background_light"
-                    android:orientation="vertical" >
-                </LinearLayout>
+
             </ScrollView>
         </LinearLayout>
 

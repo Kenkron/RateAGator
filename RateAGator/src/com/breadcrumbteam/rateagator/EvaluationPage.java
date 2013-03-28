@@ -97,8 +97,9 @@ public class EvaluationPage extends Activity {
 			for (int i = 0; i < textbooks.size(); i++) {
 				String currentLink = textbooks.get(i);
 				if(currentLink.charAt(0) == 'h') {
+					String bookName = currentLink.split("com/")[1].split("/")[0].replace("-", " ");
 					tv = new TextView(this);
-					String linkFormat = "<a href=\"" + currentLink + "\">" + currentLink + "</a>";
+					String linkFormat = "<a href=\"" + currentLink + "\">" + bookName + "</a>";
 					tv.setText(Html.fromHtml(linkFormat));
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -109,6 +110,17 @@ public class EvaluationPage extends Activity {
 		}
 	}
 
+	public void goToRatings(View view) {
+		Intent intent = new Intent(this, RatingsPage.class);
+		intent.putExtra("courseNum",
+				getIntent().getStringExtra(INTENT_COURSE_NUMBER));
+		intent.putExtra("fName",
+				getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME));
+		intent.putExtra("lName",
+				getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME));
+		this.startActivity(intent);
+	}
+	
 	public void goToComments(View view) {
 		Intent intent = new Intent(this, CommentsPage.class);
 		intent.putExtra("courseNum",
@@ -125,3 +137,4 @@ public class EvaluationPage extends Activity {
 	}
 
 }
+

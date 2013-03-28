@@ -64,9 +64,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void search(View view) {
+		String text = "";
+		text = ((EditText) this.findViewById(R.id.searchBar)).getText().toString().trim();
+		if (text.equals("")) {
+			Toast.makeText(getBaseContext(), "Search value was null, try again", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		setProgressBarIndeterminateVisibility(true);
-		String text = ((EditText) this.findViewById(R.id.searchBar)).getText()
-				.toString().trim();
 		try {
 			t1.interrupt();
 			t2.interrupt();
@@ -88,15 +92,11 @@ public class MainActivity extends Activity {
 			MainActivity.performSearch(view, text, this);
 		}
 		else {
-			Log.d("adas","s");
 			Toast.makeText(getBaseContext(), "Error Accessing Database", Toast.LENGTH_LONG).show();
-			Log.d("adsassadgdf","s");
 			t1 = new Thread(new DBConnector.GetAllProfessorNames());
 			t2 = new Thread(new DBConnector.GetAllCourseCodes());
-			Log.d("adsassgkdnllkgndkjengkergkadgdf","s");
 			t1.start();
 			t2.start();
-			Log.d("jfpegorogerp","s");
 		}
 	}
 	/**
