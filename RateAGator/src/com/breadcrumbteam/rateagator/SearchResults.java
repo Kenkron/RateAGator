@@ -86,7 +86,7 @@ public class SearchResults extends Activity {
 
 	public void goToCourse(String courseCode) {
 		Intent intent = new Intent(this, ListPage.class);
-		intent.putExtra(ListPage.INTENT_COURSE_SET, courseCode);
+		intent.putExtra(ListPage.INTENT_COURSE_SET, DBConnector.getCourseSetByCode(courseCode));
 		this.startActivity(intent);
 	}
 

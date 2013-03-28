@@ -37,6 +37,7 @@ public class DBConnector {
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
 	private static CourseSet theProfessor = null;	//returned in getProfessor()
+	private static CourseSet theCourseNumber = null;
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<CourseSet> professors = new ArrayList<CourseSet>();
 
@@ -208,6 +209,10 @@ public class DBConnector {
 		}
 		return theProfessor;
 	}
+	
+	/**a runnable function that fills the theProfessor
+	 * with all the courses tought by the professor with the
+	 * given first name and last name.*/
 	private static class GetProfessorConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
 		private String fName, lName;
@@ -264,12 +269,11 @@ public class DBConnector {
 			}
 		}
 	}
-	//
-	// get Course
-	//
-	public static ArrayList<CourseSet> getCourse(String cCode) {
+	
+	/**return the set of courses with the given course code*/
+	public static CourseSet getCourseSetByCode(String cCode) {
 		errorOccurred = false;
-		professors.clear();
+		
 		Thread t = new Thread(new GetCourseConnect(cCode));
 		t.start();
 
@@ -283,14 +287,19 @@ public class DBConnector {
 		if(errorOccurred) {//return a null object if an errorOccurred
 			return null;
 		}
-		return professors;
+		return theCourseNumber;
 	}
+	
+	/**a runnable function that fills theCourseNumber will all
+	 * courses with the  given course code*/
 	private static class GetCourseConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
 		private ArrayList<String> ccodeList = new ArrayList<String>();
+		private String cCode;
 		public GetCourseConnect(String cCode) {
 			if(cCode != null) paramList.add("name1=" + cCode.trim().replaceAll(" ", "%20"));
 			if(cCode != null) ccodeList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			this.cCode=cCode;
 		}
 		@Override
 		public void run() {
@@ -309,11 +318,11 @@ public class DBConnector {
 				JSONArray jArray = new JSONArray(result);
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
+					theCourseNumber=new CourseSet(cCode);
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
 						String fName = json_data.getString("FirstName");
 						String lName = json_data.getString("LastName");
-						CourseSet currentProfessor = new CourseSet(fName+" "+lName);//create the Professor
 
 						String courseName = json_data.getString("CourseName");
 						Course currentCourse;
@@ -324,12 +333,13 @@ public class DBConnector {
 							currentCourse = new Course(courseName, json_data.getString("CourseCode"));
 						}
 
-						currentProfessor.addCourse(currentCourse);
-						professors.add(currentProfessor);
+						currentCourse.setCourseProfessor(fName, lName);
+						
+						theCourseNumber.addCourse(currentCourse);
 					}
 				}
 				else {
-					professors = null;
+					theCourseNumber = null;
 				}
 			}
 			catch(JSONException e1) {
