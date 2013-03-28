@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -662,6 +664,70 @@ public class DBConnector {
 			catch(JSONException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
+			}
+		}
+	}
+	
+	//
+	//check if a username and password corresponds to a UF Student
+	//
+	public static boolean isUFStudent(String username, String password) {
+		errorOccurred = false;
+		Thread t = new Thread(new TestShibboleth(username, password));
+		t.start();
+
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
+		return !errorOccurred;
+	}
+	private static class TestShibboleth implements Runnable {
+		private String username = null;
+		private String password = null;
+		public TestShibboleth(String username, String password) {
+			this.username = username;
+			this.password = password;
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = "https://login.ufl.edu/idp/Authn/UserPassword";
+
+			InputStream is = null;
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost(postURL);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("j_username", username));
+				nameValuePairs.add(new BasicNameValuePair("j_password", password));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+
+				is = entity.getContent();
+				if(response.getStatusLine().getStatusCode() != 200) {
+					Log.w("DBConnector", "HTTP Post server error: bad response");
+				}
+			}
+			catch(Exception e) {
+				errorOccurred = true;
+				Log.e("DBConnector", "HTTP Post server error: death");
+			}
+
+			if(errorOccurred) {
+				return;
+			}
+
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+			if(result.contains("incorrect")) {
+				errorOccurred = true;
 			}
 		}
 	}
