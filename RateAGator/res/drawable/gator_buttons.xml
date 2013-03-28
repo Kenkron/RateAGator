@@ -6,11 +6,21 @@ android:shape="rectangle" android:padding="10dp">
  <padding android:top="10dip"
       android:bottom="10dip"/>
     
- <solid android:color="#0000FF"/> 
+<!-- <solid android:color="#002458"
+     	/>
+
+-->
+	<gradient
+	    android:type="linear"
+	    android:startColor="#FFFFFF"
+	    android:centerColor="#002458"
+	    android:endColor="#002458"
+	    android:angle="270" />
+
     <corners
      android:bottomRightRadius="10dp"
      android:bottomLeftRadius="10dp"
   	 android:topLeftRadius="10dp"
   	 android:topRightRadius="10dp"/>
-  <stroke android:width="2px" android:color="#FFFFFF" />  
+  <stroke android:width="0px" android:color="#FFFFFF" />  
 </shape>

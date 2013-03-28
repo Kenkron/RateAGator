@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#4FD5D6" >
+    android:background="#FA5B00" >
 
     <TextView
         android:id="@+id/professorPageLabel"
