@@ -97,8 +97,9 @@ public class EvaluationPage extends Activity {
 			for (int i = 0; i < textbooks.size(); i++) {
 				String currentLink = textbooks.get(i);
 				if(currentLink.charAt(0) == 'h') {
+					String bookName = currentLink.split("com/")[1].split("/")[0].replace("-", " ");
 					tv = new TextView(this);
-					String linkFormat = "<a href=\"" + currentLink + "\">" + currentLink + "</a>";
+					String linkFormat = "<a href=\"" + currentLink + "\">" + bookName + "</a>";
 					tv.setText(Html.fromHtml(linkFormat));
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
