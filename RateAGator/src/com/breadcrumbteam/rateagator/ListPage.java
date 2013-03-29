@@ -29,29 +29,35 @@ public class ListPage extends Activity {
 		// TODO make a layout for ProfessorPage
 
 		setContentView(R.layout.professor_page);
-		currentCourseSet=(CourseSet) getIntent().getSerializableExtra(INTENT_COURSE_SET);
+		currentCourseSet = (CourseSet) getIntent().getSerializableExtra(
+				INTENT_COURSE_SET);
 
 		((TextView) this.findViewById(R.id.professorPageLabel))
 				.setText(currentCourseSet.setName);
 
 		ViewGroup resultsList = (ViewGroup) findViewById(R.id.professorEvalList);
-
+		
 		for (Course c : currentCourseSet.courseList) {
-			Log.d("ProfessorPage", "CourseList: " + c.courseName);
+			Log.d("ListPage", "CourseList: " + c.courseName);
 			Button currentResult = new Button(this);
 
-			// if it has a course name, it definitely has a course number
-			if (c.courseName != null && c.courseName.length() > 0) {
-				currentResult.setText(c.courseName + " : " + c.courseNum);
-			}
-			// if it has a course number it is valid
-			else if (c.courseNum != null && c.courseNum.length() > 0) {
-				currentResult.setText(c.courseNum);
+			switch (currentCourseSet.type) {
+			case ProfessorSet:
+				// if it has a course name, it definitely has a course number
+				if (c.courseName != null && c.courseName.length() > 0) {
+					currentResult.setText(c.courseName + " : " + c.courseNum);
+				}
+				// if it has a course number it is valid
+				else if (c.courseNum != null && c.courseNum.length() > 0) {
+					currentResult.setText(c.courseNum);
+				}
+				break;
+			case CourseSet:
+				currentResult.setText(c.professorLastName+", "+c.professorFirstName);
 			}
 			setButton(currentResult, c);
 			resultsList.addView(currentResult);
 		}
-		
 	}
 
 	/**

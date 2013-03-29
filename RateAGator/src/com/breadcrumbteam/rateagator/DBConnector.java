@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.breadcrumbteam.rateagator.CourseSet.SetType;
+
 import android.net.ConnectivityManager;
 import android.net.ParseException;
 import android.util.Log;
@@ -36,8 +38,11 @@ public class DBConnector {
 
 	public static ArrayList<String> allProfessorNames = new ArrayList<String>(); //for autosearch, not returned: access statically
 	public static ArrayList<String> allCourseCodes = new ArrayList<String>(); //for autosearch, not returned: access statically
-	private static CourseSet theProfessor = null;	//returned in getProfessor()
+	/**the static course set that is manipulated to return the content for getCourseSetByCode*/
+	private static CourseSet theProfessor = null;
+	/**the static course set that is manipulated to return the content for getProfessor*/
 	private static CourseSet theCourseNumber = null;
+	
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<CourseSet> professors = new ArrayList<CourseSet>();
 
@@ -243,6 +248,7 @@ public class DBConnector {
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
 					theProfessor = new CourseSet(fName+" "+lName);	//create the Professor
+					theProfessor.type=CourseSet.SetType.ProfessorSet;
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
 						String courseName = json_data.getString("CourseName");
@@ -319,6 +325,7 @@ public class DBConnector {
 				JSONObject json_data = null;
 				if(jArray.length() > 0) {
 					theCourseNumber=new CourseSet(cCode);
+					theCourseNumber.type=CourseSet.SetType.CourseSet;
 					for(int i = 0;i<jArray.length();i++) {
 						json_data = jArray.getJSONObject(i);
 						String fName = json_data.getString("FirstName");
@@ -349,7 +356,6 @@ public class DBConnector {
 		}
 	}
 
-	/**merges multiple evaluations into one average evaluation*/
 	public static Evaluation getEvaluations(String fName, String lName, String cCode) {
 		errorOccurred = false;
 		Thread t = new Thread(new GetEvaluationsConnect(fName, lName, cCode));

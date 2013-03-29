@@ -8,11 +8,18 @@ import java.util.ArrayList;
  * representing the average evaluations for this professor*/
 public class CourseSet implements Serializable{
 	
+	public enum SetType{
+		ProfessorSet,
+		CourseSet
+	}
+	
 	private static final long serialVersionUID = 8846792087777183741L;
 
 	protected String setName;
 	
 	protected ArrayList<Course> courseList;
+	
+	public SetType type;
 	
 	public CourseSet(String setName){
 		this.setName = setName;
