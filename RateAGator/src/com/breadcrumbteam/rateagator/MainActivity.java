@@ -289,14 +289,16 @@ public class MainActivity extends Activity {
 									keepGoingUp = false;
 									break; // should fix 'a' problem
 								}
-								if (Character.toLowerCase(names
-										.get(current - 1)[0].charAt(j)) == (Character
-										.toLowerCase(input.charAt(j)))) {
-									if (j == input.length() - 1) {
-										current = current - 1;
-										break;
+								try {
+									if (Character.toLowerCase(names.get(current - 1)[0].charAt(j)) == (Character.toLowerCase(input.charAt(j)))) {
+										if (j == input.length() - 1) {
+											current = current - 1;
+											break;
+										}
+									} else {
+										keepGoingUp = false;
 									}
-								} else {
+								} catch (Exception e) {
 									keepGoingUp = false;
 								}
 							}
@@ -304,8 +306,7 @@ public class MainActivity extends Activity {
 						foundStart = true;
 						break;
 					}
-				} else if (Character.toLowerCase(names.get(current)[0]
-						.charAt(i)) < Character.toLowerCase(input.charAt(i))) {
+				} else if (Character.toLowerCase(names.get(current)[0].charAt(i)) < Character.toLowerCase(input.charAt(i))) {
 					start = current + 1;
 					break;
 				} else {
