@@ -19,6 +19,7 @@ public class ListPage extends Activity {
 	public static final String 
 			INTENT_FIRST_NAME = "first name",
 			INTENT_LAST_NAME = "last name",
+			INTENT_USERNAME = "username",
 			INTENT_COURSE_CODE = "course code";
 
 	Professor currentProfessor;
@@ -40,7 +41,7 @@ public class ListPage extends Activity {
 		setContentView(R.layout.professor_page);
 		Bundle extras = getIntent().getExtras();
 		boolean isCourse = false;
-		if(extras.size() > 1) { //it's a professor list
+		if(extras.size() > 2) { //it's a professor list
 			fname=getIntent().getStringExtra(INTENT_FIRST_NAME);
 			lname=getIntent().getStringExtra(INTENT_LAST_NAME);
 			
@@ -122,6 +123,7 @@ public class ListPage extends Activity {
 		intent.putExtra(EvaluationPage.INTENT_COURSE_NUMBER, courseCode);
 		intent.putExtra(EvaluationPage.INTENT_PROFESSOR_FIRST_NAME, fname);
 		intent.putExtra(EvaluationPage.INTENT_PROFESSOR_LAST_NAME, lname);
+		intent.putExtra(INTENT_USERNAME, this.getIntent().getStringExtra(INTENT_USERNAME));
 		this.startActivity(intent);
 	}
 	

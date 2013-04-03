@@ -21,6 +21,9 @@ public class EvaluationPage extends Activity {
 	public static final String INTENT_PROFESSOR_FIRST_NAME = "first name";
 	public static final String INTENT_PROFESSOR_LAST_NAME = "last name";
 	public static final String INTENT_COURSE_NUMBER = "course number";
+	public static final String INTENT_USERNAME = "username";
+	
+	public static String username = "";
 
 	/** displays the evaluation currently on display */
 	Evaluation shownEvaluation;
@@ -29,6 +32,8 @@ public class EvaluationPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
+		username = this.getIntent().getStringExtra(INTENT_USERNAME);
+		Log.i("#tardif", "username is: " + username);
 
 		Log.d("EvaluationPage",
 				"name (first): "

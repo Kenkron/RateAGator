@@ -2,24 +2,25 @@ package com.breadcrumbteam.rateagator;
 
 import java.util.ArrayList;
 
-import com.breadcrumbteam.rateagator.DBConnector.GetAllCourseCodes;
-import com.breadcrumbteam.rateagator.DBConnector.GetAllProfessorNames;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static ArrayList<String> searchResults;
+	private static String username = "";
 	private Thread t1 = null;
 	private Thread t2 = null;
 
@@ -63,41 +64,40 @@ public class MainActivity extends Activity {
 		// never stop running.
 	}
 
-	public void search(View view) {
-		String text = "";
-		text = ((EditText) this.findViewById(R.id.searchBar)).getText().toString().trim();
+	public void search(final View view) {
+		final Activity parentActivity = this;
+		final String text = ((EditText) this.findViewById(R.id.searchBar)).getText().toString().trim();
 		if (text.equals("")) {
 			Toast.makeText(getBaseContext(), "Search value was null, try again", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		setProgressBarIndeterminateVisibility(true);
-		try {
-			t1.interrupt();
-			t2.interrupt();
-			Log.d("a","s");
-			DBConnector.interrupted = true;
-			Log.d("a","s");
-			t1.join();
-			t2.join();
-			Log.d("a","s");
-			DBConnector.interrupted = false;
-			Log.d("a","s");
-		}
-		catch(InterruptedException e) {
-			Log.d("x","s");
-			e.printStackTrace();
-		}
-		if(DBConnector.allCourseCodes.size() > 0 && DBConnector.allCourseCodes.size() > 0) {
-			Log.d("i","s");
-			MainActivity.performSearch(view, text, this);
-		}
-		else {
-			Toast.makeText(getBaseContext(), "Error Accessing Database", Toast.LENGTH_LONG).show();
-			t1 = new Thread(new DBConnector.GetAllProfessorNames());
-			t2 = new Thread(new DBConnector.GetAllCourseCodes());
-			t1.start();
-			t2.start();
-		}
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
+		AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
+		signInAlert.setView(alertTextAreas);
+		signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
+				EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
+				String username = usernameView.getText().toString().trim();
+				String password = passwordView.getText().toString().trim();
+				boolean isValid = DBConnector.isUFStudent(username, password);
+				if(isValid) {
+					MainActivity.username = username;
+					joinThreads(view, text, parentActivity);
+				}
+				else {
+					joinThreads(view, text, parentActivity);
+				}
+			}
+		});
+		signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				joinThreads(view, text, parentActivity);
+			}
+		});
+		signInAlert.show();
+		
 	}
 	/**
 	 * This are methods for bottom bar
@@ -126,6 +126,37 @@ public class MainActivity extends Activity {
 			Uri uri = Uri.parse("https://www.isis.ufl.edu/");
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 			c.startActivity(intent);
+		}
+	}
+	
+	public void joinThreads(View view, String text, Activity parentActivity) {
+		setProgressBarIndeterminateVisibility(true);
+		try {
+			t1.interrupt();
+			t2.interrupt();
+			Log.d("a","s");
+			DBConnector.interrupted = true;
+			Log.d("a","s");
+			t1.join();
+			t2.join();
+			Log.d("a","s");
+			DBConnector.interrupted = false;
+			Log.d("a","s");
+		}
+		catch(InterruptedException e) {
+			Log.d("x","s");
+			e.printStackTrace();
+		}
+		if(DBConnector.allCourseCodes.size() > 0 && DBConnector.allCourseCodes.size() > 0) {
+			Log.d("i","s");
+			MainActivity.performSearch(view, text, parentActivity);
+		}
+		else {
+			Toast.makeText(getBaseContext(), "Error Accessing Database", Toast.LENGTH_LONG).show();
+			t1 = new Thread(new DBConnector.GetAllProfessorNames());
+			t2 = new Thread(new DBConnector.GetAllCourseCodes());
+			t1.start();
+			t2.start();
 		}
 	}
 
@@ -167,6 +198,7 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(parent, SearchResults.class);
 		intent.putStringArrayListExtra("names", searchResults);
 		intent.putExtra("query", text);
+		intent.putExtra("username", username);
 		parent.startActivity(intent);
 	}
 
