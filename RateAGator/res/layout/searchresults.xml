@@ -37,8 +37,8 @@
             android:hint="Professor/Course name"
             android:inputType="text"
             android:textCursorDrawable="@null"
-            android:textColorHint="#FFFFFF"
-            android:textColor="#FFFFFF" >
+            android:textColorHint="#000000"
+            android:textColor="#000000" >
         </EditText>
 
         <Button
