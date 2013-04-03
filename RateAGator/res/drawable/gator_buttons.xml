@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- @weston This is a standard for all buttons that should be used throughout the project -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-android:shape="rectangle" android:padding="10dp">
+android:shape="rectangle" >
 
- <padding android:top="10dip"
-      android:bottom="10dip"/>
+ <padding android:top="5dip"
+      android:bottom="5dip"/>
     
-<!-- <solid android:color="#002458"
-     	/>
-
--->
-	<gradient
-	    android:type="linear"
-	    android:startColor="#FFFFFF"
-	    android:centerColor="#002458"
-	    android:endColor="#002458"
-	    android:angle="270" />
+ <solid android:color="#002458" />
 
     <corners
      android:bottomRightRadius="10dp"
