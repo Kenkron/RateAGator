@@ -28,6 +28,7 @@ public class EvaluationPage extends Activity {
 	
 	/** displays the evaluation currently on display */
 	Evaluation shownEvaluation;
+	Rating shownRating;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class EvaluationPage extends Activity {
 		Log.d("EvaluationPage",
 				"course: " 
 						+ currentCourse.courseNum);
+		
+		// Get the evaluations
 		shownEvaluation = DBConnector.getEvaluations(
 				currentCourse.professorFirstName,
 				currentCourse.professorLastName,
@@ -88,6 +91,44 @@ public class EvaluationPage extends Activity {
 
 				if (i != 7 && i != 8)
 					container.addView(fullEval);
+			}
+		}
+		
+		// Get the ratings
+		shownRating = DBConnector.getRating(
+				currentCourse.professorFirstName,
+				currentCourse.professorLastName,
+				currentCourse.courseNum);
+
+		if (shownRating == null || DBConnector.hasErrorOccurred()) {
+			Toast.makeText(getBaseContext(),
+					"Error Accessing Ratings Database", Toast.LENGTH_LONG)
+					.show();
+			finish();
+		} else {
+
+			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
+				double rating = shownRating.getRatingResponses()[i];
+				rating = ((int) (rating*100))/100.0;
+
+				ViewGroup container = (ViewGroup) (findViewById(R.id.ratingFieldList));
+
+				LinearLayout fullRating = new LinearLayout(this);
+
+				fullRating.setOrientation(LinearLayout.HORIZONTAL);
+
+				TextView newRatingAmount = new TextView(this);
+				newRatingAmount.setText("" + rating);
+				newRatingAmount.setGravity(Gravity.RIGHT);
+
+				TextView newRatingLabel = new TextView(this);
+				newRatingLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
+
+				fullRating.addView(newRatingLabel);
+				fullRating.addView(newRatingAmount);
+
+				if (i != 7 && i != 8)
+					container.addView(fullRating);
 			}
 		}
 

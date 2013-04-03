@@ -10,14 +10,14 @@
      layout="@layout/top_navigation_bar" />
     
     <TextView
-        android:id="@+id/professorEvalLabel"
+        android:id="@+id/professorRatingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Course Professor"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/courseEvalLabel"
+        android:id="@+id/courseRatingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

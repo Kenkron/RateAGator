@@ -5,6 +5,7 @@
     android:background="#FA5B00"
     android:orientation="vertical" >
 
+    //Top Bar
     <include
         android:id="@+id/top_navigation_bar"
         layout="@layout/top_navigation_bar" />
@@ -23,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="65dip" >
 
+                // Contains evals, ratings, comments, and textbooks
                 <LinearLayout
                     android:id="@+id/scrollingCourseData"
                     android:layout_width="match_parent"
@@ -50,7 +52,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Evaluations"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_marginTop="10dip" />
 
                     <LinearLayout
                         android:id="@+id/evaluationFieldList"
@@ -65,7 +68,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Ratings"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_marginTop="10dip" />
 
                     <LinearLayout
                         android:id="@+id/ratingFieldList"
@@ -75,19 +79,19 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/textbookEvalLabel"
+                        android:id="@+id/textbookLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="center_horizontal"
                         android:text="Textbook Links"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_marginTop="10dip" />
 
                     <LinearLayout
                         android:id="@+id/textbookList"
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@android:color/background_light"
+                        android:layout_gravity="center_horizontal"
                         android:orientation="vertical" >
                     </LinearLayout>
 
@@ -97,7 +101,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Comments"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_marginTop="10dip" />
 
                     <LinearLayout
                         android:id="@+id/commentFieldList"

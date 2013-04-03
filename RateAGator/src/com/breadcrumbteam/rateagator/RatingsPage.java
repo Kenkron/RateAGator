@@ -47,13 +47,13 @@ public class RatingsPage extends Activity {
 			finish();
 		} else {
 
-			((TextView) findViewById(R.id.professorEvalLabel))
+			((TextView) findViewById(R.id.professorRatingLabel))
 					.setText(getIntent().getStringExtra(
 							INTENT_PROFESSOR_FIRST_NAME)
 							+ " "
 							+ getIntent().getStringExtra(
 									INTENT_PROFESSOR_LAST_NAME));
-			((TextView) findViewById(R.id.courseEvalLabel)).setText(getIntent()
+			((TextView) findViewById(R.id.courseRatingLabel)).setText(getIntent()
 					.getStringExtra(INTENT_COURSE_NUMBER));
 
 			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
