@@ -24,6 +24,7 @@ public class SearchResults extends Activity {
 	 * Identifies the name of the list of search results in the intent
 	 */
 	public static final String INTENT_RESULTS = "names";
+	public static final String INTENT_USERNAME = "username";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class SearchResults extends Activity {
 	public void goToCourse(String courseCode) {
 		Intent intent = new Intent(this, ListPage.class);
 		intent.putExtra(ListPage.INTENT_COURSE_SET, DBConnector.getCourseSetByCode(courseCode));
+		intent.putExtra(INTENT_USERNAME, this.getIntent().getStringExtra(INTENT_USERNAME));
 		this.startActivity(intent);
 	}
 

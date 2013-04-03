@@ -19,6 +19,9 @@ import android.widget.Toast;
 public class EvaluationPage extends Activity {
 
 	public static final String INTENT_COURSE="course";
+	public static final String INTENT_USERNAME = "username";
+	
+	public static String username = "";
 
 	/**the course for which data is shown*/
 	Course currentCourse;
@@ -30,6 +33,8 @@ public class EvaluationPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
+		username = this.getIntent().getStringExtra(INTENT_USERNAME);
+		Log.i("#tardif", "username is: " + username);
 
 		currentCourse=((Course)getIntent().getSerializableExtra(INTENT_COURSE));
 		
@@ -109,6 +114,17 @@ public class EvaluationPage extends Activity {
 		}
 	}
 
+	public void goToRatings(View view) {
+		Intent intent = new Intent(this, RatingsPage.class);
+		intent.putExtra(RatingsPage.INTENT_COURSE_NUMBER,
+				currentCourse.courseNum);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_FIRST_NAME,
+				currentCourse.professorFirstName);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_LAST_NAME,
+				currentCourse.professorLastName);
+		this.startActivity(intent);
+	}
+	
 	public void goToComments(View view) {
 		Intent intent = new Intent(this, CommentsPage.class);
 		intent.putExtra("courseNum",currentCourse.courseNum);
@@ -122,3 +138,4 @@ public class EvaluationPage extends Activity {
 	}
 
 }
+

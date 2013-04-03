@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,7 @@ public class DBConnector {
 	
 	private static ArrayList<Evaluation> evals = new ArrayList<Evaluation>();
 	private static ArrayList<CourseSet> professors = new ArrayList<CourseSet>();
+	private static Rating rating = null;
 
 	//http post
 	private static synchronized InputStream httpPost(String postURL) {
@@ -421,9 +424,8 @@ public class DBConnector {
 	//getRatings
 	//
 	public static Rating getRating(String fName, String lName, String cCode) {
-		Rating rating = null;
 		errorOccurred = false;
-		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode, rating));
+		Thread t = new Thread(new GetRatingConnect(fName, lName, cCode));
 		t.start();
 
 		try {
@@ -440,12 +442,10 @@ public class DBConnector {
 	}
 	private static class GetRatingConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
-		private Rating rating = null;
-		public GetRatingConnect(String fName, String lName, String cCode, Rating rating) {
+		public GetRatingConnect(String fName, String lName, String cCode) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			this.rating = rating;
 		}
 		@Override
 		public void run() {
@@ -470,7 +470,7 @@ public class DBConnector {
 				json_data = jArray.getJSONObject(0);
 				rating = new Rating(json_data.getInt("Responded"));
 
-				for(int j = 0;j<=Rating.DB_FIELD_NAMES.length;j++) {
+				for(int j = 0;j<Rating.DB_FIELD_NAMES.length;j++) {
 					rating.addResponseValue(json_data.getDouble(Rating.DB_FIELD_NAMES[j]));
 				}
 			}
@@ -680,6 +680,70 @@ public class DBConnector {
 			catch(JSONException e1) {
 				errorOccurred = true;
 				e1.printStackTrace();
+			}
+		}
+	}
+	
+	//
+	//check if a username and password corresponds to a UF Student
+	//
+	public static boolean isUFStudent(String username, String password) {
+		errorOccurred = false;
+		Thread t = new Thread(new TestShibboleth(username, password));
+		t.start();
+
+		try {
+			t.join();
+		}
+		catch (InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
+		return !errorOccurred;
+	}
+	private static class TestShibboleth implements Runnable {
+		private String username = null;
+		private String password = null;
+		public TestShibboleth(String username, String password) {
+			this.username = username;
+			this.password = password;
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = "https://login.ufl.edu/idp/Authn/UserPassword";
+
+			InputStream is = null;
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost(postURL);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("j_username", username));
+				nameValuePairs.add(new BasicNameValuePair("j_password", password));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+
+				is = entity.getContent();
+				if(response.getStatusLine().getStatusCode() != 200) {
+					Log.w("DBConnector", "HTTP Post server error: bad response");
+				}
+			}
+			catch(Exception e) {
+				errorOccurred = true;
+				Log.e("DBConnector", "HTTP Post server error: death");
+			}
+
+			if(errorOccurred) {
+				return;
+			}
+
+			String result = convertResponseToString(is);
+			if(errorOccurred) {
+				return;
+			}
+			if(result.contains("incorrect")) {
+				errorOccurred = true;
 			}
 		}
 	}

@@ -38,7 +38,8 @@ public class Rating {
 			"Difficulty",
 			"Book",
 			"Hotness",
-			"Clarity Helpfulness",
+			"Content Clarity",
+			"Helpfulness",
 			"Course Relevance"
 		};
 	

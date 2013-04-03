@@ -19,6 +19,10 @@ public class ListPage extends Activity {
 	/** labels for the intent fields */
 	public static final String INTENT_COURSE_SET = "courseSet";
 
+	/**labels for the intent fields*/
+	public static final String 
+			INTENT_USERNAME = "username";
+
 	/** the currently handled course set */
 	CourseSet currentCourseSet;
 
@@ -79,6 +83,7 @@ public class ListPage extends Activity {
 	public void goToEvaluationPage(Course targetCourse) {
 		Intent intent = new Intent(this, EvaluationPage.class);
 		intent.putExtra(EvaluationPage.INTENT_COURSE, targetCourse);
+		intent.putExtra(INTENT_USERNAME, this.getIntent().getStringExtra(INTENT_USERNAME));
 		this.startActivity(intent);
 	}
 
