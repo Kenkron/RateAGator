@@ -557,8 +557,9 @@ public class DBConnector {
 				JSONObject json_data = null;
 				for(int i = 0;i<jArray.length();i++) {
 					json_data = jArray.getJSONObject(i);
+					String currentUser = json_data.getString("Username");
 					String currentComment = json_data.getString("Comment");
-					comments.add(currentComment);
+					comments.add(currentUser + ":" + currentComment);
 				}
 			}
 			catch(JSONException e1) {
@@ -569,6 +570,40 @@ public class DBConnector {
 	}
 
 
+	//
+	//deleteComment
+	//
+	public static void deleteComment(String fName, String lName, String cCode, String username) {
+		errorOccurred = false;
+		Thread t = new Thread(new DeleteCommentConnect(fName, lName, cCode, username));
+		t.start();
+
+		try {
+			t.join();
+		}
+		catch(InterruptedException e) {
+			errorOccurred = true;
+			e.printStackTrace();
+		}
+	}
+	private static class DeleteCommentConnect implements Runnable {
+		private ArrayList<String> paramList = new ArrayList<String>();
+		public DeleteCommentConnect(String fName, String lName, String cCode, String username) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
+			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
+			paramList.add("uname=" + username);
+		}
+		@Override
+		public void run() {
+			//add parameters to the URL
+			String postURL = scriptLocation + "/deleteComment.php" + convertParamList(paramList);
+
+			InputStream is = httpPost(postURL);
+		}
+	}
+	
+	
 	//
 	//postComment
 	//
@@ -595,6 +630,7 @@ public class DBConnector {
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
 			paramList.add("comment=" + comment.trim().replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\"", "%22"));
+			paramList.add("uname=" + MainActivity.username);
 		}
 		@Override
 		public void run() {
