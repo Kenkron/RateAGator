@@ -5091,3 +5091,21 @@ java.lang.IllegalArgumentException: Widget has the wrong parent
 
 !ENTRY org.eclipse.ui 2 2 2013-04-03 08:33:17.462
 !MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-04-03 13:08:33.066 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_15
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.ui 2 2 2013-04-03 13:14:48.682
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
+!SESSION 2013-04-04 16:34:04.667 -----------------------------------------------
+eclipse.buildId=I20120502-2000
+java.version=1.7.0_15
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.ui 2 2 2013-04-04 16:35:03.080
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)

@@ -1,5 +1,9 @@
 package com.breadcrumbteam.rateagator;
 
+import java.util.ArrayList;
+
+import com.breadcrumbteam.rateagator.CourseSet.SetType;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * a list of professor+course ratings based on a selected search result
@@ -19,9 +24,8 @@ public class ListPage extends Activity {
 	/** labels for the intent fields */
 	public static final String INTENT_COURSE_SET = "courseSet";
 
-	/**labels for the intent fields*/
-	public static final String 
-			INTENT_USERNAME = "username";
+	/** labels for the intent fields */
+	public static final String INTENT_USERNAME = "username";
 
 	/** the currently handled course set */
 	CourseSet currentCourseSet;
@@ -40,6 +44,49 @@ public class ListPage extends Activity {
 				.setText(currentCourseSet.setName);
 
 		ViewGroup resultsList = (ViewGroup) findViewById(R.id.professorEvalList);
+
+		if (currentCourseSet.courseList.size() > 1) {
+			final Course averageCourse;
+			final String username=this.getIntent().getStringExtra(INTENT_USERNAME);
+			if (currentCourseSet.type == SetType.ProfessorSet) {
+				averageCourse = new Course("", "Average");
+				averageCourse.setCourseProfessor(
+						currentCourseSet.courseList.get(0).professorFirstName,
+						currentCourseSet.courseList.get(0).professorLastName);
+			}else{
+				averageCourse = new Course(
+						currentCourseSet.courseList.get(0).courseName, 
+						currentCourseSet.courseList.get(0).courseNum);
+				averageCourse.setCourseProfessor("","Average");
+			}
+			Button averageResult=new Button(this);
+			setButton(averageResult, averageCourse);
+			averageResult.setText("Average");
+			averageResult.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.d("ListPage","average clicked");
+					Intent intent = new Intent(v.getContext(), EvaluationPage.class);
+					intent.putExtra(EvaluationPage.INTENT_COURSE, averageCourse);
+					intent.putExtra(INTENT_USERNAME,username);
+					ArrayList<Evaluation> allEvals=new ArrayList<Evaluation>();
+					for (Course c:currentCourseSet.courseList){
+						allEvals.add(DBConnector.getEvaluations(
+								c.professorFirstName, c.professorLastName, c.courseNum));
+						if (DBConnector.hasErrorOccurred()){
+							Toast.makeText(getBaseContext(),
+								"Error Accessing Database For "+c.professorFirstName+" teaching "+c.courseNum, 
+								Toast.LENGTH_LONG).show();
+							return;	
+						}
+					}
+					intent.putExtra(EvaluationPage.INTENT_EVALUATION, 
+							Evaluation.mergeEvaluations(allEvals));
+					v.getContext().startActivity(intent);
+				}
+			});
+			resultsList.addView(averageResult);
+		}
 		
 		for (Course c : currentCourseSet.courseList) {
 			Log.d("ListPage", "CourseList: " + c.courseName);
@@ -57,7 +104,8 @@ public class ListPage extends Activity {
 				}
 				break;
 			case CourseSet:
-				currentResult.setText(c.professorLastName+", "+c.professorFirstName);
+				currentResult.setText(c.professorLastName + ", "
+						+ c.professorFirstName);
 			}
 			setButton(currentResult, c);
 			resultsList.addView(currentResult);
@@ -83,10 +131,16 @@ public class ListPage extends Activity {
 	public void goToEvaluationPage(Course targetCourse) {
 		Intent intent = new Intent(this, EvaluationPage.class);
 		intent.putExtra(EvaluationPage.INTENT_COURSE, targetCourse);
-		intent.putExtra(INTENT_USERNAME, this.getIntent().getStringExtra(INTENT_USERNAME));
+		intent.putExtra(INTENT_USERNAME,
+				this.getIntent().getStringExtra(INTENT_USERNAME));
+		intent.putExtra(EvaluationPage.INTENT_EVALUATION, 
+				DBConnector.getEvaluations(
+						targetCourse.professorFirstName, 
+						targetCourse.professorLastName, 
+						targetCourse.courseNum));
 		this.startActivity(intent);
 	}
-
+	
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}
