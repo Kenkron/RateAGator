@@ -65,9 +65,10 @@ public class EvaluationPage extends Activity {
 			((TextView) findViewById(R.id.professorLabel))
 					.setText(currentCourse.professorFirstName
 							+ " "
-							+ currentCourse.professorLastName);
+							+ currentCourse.professorLastName + " "
+							+ currentCourse.courseNum);
 			
-			((TextView) findViewById(R.id.courseLabel)).setText(currentCourse.courseNum);
+			//((TextView) findViewById(.id.courseLabel)).setText(currentCourse.courseNum);
 
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
 				double rating = shownEvaluation.getResponses()[i];
