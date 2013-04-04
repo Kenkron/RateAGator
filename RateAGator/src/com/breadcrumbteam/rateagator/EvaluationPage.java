@@ -20,6 +20,7 @@ public class EvaluationPage extends Activity {
 
 	public static final String INTENT_COURSE="course";
 	public static final String INTENT_USERNAME = "username";
+	public static final String INTENT_EVALUATION = "eval";
 	
 	public static String username = "";
 
@@ -49,18 +50,15 @@ public class EvaluationPage extends Activity {
 				"course: " 
 						+ currentCourse.courseNum);
 		
-		// Get the evaluations
-		shownEvaluation = DBConnector.getEvaluations(
+		/////////////Show the Evaluations////////////////
+		shownEvaluation = (Evaluation) getIntent().getSerializableExtra(INTENT_EVALUATION);
+				
+				/*DBConnector.getEvaluations(
 				currentCourse.professorFirstName,
 				currentCourse.professorLastName,
-				currentCourse.courseNum);
+				currentCourse.courseNum);*/
 
-		if (shownEvaluation == null || DBConnector.hasErrorOccurred()) {
-			Toast.makeText(getBaseContext(),
-					"Error Accessing Evaluations Database", Toast.LENGTH_LONG)
-					.show();
-			finish();
-		} else {
+		
 
 			((TextView) findViewById(R.id.professorLabel))
 					.setText(currentCourse.professorFirstName
@@ -93,9 +91,9 @@ public class EvaluationPage extends Activity {
 				if (i != 7 && i != 8)
 					container.addView(fullEval);
 			}
-		}
 		
-		// Get the ratings
+		
+		///////////////// Get the ratings////////////////
 		shownRating = DBConnector.getRating(
 				currentCourse.professorFirstName,
 				currentCourse.professorLastName,
@@ -105,7 +103,7 @@ public class EvaluationPage extends Activity {
 			Toast.makeText(getBaseContext(),
 					"Error Accessing Ratings Database", Toast.LENGTH_LONG)
 					.show();
-			finish();
+			//finish();
 		} else {
 
 			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
@@ -123,7 +121,7 @@ public class EvaluationPage extends Activity {
 				newRatingAmount.setGravity(Gravity.RIGHT);
 
 				TextView newRatingLabel = new TextView(this);
-				newRatingLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
+				newRatingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
 
 				fullRating.addView(newRatingLabel);
 				fullRating.addView(newRatingAmount);
@@ -133,6 +131,8 @@ public class EvaluationPage extends Activity {
 			}
 		}
 
+		////////////////TEXTBOOKS//////////////////
+		
 		// fill out textbooks part
 		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.courseNum);
 		if (textbooks != null) {

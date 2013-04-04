@@ -1,9 +1,12 @@
 package com.breadcrumbteam.rateagator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Evaluation {
+public class Evaluation implements Serializable{
 	
+	private static final long serialVersionUID = 1626338404173274034L;
+
 	/**an ordered list of the labels for the fields*/
 	public static final String[] FIELD_NAMES=
 		{

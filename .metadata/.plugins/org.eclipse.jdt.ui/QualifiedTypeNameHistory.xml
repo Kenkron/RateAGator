@@ -23,4 +23,5 @@
 <fullyQualifiedTypeName name="java.io.Serializable"/>
 <fullyQualifiedTypeName name="com.breadcrumbteam.rateagator.CourseSet"/>
 <fullyQualifiedTypeName name="com.breadcrumbteam.rateagator.DBConnector"/>
+<fullyQualifiedTypeName name="com.breadcrumbteam.rateagator.RatingsPage"/>
 </qualifiedTypeNameHistroy>
