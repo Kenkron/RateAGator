@@ -20,7 +20,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static ArrayList<String> searchResults;
-	public static String username = "";
+	private static String username = null;
+	public static String getUsername() {
+		return username;
+	}
 	private Thread t1 = null;
 	private Thread t2 = null;
 
