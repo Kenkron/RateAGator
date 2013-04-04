@@ -591,9 +591,9 @@ public class DBConnector {
 	//
 	//deleteComment
 	//
-	public static void deleteComment(String fName, String lName, String cCode, String username) {
+	public static void deleteComment(String fName, String lName, String cCode) {
 		errorOccurred = false;
-		Thread t = new Thread(new DeleteCommentConnect(fName, lName, cCode, username));
+		Thread t = new Thread(new DeleteCommentConnect(fName, lName, cCode));
 		t.start();
 
 		try {
@@ -606,11 +606,11 @@ public class DBConnector {
 	}
 	private static class DeleteCommentConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
-		public DeleteCommentConnect(String fName, String lName, String cCode, String username) {
+		public DeleteCommentConnect(String fName, String lName, String cCode) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-			paramList.add("uname=" + username);
+			paramList.add("uname=" + MainActivity.getUsername());
 		}
 		@Override
 		public void run() {
@@ -623,7 +623,7 @@ public class DBConnector {
 	
 	
 	//
-	//postComment
+	//addComment
 	//
 	public static void addComment(String fName, String lName, String cCode, String comment) {
 		errorOccurred = false;
@@ -648,7 +648,7 @@ public class DBConnector {
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
 			paramList.add("comment=" + comment.trim().replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\"", "%22"));
-			paramList.add("uname=" + MainActivity.username);
+			paramList.add("uname=" + MainActivity.getUsername());
 		}
 		@Override
 		public void run() {
