@@ -1,5 +1,12 @@
 package com.breadcrumbteam.rateagator;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -20,6 +27,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static ArrayList<String> searchResults;
+	private static final String usernameLocation = "usernameFile";
 	private static String username = null;
 	public static String getUsername() {
 		return username;
@@ -32,7 +40,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setProgressBarIndeterminateVisibility(false);
-		//DBConnector.initProfessorsAndCourses();
+		writeNewUsername(null);//TODO: remove this once we get a manual way to remove one's username 
+		username = readInUsername();
 		t1 = new Thread(new DBConnector.GetAllProfessorNames());
 		t2 = new Thread(new DBConnector.GetAllCourseCodes());
 		t1.start();
@@ -74,33 +83,35 @@ public class MainActivity extends Activity {
 			Toast.makeText(getBaseContext(), "Search value was null, try again", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
-		AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
-		signInAlert.setView(alertTextAreas);
-		signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
-				EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
-				String username = usernameView.getText().toString().trim();
-				String password = passwordView.getText().toString().trim();
-				boolean isValid = DBConnector.isUFStudent(username, password);
-				if(isValid) {
-					MainActivity.username = username;
+		if(username == null) {
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
+			AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
+			signInAlert.setView(alertTextAreas);
+			signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
+					EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
+					String username = usernameView.getText().toString().trim();
+					String password = passwordView.getText().toString().trim();
+					boolean isValid = DBConnector.isUFStudent(username, password);
+					if(isValid) {
+						MainActivity.username = username;
+						writeNewUsername(username);
+					}
 					joinThreads(view, text, parentActivity);
 				}
-				else {
+			});
+			signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
 					joinThreads(view, text, parentActivity);
 				}
-			}
-		});
-		signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				joinThreads(view, text, parentActivity);
-			}
-		});
-		signInAlert.show();
-		
+			});
+			signInAlert.show();
+		}
+		else {
+			joinThreads(view, text, parentActivity);
+		}
 	}
 	/**
 	 * This are methods for bottom bar
@@ -380,6 +391,43 @@ public class MainActivity extends Activity {
 			}
 		}
 		return;
+	}
+	
+	public void removeUsername() {
+		writeNewUsername(null);
+	}
+	public void writeNewUsername(String newUsername) {
+		if(newUsername == null) newUsername = "";
+		File file = new File(getFilesDir(), usernameLocation);
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(newUsername.getBytes());
+			fos.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public String readInUsername() {
+		File file = new File(getFilesDir(), usernameLocation);
+		
+		String myData = "";
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			DataInputStream in = new DataInputStream(fis);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			while((strLine = br.readLine()) != null) {
+				myData = myData + strLine;
+			}
+			in.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		if(myData.equals("")) return null;
+
+		return myData;
 	}
 
 }
