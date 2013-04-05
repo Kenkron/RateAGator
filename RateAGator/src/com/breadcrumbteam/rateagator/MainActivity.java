@@ -127,8 +127,12 @@ public class MainActivity extends Activity {
 			c.startActivity(intent);
 		}
 		else if (vId == R.id.goHelp) {
-			Uri uri = Uri.parse("http://gizmodo.com/5909262/how-to-use-android");
-			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			/**
+			 * This will crash on any other page then main activity at the moment
+			 * This needs to be corrected it is here for testing for the time being
+			 */
+			Intent intent = new Intent(c, HelpPage.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 			c.startActivity(intent);
 		}
 		else if (vId == R.id.goHome) {
