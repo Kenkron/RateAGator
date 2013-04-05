@@ -53,6 +53,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.breadcrumbteam.rateagator.EvaluationPage" />
         </activity>
+        <activity android:name="HelpPage"></activity>
     </application>
 
 </manifest>

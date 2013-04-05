@@ -5,7 +5,7 @@
     android:background="#FA5B00"
     android:orientation="vertical" >
 
-    //Top Bar
+    <!-- Top Bar -->
     <include
         android:id="@+id/top_navigation_bar"
         layout="@layout/top_navigation_bar" />
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="65dip" >
 
-                // Contains evals, ratings, comments, and textbooks
+                <!-- Contains evals, ratings, comments, and textbooks -->
                 <LinearLayout
                     android:id="@+id/scrollingCourseData"
                     android:layout_width="match_parent"

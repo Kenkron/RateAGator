@@ -6,52 +6,58 @@
     android:layout_alignParentTop="true"
     android:background="#FA5B00" >
 
+    <!-- TODO ::: Scroll to for button Actions, and make buttons same width -->
+    
     <Button
         android:id="@+id/goEvals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
         android:layout_weight="1"
         android:onClick="goToEvals"
-        android:text="UF EVAL"
+        android:text="UF EVALS"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:layout_marginRight="4dip"
         android:layout_marginLeft="4dip"
         android:layout_marginBottom="4dip"
-        android:background="@drawable/gator_buttons" />
+        android:background="@drawable/gator_buttons" 
+    	android:textSize= "12sp"
+    	/>
 
     <Button
         android:id="@+id/goRatings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
         android:layout_weight="1"
         android:onClick="goToRatings"
-        android:text="Rating"
+        android:text="Ratings"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:layout_marginRight="4dip"
         android:layout_marginLeft="4dip"
         android:layout_marginBottom="4dip"
-        android:background="@drawable/gator_buttons" />
+        android:background="@drawable/gator_buttons"
+        android:textSize= "12sp" />
 
     <Button
         android:id="@+id/goComments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
         android:layout_weight="1"
         android:onClick="goToComments"
-        android:text="Comment"
+        android:text="Comments"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:layout_marginRight="4dip"
         android:layout_marginLeft="4dip"
         android:layout_marginBottom="4dip"
-        android:background="@drawable/gator_buttons" />
+        android:background="@drawable/gator_buttons"
+        android:textSize= "12sp" />
 
     <Button
         android:id="@+id/goBooks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
         android:layout_weight="1"
         android:onClick="goToBooks"
         android:text="Books"
@@ -60,6 +66,7 @@
         android:layout_marginRight="4dip"
         android:layout_marginLeft="4dip"
         android:layout_marginBottom="4dip"
-        android:background="@drawable/gator_buttons" />
+        android:background="@drawable/gator_buttons"
+        android:textSize= "12sp" />
 
 </LinearLayout>
