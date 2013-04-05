@@ -18,9 +18,10 @@ import android.widget.Toast;
 
 public class EvaluationPage extends Activity {
 
-	public static final String INTENT_COURSE="course";
-	public static final String INTENT_USERNAME = "username";
-	public static final String INTENT_EVALUATION = "eval";
+	public static final String INTENT_COURSE="course", 
+			INTENT_USERNAME = "username", 
+			INTENT_EVALUATION = "eval",
+			INTENT_RATING = "rating";
 	
 	public static String username = "";
 
@@ -52,13 +53,6 @@ public class EvaluationPage extends Activity {
 		
 		/////////////Show the Evaluations////////////////
 		shownEvaluation = (Evaluation) getIntent().getSerializableExtra(INTENT_EVALUATION);
-				
-				/*DBConnector.getEvaluations(
-				currentCourse.professorFirstName,
-				currentCourse.professorLastName,
-				currentCourse.courseNum);*/
-
-		
 
 			((TextView) findViewById(R.id.professorLabel))
 					.setText(currentCourse.professorFirstName
@@ -66,8 +60,6 @@ public class EvaluationPage extends Activity {
 							+ currentCourse.professorLastName + " "
 							+ currentCourse.courseNum);
 			
-			//((TextView) findViewById(.id.courseLabel)).setText(currentCourse.courseNum);
-
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
 				double rating = shownEvaluation.getResponses()[i];
 				rating = ((int) (rating*100))/100.0;
@@ -94,12 +86,9 @@ public class EvaluationPage extends Activity {
 		
 		
 		///////////////// Get the ratings////////////////
-		shownRating = DBConnector.getRating(
-				currentCourse.professorFirstName,
-				currentCourse.professorLastName,
-				currentCourse.courseNum);
-
-		if (shownRating == null || DBConnector.hasErrorOccurred()) {
+		shownRating = (Rating) getIntent().getSerializableExtra(INTENT_RATING);
+				
+		if (shownRating == null) {
 			Toast.makeText(getBaseContext(),
 					"Error Accessing Ratings Database", Toast.LENGTH_LONG)
 					.show();

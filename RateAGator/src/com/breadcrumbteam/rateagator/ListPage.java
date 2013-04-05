@@ -47,47 +47,74 @@ public class ListPage extends Activity {
 
 		if (currentCourseSet.courseList.size() > 1) {
 			final Course averageCourse;
-			final String username=this.getIntent().getStringExtra(INTENT_USERNAME);
+			final String username = this.getIntent().getStringExtra(
+					INTENT_USERNAME);
 			if (currentCourseSet.type == SetType.ProfessorSet) {
 				averageCourse = new Course("", "Average");
 				averageCourse.setCourseProfessor(
 						currentCourseSet.courseList.get(0).professorFirstName,
 						currentCourseSet.courseList.get(0).professorLastName);
-			}else{
+			} else {
 				averageCourse = new Course(
-						currentCourseSet.courseList.get(0).courseName, 
+						currentCourseSet.courseList.get(0).courseName,
 						currentCourseSet.courseList.get(0).courseNum);
-				averageCourse.setCourseProfessor("","Average");
+				averageCourse.setCourseProfessor("", "Average");
 			}
-			Button averageResult=new Button(this);
+			Button averageResult = new Button(this);
 			setButton(averageResult, averageCourse);
 			averageResult.setText("Average");
 			averageResult.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d("ListPage","average clicked");
-					Intent intent = new Intent(v.getContext(), EvaluationPage.class);
+					Log.d("ListPage", "average clicked");
+					Intent intent = new Intent(v.getContext(),
+							EvaluationPage.class);
 					intent.putExtra(EvaluationPage.INTENT_COURSE, averageCourse);
-					intent.putExtra(INTENT_USERNAME,username);
-					ArrayList<Evaluation> allEvals=new ArrayList<Evaluation>();
-					for (Course c:currentCourseSet.courseList){
+					intent.putExtra(INTENT_USERNAME, username);
+					ArrayList<Evaluation> allEvals = new ArrayList<Evaluation>();
+					ArrayList<Rating> allRatings = new ArrayList<Rating>();
+					for (Course c : currentCourseSet.courseList) {
 						allEvals.add(DBConnector.getEvaluations(
-								c.professorFirstName, c.professorLastName, c.courseNum));
-						if (DBConnector.hasErrorOccurred()){
-							Toast.makeText(getBaseContext(),
-								"Error Accessing Database For "+c.professorFirstName+" teaching "+c.courseNum, 
-								Toast.LENGTH_LONG).show();
-							return;	
+								c.professorFirstName, c.professorLastName,
+								c.courseNum));
+						if (DBConnector.hasErrorOccurred()) {
+							Toast.makeText(
+									getBaseContext(),
+									"Error Accessing Evaluations For "
+											+ c.professorFirstName
+											+ " teaching " + c.courseNum,
+									Toast.LENGTH_SHORT).show();
+						}
+						allRatings.add(DBConnector.getRating(
+								c.professorFirstName, c.professorLastName,
+								c.courseNum));
+						if (DBConnector.hasErrorOccurred()) {
+							Toast.makeText(
+									getBaseContext(),
+									"Error Accessing Ratings For "
+											+ c.professorFirstName
+											+ " teaching " + c.courseNum,
+									Toast.LENGTH_SHORT).show();
 						}
 					}
-					intent.putExtra(EvaluationPage.INTENT_EVALUATION, 
-							Evaluation.mergeEvaluations(allEvals));
-					v.getContext().startActivity(intent);
+					if (allEvals.size() > 0 && allRatings.size() > 0) {
+						intent.putExtra(EvaluationPage.INTENT_EVALUATION,
+								Evaluation.mergeEvaluations(allEvals));
+						intent.putExtra(EvaluationPage.INTENT_RATING,
+								Rating.merge(allRatings));
+						v.getContext().startActivity(intent);
+					}else{
+						Toast.makeText(
+								getBaseContext(),
+								"Error Accessing Averages For "
+										+ currentCourseSet.setName,
+								Toast.LENGTH_LONG).show();
+					}
 				}
 			});
 			resultsList.addView(averageResult);
 		}
-		
+
 		for (Course c : currentCourseSet.courseList) {
 			Log.d("ListPage", "CourseList: " + c.courseName);
 			Button currentResult = new Button(this);
@@ -133,14 +160,25 @@ public class ListPage extends Activity {
 		intent.putExtra(EvaluationPage.INTENT_COURSE, targetCourse);
 		intent.putExtra(INTENT_USERNAME,
 				this.getIntent().getStringExtra(INTENT_USERNAME));
-		intent.putExtra(EvaluationPage.INTENT_EVALUATION, 
-				DBConnector.getEvaluations(
-						targetCourse.professorFirstName, 
-						targetCourse.professorLastName, 
-						targetCourse.courseNum));
+		intent.putExtra(EvaluationPage.INTENT_EVALUATION, DBConnector
+				.getEvaluations(targetCourse.professorFirstName,
+						targetCourse.professorLastName, targetCourse.courseNum));
+		if (DBConnector.hasErrorOccurred()) {
+			Toast.makeText(getBaseContext(), "Error Accessing Evaluations",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+		intent.putExtra(EvaluationPage.INTENT_RATING, DBConnector.getRating(
+				targetCourse.professorFirstName,
+				targetCourse.professorLastName, targetCourse.courseNum));
+		if (DBConnector.hasErrorOccurred()) {
+			Toast.makeText(getBaseContext(), "Error Accessing Ratings",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		this.startActivity(intent);
 	}
-	
+
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}
