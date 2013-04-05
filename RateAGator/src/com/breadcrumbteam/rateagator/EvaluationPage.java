@@ -3,15 +3,19 @@ package com.breadcrumbteam.rateagator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +40,17 @@ public class EvaluationPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
+		
+		((Button)findViewById(R.id.goComments)).setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(v.getContext(), "click to submit a comment", Toast.LENGTH_LONG).show();
+				Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				vib.vibrate(250);
+				return false;
+			}
+		});
+		
 		username = this.getIntent().getStringExtra(INTENT_USERNAME);
 		Log.i("#tardif", "username is: " + username);
 
