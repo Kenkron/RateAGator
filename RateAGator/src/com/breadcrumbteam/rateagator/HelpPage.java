@@ -3,6 +3,7 @@ package com.breadcrumbteam.rateagator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,10 @@ public class HelpPage extends Activity {
 		Log.i("got to help page", "sfalfjdasd");
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.help_page);
+	    /**
+	     * Keeps screen in portrait mode
+	     */
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 	}
 	public static void goToLink(View v) {

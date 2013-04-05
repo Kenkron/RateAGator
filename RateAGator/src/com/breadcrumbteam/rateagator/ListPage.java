@@ -6,6 +6,7 @@ import com.breadcrumbteam.rateagator.CourseSet.SetType;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,11 @@ public class ListPage extends Activity {
 		setContentView(R.layout.professor_page);
 		currentCourseSet = (CourseSet) getIntent().getSerializableExtra(
 				INTENT_COURSE_SET);
+		
+	    /**
+	     * Keeps screen in portrait mode
+	     */
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		((TextView) this.findViewById(R.id.professorPageLabel))
 				.setText(currentCourseSet.setName);

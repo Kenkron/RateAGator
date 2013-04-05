@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Html;
@@ -40,6 +41,10 @@ public class EvaluationPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.professor_course_eval);
+	    /**
+	     * Keeps screen in portrait mode
+	     */
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		((Button)findViewById(R.id.goComments)).setOnLongClickListener(new OnLongClickListener() {
 			@Override
