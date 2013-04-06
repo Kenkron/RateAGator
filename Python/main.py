@@ -25,26 +25,29 @@ def getCoursePageLinks(listing_links, baseURL):
     return course_page_links
 def getIsbns(book_page_links):
     print "Getting ISBNs"
-    previousCode = ""
+    previousCode= ""
+    previousProf = ""
     bookISBNs = list()
     for link in book_page_links:
         soup = BS(urllib2.urlopen(link).read())
         try:
             currentCode = soup.find("td", "h2 course").text.strip()
+            currentProf = soup.find("td", "h2 instructor").text.strip()
         except AttributeError:
             continue
             
         #checking if should write to file or not
-        if currentCode != previousCode:
+        if currentProf != previousProf:
             if len(bookISBNs) != 0:
                 #write to file
                 with open("log.txt", "a") as myfile:
-                    myfile.write(previousCode.encode('utf-8'))
+                    myfile.write(previousCode + " " + previousProf)
                     for member in bookISBNs:
-                        myfile.write((" " + member).encode('utf-8'))
-                    myfile.write("\n".encode('utf-8'))
+                        myfile.write(" " + member)
+                    myfile.write("\n")
             print previousCode + " is complete!"
             previousCode = currentCode
+            previousProf = currentProf
             bookISBNs = list()
         
         try:
@@ -55,18 +58,18 @@ def getIsbns(book_page_links):
                     currentISBN = a.findNext("td").text.strip()
                     if currentISBN == "":
                         continue
-                    if currentISBN in bookISBNs:
-                        continue
-                    else:
-                        try:
-                            #attempt to get amazon url
-                            amazon_search_url = AMAZON_BASE + currentISBN
-                            soup = BS(urllib2.urlopen(amazon_search_url).read())
-                            book_page_url = soup.find_all("div", id="result_0")[0].findNext("a")["href"]
+                    try:
+                        #attempt to get amazon url
+                        amazon_search_url = AMAZON_BASE + currentISBN
+                        soup = BS(urllib2.urlopen(amazon_search_url).read())
+                        book_page_url = soup.find_all("div", id="result_0")[0].findNext("a")["href"]
+                        if book_page_url in bookISBNs:
+                            continue
+                        else:
                             bookISBNs.append(book_page_url)
-                        except IndexError:
-                            #if not, just submit the isbn number
-                            bookISBNs.append(currentISBN)
+                    except IndexError:
+                        #if not, just submit the isbn number
+                        continue
         except AttributeError:
                 continue
     
