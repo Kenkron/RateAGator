@@ -194,11 +194,14 @@ public class MainActivity extends Activity {
 			if (Character.isDigit(text.charAt(i))) {
 				containsDigit = true;
 			}
+			if(text.charAt(i) == ' ') { // to fool the character checker
+				continue;
+			}
 			if (!Character.isLetterOrDigit(text.charAt(i))) {
 				new AlertDialog.Builder(parent)
 						.setTitle("Oops")
 						.setMessage(
-								"Search value contains a non alphanumeric character. Revise your search and try again")
+								"Valid characters are A-Z, 0-9 and [space]. Revise your query and try again")
 						.setNeutralButton("Close", null).show();
 				return;
 			}
@@ -236,6 +239,7 @@ public class MainActivity extends Activity {
 
 	private static void searchProfessors(String text) {
 		ArrayList<String[]> lastNames = new ArrayList<String[]>();
+		
 		ArrayList<String[]> firstNames = new ArrayList<String[]>();
 
 		// fills in the first and last name arrayLists
@@ -245,6 +249,30 @@ public class MainActivity extends Activity {
 			// splits the lastName pair by ", " to make the firstName arrayList
 			firstNames.add(new String[] { lastNames.get(i)[0].split(", ")[1],
 					Integer.toString(i) });
+		}
+		
+		boolean containsSpace = false;
+		// Check for space (for fullName search)
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == ' ') {
+				containsSpace = true;
+				break;
+			}
+		}
+		
+		if(containsSpace) {
+			// Conduct fullname search
+			getSearchResults(text.split(" ")[1], lastNames, false);
+			Log.i("#tardif", searchResults.toString());
+			String inputFirstName = text.split(" ")[0];
+			ArrayList<String> trimmedResults = new ArrayList<String>();
+			for(int i = 0; i < searchResults.size(); i++) {
+				if(searchResults.get(i).split(", ")[1].equalsIgnoreCase(inputFirstName) ){
+					trimmedResults.add(searchResults.get(i));
+				}
+			}
+			searchResults = trimmedResults;
+			return;
 		}
 
 		// sorts the firstName (lastName is already sorted)
@@ -329,15 +357,16 @@ public class MainActivity extends Activity {
 				break;
 			}
 			current = (start + end) / 2;
-			for (int i = 0; i < input.length(); i++) {
+			int maxSearchChar = Math.min(input.length(), names.get(current)[0].length());
+			for (int i = 0; i < maxSearchChar; i++) {
 				if (Character.toLowerCase(names.get(current)[0].charAt(i)) == (Character
 						.toLowerCase(input.charAt(i)))) {
-					if (i == input.length() - 1) {
+					if (i == maxSearchChar - 1) {
 						// iterate up until there is no longer a complete match
 						// a good test case for this would to see which "Robert"
 						// shows up first
 						while (keepGoingUp) {
-							for (int j = 0; j < input.length(); j++) {
+							for (int j = 0; j < maxSearchChar; j++) {
 								// if its at the first index, avoids
 								// arrayOutOfBoundsException
 								if (current == 0) {
@@ -346,7 +375,7 @@ public class MainActivity extends Activity {
 								}
 								try {
 									if (Character.toLowerCase(names.get(current - 1)[0].charAt(j)) == (Character.toLowerCase(input.charAt(j)))) {
-										if (j == input.length() - 1) {
+										if (j == maxSearchChar - 1) {
 											current = current - 1;
 											break;
 										}
@@ -383,6 +412,9 @@ public class MainActivity extends Activity {
 							.toLowerCase(input.charAt(i)))) {
 						if (i == maxCharacters - 1) {
 							searchResults.add(originalList.get(Integer
+									.parseInt(names.get(current)[1])));
+							//TODO: remove this next line
+							Log.i("#tardif", originalList.get(Integer
 									.parseInt(names.get(current)[1])));
 							// if its at the last index, avoids
 							// arrayOutOfBoundsException
