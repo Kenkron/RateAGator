@@ -35,14 +35,52 @@
 				android:layout_marginBottom="6dip"
 			></TextView>
 		    
+		    <ImageView
+		     android:layout_width="fill_parent"
+		     android:layout_height="fill_parent"
+		     android:layout_weight="1"
+		     android:src="@drawable/tutorial1"
+		        
+		    ></ImageView>    
+		    
 		    <TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content" 
 				android:orientation="vertical" 
 				android:textColor="#FFFFFF"
 				android:gravity="top"
-				android:text="Usage: Search for your future UF professors and find offical UF evaluations as well as ratings,
-				comments, and textbooks. Brought to you by the RateAGator Team"
+				android:textSize="18sp"
+				android:text = "@string/help_page1"
+			></TextView>
+		    
+		    <TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="vertical" 
+				android:textColor="#FFFFFF"
+				android:gravity="top"
+				android:textSize="18sp"
+				android:text = "@string/help_page2"
+			></TextView>
+		    
+		    <TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="vertical" 
+				android:textColor="#FFFFFF"
+				android:gravity="top"
+				android:textSize="18sp"
+				android:text = "@string/help_page3"
+			></TextView>
+		    
+		    <TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="vertical" 
+				android:textColor="#FFFFFF"
+				android:gravity="top"
+				android:textSize="18sp"
+				android:text = "@string/help_page4"
 			></TextView>
 
 	    </LinearLayout>
