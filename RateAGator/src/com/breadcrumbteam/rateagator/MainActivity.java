@@ -29,7 +29,9 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	private static ArrayList<String> searchResults;
 	private static final String usernameLocation = "usernameFile";
+	private static final String doNotDisplayLocation = "doNotDisplayFile";
 	private static String username = null;
+	private static boolean displayUsernameMenu = true;
 	public static String getUsername() {
 		return username;
 	}
@@ -41,12 +43,20 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setProgressBarIndeterminateVisibility(false);
-	    /**
-	     * Keeps screen in portrait mode
-	     */
-	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		writeNewUsername(null);//TODO: remove this once we get a manual way to remove one's username 
-		username = readInUsername();
+		/**
+		 * Keeps screen in portrait mode
+		 */
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		writeFileContents(usernameLocation, null);//TODO: remove this once we get a manual way to remove one's username 
+		username = readFileContents(usernameLocation);
+		String temp = readFileContents(doNotDisplayLocation);
+		if(temp == null) {
+			displayUsernameMenu = true;
+		}
+		else {
+			displayUsernameMenu = Boolean.valueOf(temp);
+		}
+		Log.i("GESNSKGNDSKGNDSL", String.valueOf(displayUsernameMenu));
 		t1 = new Thread(new DBConnector.GetAllProfessorNames());
 		t2 = new Thread(new DBConnector.GetAllCourseCodes());
 		t1.start();
@@ -102,7 +112,7 @@ public class MainActivity extends Activity {
 					boolean isValid = DBConnector.isUFStudent(username, password);
 					if(isValid) {
 						MainActivity.username = username;
-						writeNewUsername(username);
+						writeFileContents(usernameLocation, username);
 					}
 					joinThreads(view, text, parentActivity);
 				}
@@ -142,8 +152,8 @@ public class MainActivity extends Activity {
 		}
 		else if (vId == R.id.goHome) {
 			Intent intent = new Intent(c, MainActivity.class);
-		    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
-		    c.startActivity(intent);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
+			c.startActivity(intent);
 		}
 		else if (vId == R.id.goIsis) {
 			Uri uri = Uri.parse("https://www.isis.ufl.edu/");
@@ -151,7 +161,7 @@ public class MainActivity extends Activity {
 			c.startActivity(intent);
 		}
 	}
-	
+
 	public void joinThreads(View view, String text, Activity parentActivity) {
 		setProgressBarIndeterminateVisibility(true);
 		try {
@@ -199,9 +209,9 @@ public class MainActivity extends Activity {
 			}
 			if (!Character.isLetterOrDigit(text.charAt(i))) {
 				new AlertDialog.Builder(parent)
-						.setTitle("Oops")
-						.setMessage(
-								"Valid characters are A-Z, 0-9 and [space]. Revise your query and try again")
+				.setTitle("Oops")
+				.setMessage(
+						"Valid characters are A-Z, 0-9 and [space]. Revise your query and try again")
 						.setNeutralButton("Close", null).show();
 				return;
 			}
@@ -211,7 +221,7 @@ public class MainActivity extends Activity {
 		if (containsDigit) { // know for sure it's a course
 			searchCourses(text);
 		} else if (text.length() == 3) { // could be a professor or a course
-											// prefix
+			// prefix
 			// get courses
 			searchCourses(text);
 			// get names
@@ -239,7 +249,7 @@ public class MainActivity extends Activity {
 
 	private static void searchProfessors(String text) {
 		ArrayList<String[]> lastNames = new ArrayList<String[]>();
-		
+
 		ArrayList<String[]> firstNames = new ArrayList<String[]>();
 
 		// fills in the first and last name arrayLists
@@ -250,7 +260,7 @@ public class MainActivity extends Activity {
 			firstNames.add(new String[] { lastNames.get(i)[0].split(", ")[1],
 					Integer.toString(i) });
 		}
-		
+
 		boolean containsSpace = false;
 		// Check for space (for fullName search)
 		for (int i = 0; i < text.length(); i++) {
@@ -259,7 +269,7 @@ public class MainActivity extends Activity {
 				break;
 			}
 		}
-		
+
 		if(containsSpace) {
 			// Conduct fullname search
 			getSearchResults(text.split(" ")[1], lastNames, false);
@@ -433,25 +443,26 @@ public class MainActivity extends Activity {
 		}
 		return;
 	}
-	
-	public void removeUsername() {
-		writeNewUsername(null);
+
+	public void clearFileContents(String fileLocation) {
+		writeFileContents(fileLocation, null);
 	}
-	public void writeNewUsername(String newUsername) {
-		if(newUsername == null) newUsername = "";
-		File file = new File(getFilesDir(), usernameLocation);
+	public void writeFileContents(String fileLocation, String content) {
+		if(content == null) content = "";
+		File file = new File(getFilesDir(), fileLocation);
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
-			fos.write(newUsername.getBytes());
+			fos.write(content.getBytes());
 			fos.close();
 		}
 		catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
-	public String readInUsername() {
-		File file = new File(getFilesDir(), usernameLocation);
-		
+
+	public String readFileContents(String fileLocation) {
+		File file = new File(getFilesDir(), fileLocation);
+
 		String myData = "";
 		try {
 			FileInputStream fis = new FileInputStream(file);
