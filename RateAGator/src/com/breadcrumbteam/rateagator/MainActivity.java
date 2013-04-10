@@ -20,8 +20,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -47,7 +49,6 @@ public class MainActivity extends Activity {
 		 * Keeps screen in portrait mode
 		 */
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		writeFileContents(usernameLocation, null);//TODO: remove this once we get a manual way to remove one's username 
 		username = readFileContents(usernameLocation);
 		String temp = readFileContents(doNotDisplayLocation);
 		if(temp == null) {
@@ -56,7 +57,6 @@ public class MainActivity extends Activity {
 		else {
 			displayUsernameMenu = Boolean.valueOf(temp);
 		}
-		Log.i("GESNSKGNDSKGNDSL", String.valueOf(displayUsernameMenu));
 		t1 = new Thread(new DBConnector.GetAllProfessorNames());
 		t2 = new Thread(new DBConnector.GetAllCourseCodes());
 		t1.start();
@@ -78,6 +78,17 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.reset:
+	            resetUsername();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	/**
 	 * this method is called when the exit button is pressed What causes this
 	 * method to be called? In the file res/layout/activity_main.xml (Which is
@@ -98,15 +109,16 @@ public class MainActivity extends Activity {
 			Toast.makeText(getBaseContext(), "Search value was null, try again", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		if(username == null) {
+		if(username == null && displayUsernameMenu) {
 			LayoutInflater factory = LayoutInflater.from(this);
-			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
+			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas_checkbox, null);
 			AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
 			signInAlert.setView(alertTextAreas);
 			signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
 					EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
+					CheckBox checkBox = (CheckBox) alertTextAreas.findViewById(R.id.checkBox1);
 					String username = usernameView.getText().toString().trim();
 					String password = passwordView.getText().toString().trim();
 					boolean isValid = DBConnector.isUFStudent(username, password);
@@ -114,11 +126,22 @@ public class MainActivity extends Activity {
 						MainActivity.username = username;
 						writeFileContents(usernameLocation, username);
 					}
+					else {
+						if(!username.equals("")) {
+							Toast.makeText(getBaseContext(), "Invalid username/password", Toast.LENGTH_SHORT).show();
+						}
+					}
+					displayUsernameMenu = !checkBox.isChecked();
+					writeFileContents(doNotDisplayLocation, String.valueOf(displayUsernameMenu));
+					
 					joinThreads(view, text, parentActivity);
 				}
 			});
 			signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
+					CheckBox checkBox = (CheckBox) alertTextAreas.findViewById(R.id.checkBox1);
+					displayUsernameMenu = !checkBox.isChecked();
+					writeFileContents(doNotDisplayLocation, String.valueOf(displayUsernameMenu));
 					joinThreads(view, text, parentActivity);
 				}
 			});
@@ -167,21 +190,15 @@ public class MainActivity extends Activity {
 		try {
 			t1.interrupt();
 			t2.interrupt();
-			Log.d("a","s");
 			DBConnector.interrupted = true;
-			Log.d("a","s");
 			t1.join();
 			t2.join();
-			Log.d("a","s");
 			DBConnector.interrupted = false;
-			Log.d("a","s");
 		}
 		catch(InterruptedException e) {
-			Log.d("x","s");
 			e.printStackTrace();
 		}
 		if(DBConnector.allCourseCodes.size() > 0 && DBConnector.allCourseCodes.size() > 0) {
-			Log.d("i","s");
 			MainActivity.performSearch(view, text, parentActivity);
 		}
 		else {
@@ -480,6 +497,13 @@ public class MainActivity extends Activity {
 		if(myData.equals("")) return null;
 
 		return myData;
+	}
+	
+	public void resetUsername() {
+		username = null;
+		displayUsernameMenu = true;
+		writeFileContents(usernameLocation, null);
+		writeFileContents(doNotDisplayLocation, null);		
 	}
 
 }
