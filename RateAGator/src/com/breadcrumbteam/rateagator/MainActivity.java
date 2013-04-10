@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -48,8 +49,6 @@ public class MainActivity extends Activity {
 		 * Keeps screen in portrait mode
 		 */
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		writeFileContents(usernameLocation, null);//TODO: remove this once we get a manual way to remove one's username
-		writeFileContents(doNotDisplayLocation, null);//TODO: remove this once we get a manual way to remove one's username
 		username = readFileContents(usernameLocation);
 		String temp = readFileContents(doNotDisplayLocation);
 		if(temp == null) {
@@ -58,7 +57,6 @@ public class MainActivity extends Activity {
 		else {
 			displayUsernameMenu = Boolean.valueOf(temp);
 		}
-		Log.i("GESNSKGNDSKGNDSL", String.valueOf(displayUsernameMenu));
 		t1 = new Thread(new DBConnector.GetAllProfessorNames());
 		t2 = new Thread(new DBConnector.GetAllCourseCodes());
 		t1.start();
@@ -80,6 +78,17 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.reset:
+	            resetUsername();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	/**
 	 * this method is called when the exit button is pressed What causes this
 	 * method to be called? In the file res/layout/activity_main.xml (Which is
@@ -176,21 +185,15 @@ public class MainActivity extends Activity {
 		try {
 			t1.interrupt();
 			t2.interrupt();
-			Log.d("a","s");
 			DBConnector.interrupted = true;
-			Log.d("a","s");
 			t1.join();
 			t2.join();
-			Log.d("a","s");
 			DBConnector.interrupted = false;
-			Log.d("a","s");
 		}
 		catch(InterruptedException e) {
-			Log.d("x","s");
 			e.printStackTrace();
 		}
 		if(DBConnector.allCourseCodes.size() > 0 && DBConnector.allCourseCodes.size() > 0) {
-			Log.d("i","s");
 			MainActivity.performSearch(view, text, parentActivity);
 		}
 		else {
@@ -489,6 +492,13 @@ public class MainActivity extends Activity {
 		if(myData.equals("")) return null;
 
 		return myData;
+	}
+	
+	public void resetUsername() {
+		username = null;
+		displayUsernameMenu = true;
+		writeFileContents(usernameLocation, null);
+		writeFileContents(doNotDisplayLocation, null);		
 	}
 
 }
