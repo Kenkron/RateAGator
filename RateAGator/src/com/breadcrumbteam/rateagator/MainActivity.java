@@ -126,6 +126,11 @@ public class MainActivity extends Activity {
 						MainActivity.username = username;
 						writeFileContents(usernameLocation, username);
 					}
+					else {
+						if(!username.equals("")) {
+							Toast.makeText(getBaseContext(), "Invalid username/password", Toast.LENGTH_SHORT).show();
+						}
+					}
 					displayUsernameMenu = !checkBox.isChecked();
 					writeFileContents(doNotDisplayLocation, String.valueOf(displayUsernameMenu));
 					
