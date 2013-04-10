@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -47,7 +48,8 @@ public class MainActivity extends Activity {
 		 * Keeps screen in portrait mode
 		 */
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		writeFileContents(usernameLocation, null);//TODO: remove this once we get a manual way to remove one's username 
+		writeFileContents(usernameLocation, null);//TODO: remove this once we get a manual way to remove one's username
+		writeFileContents(doNotDisplayLocation, null);//TODO: remove this once we get a manual way to remove one's username
 		username = readFileContents(usernameLocation);
 		String temp = readFileContents(doNotDisplayLocation);
 		if(temp == null) {
@@ -98,15 +100,16 @@ public class MainActivity extends Activity {
 			Toast.makeText(getBaseContext(), "Search value was null, try again", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		if(username == null) {
+		if(username == null && displayUsernameMenu) {
 			LayoutInflater factory = LayoutInflater.from(this);
-			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
+			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas_checkbox, null);
 			AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
 			signInAlert.setView(alertTextAreas);
 			signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
 					EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
+					CheckBox checkBox = (CheckBox) alertTextAreas.findViewById(R.id.checkBox1);
 					String username = usernameView.getText().toString().trim();
 					String password = passwordView.getText().toString().trim();
 					boolean isValid = DBConnector.isUFStudent(username, password);
@@ -114,11 +117,17 @@ public class MainActivity extends Activity {
 						MainActivity.username = username;
 						writeFileContents(usernameLocation, username);
 					}
+					displayUsernameMenu = !checkBox.isChecked();
+					writeFileContents(doNotDisplayLocation, String.valueOf(displayUsernameMenu));
+					
 					joinThreads(view, text, parentActivity);
 				}
 			});
 			signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
+					CheckBox checkBox = (CheckBox) alertTextAreas.findViewById(R.id.checkBox1);
+					displayUsernameMenu = !checkBox.isChecked();
+					writeFileContents(doNotDisplayLocation, String.valueOf(displayUsernameMenu));
 					joinThreads(view, text, parentActivity);
 				}
 			});
