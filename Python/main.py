@@ -3,6 +3,7 @@ import urllib2
 
 FALL_2012 = "http://www.registrar.ufl.edu/soc/201208/all/"
 AMAZON_BASE = "http://www.amazon.com/s/ref=nb_sb_noss/176-8710242-7445831?url=search-alias%3Daps&field-keywords="
+OFFSET = 24;
 
 # course listing links
 def getListingLinks(baseURL):
@@ -10,14 +11,15 @@ def getListingLinks(baseURL):
     soup = BS(urllib2.urlopen(baseURL).read())
     listing_links = [str(x['value']) for x in soup.find(id='soc_content').find_all('option')]
     del listing_links[0]
+    print "listing links " + str(len(listing_links))
     return listing_links
 
 # get all the textbook links from course page (has duplicates)
 def getCoursePageLinks(listing_links, baseURL):
     print "Getting course page links"
     course_page_links = list()
-    for listing in listing_links:
-        soup = BS(urllib2.urlopen(baseURL + listing).read())
+    for i in range(len(listing_links) - OFFSET):
+        soup = BS(urllib2.urlopen(baseURL + listing_links[i+OFFSET]).read())
         for x in soup.find(id="soc_content").find_all('a'):
             if x.has_key("href"):
                 if "books" in x["href"]:
@@ -40,10 +42,10 @@ def getIsbns(book_page_links):
         if currentProf != previousProf:
             if len(bookISBNs) != 0:
                 #write to file
-                with open("log.txt", "a") as myfile:
-                    myfile.write(previousCode + " " + previousProf)
+                with open("log1_3.txt", "a") as myfile:
+                    myfile.write(previousCode.encode('utf-8') + " " + previousProf.encode('utf-8'))
                     for member in bookISBNs:
-                        myfile.write(" " + member)
+                        myfile.write(" " + member.encode('utf-8'))
                     myfile.write("\n")
             print previousCode + " is complete!"
             previousCode = currentCode
