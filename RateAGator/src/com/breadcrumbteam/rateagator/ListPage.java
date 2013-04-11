@@ -38,6 +38,10 @@ public class ListPage extends Activity {
 		// TODO make a layout for ProfessorPage
 
 		setContentView(R.layout.professor_page);
+		
+	    //sets up help text
+	    MainActivity.setupBottomButtonHelpListeners(this);
+	    
 		currentCourseSet = (CourseSet) getIntent().getSerializableExtra(
 				INTENT_COURSE_SET);
 		
@@ -80,9 +84,9 @@ public class ListPage extends Activity {
 					ArrayList<Evaluation> allEvals = new ArrayList<Evaluation>();
 					ArrayList<Rating> allRatings = new ArrayList<Rating>();
 					for (Course c : currentCourseSet.courseList) {
-						allEvals.add(DBConnector.getEvaluations(
+						Evaluation nextEval = DBConnector.getEvaluations(
 								c.professorFirstName, c.professorLastName,
-								c.courseNum));
+								c.courseNum);
 						if (DBConnector.hasErrorOccurred()) {
 							Toast.makeText(
 									getBaseContext(),
@@ -90,8 +94,10 @@ public class ListPage extends Activity {
 											+ c.professorFirstName
 											+ " teaching " + c.courseNum,
 									Toast.LENGTH_SHORT).show();
+						}else{
+							allEvals.add(nextEval);
 						}
-						allRatings.add(DBConnector.getRating(
+						Rating nextRating=(DBConnector.getRating(
 								c.professorFirstName, c.professorLastName,
 								c.courseNum));
 						if (DBConnector.hasErrorOccurred()) {
@@ -101,6 +107,8 @@ public class ListPage extends Activity {
 											+ c.professorFirstName
 											+ " teaching " + c.courseNum,
 									Toast.LENGTH_SHORT).show();
+						}else{
+							allRatings.add(nextRating);
 						}
 					}
 					if (allEvals.size() > 0 && allRatings.size() > 0) {

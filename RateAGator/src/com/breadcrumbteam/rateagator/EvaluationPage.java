@@ -3,7 +3,9 @@ package com.breadcrumbteam.rateagator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Paint.Align;
@@ -13,11 +15,16 @@ import android.text.Html;
 import android.text.Layout.Alignment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
@@ -48,7 +55,10 @@ public class EvaluationPage extends Activity {
 	     * Keeps screen in portrait mode
 	     */
 	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+
+	    //sets up help text
+	    MainActivity.setupBottomButtonHelpListeners(this);
+
 		((Button)findViewById(R.id.goComments)).setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -119,16 +129,15 @@ public class EvaluationPage extends Activity {
 					.show();
 			//finish();
 		} else {
-
+			LinearLayout container = null;
 			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
 				float rating = (float) shownRating.getRatingResponses()[i];
 				
 				//puts in 2 decimal points only
 				rating = (float) (Math.round(rating*100.0)/100.0);
 
-				LinearLayout container = (LinearLayout) (findViewById(R.id.ratingFieldList));
+				container = (LinearLayout) (findViewById(R.id.ratingFieldList));
 				container.setOrientation(LinearLayout.VERTICAL);
-
 				LinearLayout fullRating = new LinearLayout(this);
 
 				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
@@ -142,16 +151,26 @@ public class EvaluationPage extends Activity {
 
 				fullRating.addView(newRatingLabel);
 				fullRating.addView(ratingBar);
-
-				if (i != 7 && i != 8)
-					container.addView(fullRating);
 			}
+			Button rateButton = new Button(this);
+			rateButton.setText("Rate Professor");
+			rateButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if(MainActivity.getUsername() != null) {
+						goToRateProfessor(v);
+					}
+					else {
+						Toast.makeText(getBaseContext(), "Must be logged in", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+			container.addView(rateButton);
 		}
 
 		////////////////TEXTBOOKS//////////////////
 		
 		// fill out textbooks part
-		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.courseNum);
+		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.professorFirstName, currentCourse.professorLastName, currentCourse.courseNum);
 		if (textbooks != null) {
 			//makes sure there are textbooks before loading them
 			Log.i("testing", textbooks.toString());
@@ -194,6 +213,17 @@ public class EvaluationPage extends Activity {
 
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
+	}
+	
+	public void goToRateProfessor(View view) {
+		Intent intent = new Intent(this, RateProfessorPage.class);
+		intent.putExtra(RatingsPage.INTENT_COURSE_NUMBER,
+				currentCourse.courseNum);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_FIRST_NAME,
+				currentCourse.professorFirstName);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_LAST_NAME,
+				currentCourse.professorLastName);
+		this.startActivity(intent);
 	}
 
 }

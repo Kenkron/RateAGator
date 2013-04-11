@@ -54,6 +54,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.breadcrumbteam.rateagator.EvaluationPage" />
         </activity>
+        <activity
+            android:name="com.breadcrumbteam.rateagator.RateProfessorPage"
+            android:label="@string/title_activity_rate_professor_page"
+            android:parentActivityName="com.breadcrumbteam.rateagator.EvaluationPage" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.breadcrumbteam.rateagator.EvaluationPage" />
+        </activity>
         <activity android:name="HelpPage"></activity>
     </application>
 
