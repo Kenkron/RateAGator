@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.view.View.OnLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -48,6 +51,7 @@ public class MainActivity extends Activity {
 		/**
 		 * Keeps screen in portrait mode
 		 */
+		
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		username = readFileContents(usernameLocation);
 		String temp = readFileContents(doNotDisplayLocation);
@@ -63,6 +67,10 @@ public class MainActivity extends Activity {
 		t2.start();
 
 		setContentView(R.layout.activity_main);
+
+		//setup help text
+		setupBottomButtonHelpListeners(this);
+		setHelp(this, R.id.searchButton, "Search for a Professor or Course.");
 	}
 
 	@Override
@@ -506,4 +514,30 @@ public class MainActivity extends Activity {
 		writeFileContents(doNotDisplayLocation, null);		
 	}
 
+	
+	public static void setupBottomButtonHelpListeners(final Activity activity){
+		setHelp(activity,R.id.goHome,"Return to Main Menu");
+		setHelp(activity,R.id.goCourses,"Go to UF Registrar");
+		setHelp(activity,R.id.goIsis,"Go to ISIS");
+		setHelp(activity,R.id.goHelp,"View Help Page");
+	}
+	
+	/**Applies help text to a View that will
+	 * appear when the View is long-pressed.
+	 * 
+	 * @param activity: the activity with the button
+	 * @param id: the id of the View (found in R)
+	 * @param helpText: the text to display for help*/
+	public static void setHelp(final Activity activity, final int id, final String helpText){
+		((View)activity.findViewById(id)).setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(v.getContext(), helpText, Toast.LENGTH_LONG).show();
+				Vibrator vib = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+				vib.vibrate(250);
+				return true;
+			}
+		});
+		((View)activity.findViewById(id)).setLongClickable(true);
+	}
 }

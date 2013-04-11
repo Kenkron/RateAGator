@@ -45,7 +45,10 @@ public class EvaluationPage extends Activity {
 	     * Keeps screen in portrait mode
 	     */
 	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+
+	    //sets up help text
+	    MainActivity.setupBottomButtonHelpListeners(this);
+
 		((Button)findViewById(R.id.goComments)).setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -187,6 +190,5 @@ public class EvaluationPage extends Activity {
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}
-
 }
 
