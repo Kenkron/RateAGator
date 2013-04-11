@@ -143,9 +143,6 @@ public class EvaluationPage extends Activity {
 
 				fullRating.addView(newRatingLabel);
 				fullRating.addView(ratingBar);
-
-				if (i != 7 && i != 8)
-					container.addView(fullRating);
 			}
 			Button rateButton = new Button(this);
 			rateButton.setText("Rate Professor");
@@ -165,7 +162,7 @@ public class EvaluationPage extends Activity {
 		////////////////TEXTBOOKS//////////////////
 		
 		// fill out textbooks part
-		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.courseNum);
+		ArrayList<String> textbooks = DBConnector.getTextbooks(currentCourse.professorFirstName, currentCourse.professorLastName, currentCourse.courseNum);
 		if (textbooks != null) {
 			//makes sure there are textbooks before loading them
 			Log.i("testing", textbooks.toString());
