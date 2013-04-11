@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,23 @@ public class RateProfessorPage extends Activity {
 						.getStringExtra(INTENT_PROFESSOR_LAST_NAME));
 		Log.d("RatingsPage",
 				"course: " + getIntent().getStringExtra(INTENT_COURSE_NUMBER));
+		
+		for(int i = 0;i<Rating.FIELD_NAMES.length;i++) {
+			ViewGroup container = (ViewGroup) (findViewById(R.id.rateProfessorFieldList));
+			LinearLayout fullRate = new LinearLayout(this);
+			fullRate.setOrientation(LinearLayout.HORIZONTAL);
+			TextView newRatingLabel = new TextView(this);
+			newRatingLabel.setText(Rating.FIELD_NAMES[i]);
+			
+			RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyle);
+			ratingBar.setNumStars(5);
+			ratingBar.setRating(3);
+			ratingBar.setStepSize(1);
+			
+			fullRate.addView(newRatingLabel);
+			fullRate.addView(ratingBar);
+			container.addView(fullRate);
+		}
 	}
 
 	public void goToComments(View view) {
