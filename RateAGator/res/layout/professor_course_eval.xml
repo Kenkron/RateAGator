@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <!-- Top Bar -->
+
     <include
         android:id="@+id/top_navigation_bar"
         layout="@layout/top_navigation_bar" />
@@ -25,6 +26,7 @@
                 android:layout_marginBottom="65dip" >
 
                 <!-- Contains evals, ratings, comments, and textbooks -->
+
                 <LinearLayout
                     android:id="@+id/scrollingCourseData"
                     android:layout_width="match_parent"
@@ -38,14 +40,16 @@
                         android:text="Course Professor"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+                    <!-- Evals -->
+
                     <TextView
                         android:id="@+id/evaluationsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dip"
                         android:text="Evaluations"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:layout_marginTop="10dip" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <LinearLayout
                         android:id="@+id/evaluationFieldList"
@@ -54,14 +58,26 @@
                         android:orientation="vertical" >
                     </LinearLayout>
 
+                    <!-- 
+                    <RatingBar
+                        android:id="@+id/ratingBar1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="2.0"
+                        android:stepSize="0.1" />
+                    -->
+
+                    <!-- Ratings -->
+
                     <TextView
                         android:id="@+id/ratingsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dip"
                         android:text="Ratings"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:layout_marginTop="10dip" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <LinearLayout
                         android:id="@+id/ratingFieldList"
@@ -70,14 +86,16 @@
                         android:orientation="vertical" >
                     </LinearLayout>
 
+                    <!-- Textbooks -->
+
                     <TextView
                         android:id="@+id/textbookLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dip"
                         android:text="Textbook Links"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:layout_marginTop="10dip" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <LinearLayout
                         android:id="@+id/textbookList"
@@ -87,14 +105,16 @@
                         android:orientation="vertical" >
                     </LinearLayout>
 
+                    <!-- Comments -->
+
                     <TextView
                         android:id="@+id/commentsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dip"
                         android:text="Comments"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:layout_marginTop="10dip" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <LinearLayout
                         android:id="@+id/commentFieldList"

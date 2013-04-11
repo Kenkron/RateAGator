@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,8 +88,8 @@ public class EvaluationPage extends Activity {
 							+ currentCourse.courseNum);
 			
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
-				double rating = shownEvaluation.getResponses()[i];
-				rating = ((int) (rating*100))/100.0;
+				float rating = (float) shownEvaluation.getResponses()[i];
+				rating = (float) (Math.round(rating*100.0)/100.0);
 
 				ViewGroup container = (ViewGroup) (findViewById(R.id.evaluationFieldList));
 
@@ -96,15 +97,16 @@ public class EvaluationPage extends Activity {
 
 				fullEval.setOrientation(LinearLayout.HORIZONTAL);
 
-				TextView newEvalAmount = new TextView(this);
-				newEvalAmount.setText("" + rating);
-				newEvalAmount.setGravity(Gravity.RIGHT);
+				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
+				ratingBar.setNumStars(5);
+				ratingBar.setRating(rating);
+				ratingBar.setStepSize(0.1f);
 
 				TextView newEvalLabel = new TextView(this);
 				newEvalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
 
 				fullEval.addView(newEvalLabel);
-				fullEval.addView(newEvalAmount);
+				fullEval.addView(ratingBar);
 
 				if (i != 7 && i != 8)
 					container.addView(fullEval);
@@ -122,22 +124,25 @@ public class EvaluationPage extends Activity {
 		} else {
 			ViewGroup container = (ViewGroup) (findViewById(R.id.ratingFieldList));
 			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
-				double rating = shownRating.getRatingResponses()[i];
-				rating = ((int) (rating*100))/100.0;
+				float rating = (float) shownRating.getRatingResponses()[i];
+				
+				//puts in 2 decimal points only
+				rating = (float) (Math.round(rating*100.0)/100.0);
 
 				LinearLayout fullRating = new LinearLayout(this);
 
 				fullRating.setOrientation(LinearLayout.HORIZONTAL);
 
-				TextView newRatingAmount = new TextView(this);
-				newRatingAmount.setText("" + rating);
-				newRatingAmount.setGravity(Gravity.RIGHT);
+				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
+				ratingBar.setNumStars(5);
+				ratingBar.setRating(rating);
+				ratingBar.setStepSize(0.1f);
 
 				TextView newRatingLabel = new TextView(this);
 				newRatingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
 
 				fullRating.addView(newRatingLabel);
-				fullRating.addView(newRatingAmount);
+				fullRating.addView(ratingBar);
 
 				if (i != 7 && i != 8)
 					container.addView(fullRating);
