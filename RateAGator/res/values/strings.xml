@@ -7,6 +7,7 @@
     <string name="search">Search</string>
     <string name="results">Results:</string>
     <string name="title_activity_comments_page">CommentsPage</string>
+    <string name="title_activity_rate_professor_page">Rate Professor</string>
     <string name="help_page1"><b><u>Usage:</u></b> Search for your future UF professors and find official UF evaluations as well as ratings, comments, and textbooks.  Brought to you by the RateAGator Team.</string>
     <string name="help_page2">\nAlso available are the the required textbooks for each course as well as user comments and ratings for each professor.\n</string>
     <string name="help_page3"><b><u>Contact Information:</u></b>\nUFRateAGator@gmail.com\nOr visit our Facebook page "Rateagator"\n </string>
