@@ -3,7 +3,9 @@ package com.breadcrumbteam.rateagator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,12 +14,17 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,8 +91,8 @@ public class EvaluationPage extends Activity {
 							+ currentCourse.courseNum);
 			
 			for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
-				double rating = shownEvaluation.getResponses()[i];
-				rating = ((int) (rating*100))/100.0;
+				float rating = (float) shownEvaluation.getResponses()[i];
+				rating = (float) (Math.round(rating*100.0)/100.0);
 
 				ViewGroup container = (ViewGroup) (findViewById(R.id.evaluationFieldList));
 
@@ -93,15 +100,16 @@ public class EvaluationPage extends Activity {
 
 				fullEval.setOrientation(LinearLayout.HORIZONTAL);
 
-				TextView newEvalAmount = new TextView(this);
-				newEvalAmount.setText("" + rating);
-				newEvalAmount.setGravity(Gravity.RIGHT);
+				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
+				ratingBar.setNumStars(5);
+				ratingBar.setRating(rating);
+				ratingBar.setStepSize(0.1f);
 
 				TextView newEvalLabel = new TextView(this);
 				newEvalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
 
 				fullEval.addView(newEvalLabel);
-				fullEval.addView(newEvalAmount);
+				fullEval.addView(ratingBar);
 
 				if (i != 7 && i != 8)
 					container.addView(fullEval);
@@ -117,30 +125,44 @@ public class EvaluationPage extends Activity {
 					.show();
 			//finish();
 		} else {
-
+			ViewGroup container = (ViewGroup) (findViewById(R.id.ratingFieldList));
 			for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
-				double rating = shownRating.getRatingResponses()[i];
-				rating = ((int) (rating*100))/100.0;
-
-				ViewGroup container = (ViewGroup) (findViewById(R.id.ratingFieldList));
+				float rating = (float) shownRating.getRatingResponses()[i];
+				
+				//puts in 2 decimal points only
+				rating = (float) (Math.round(rating*100.0)/100.0);
 
 				LinearLayout fullRating = new LinearLayout(this);
 
 				fullRating.setOrientation(LinearLayout.HORIZONTAL);
 
-				TextView newRatingAmount = new TextView(this);
-				newRatingAmount.setText("" + rating);
-				newRatingAmount.setGravity(Gravity.RIGHT);
+				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
+				ratingBar.setNumStars(5);
+				ratingBar.setRating(rating);
+				ratingBar.setStepSize(0.1f);
 
 				TextView newRatingLabel = new TextView(this);
 				newRatingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
 
 				fullRating.addView(newRatingLabel);
-				fullRating.addView(newRatingAmount);
+				fullRating.addView(ratingBar);
 
 				if (i != 7 && i != 8)
 					container.addView(fullRating);
 			}
+			Button rateButton = new Button(this);
+			rateButton.setText("Rate Professor");
+			rateButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if(MainActivity.getUsername() != null) {
+						goToRateProfessor(v);
+					}
+					else {
+						Toast.makeText(getBaseContext(), "Must be logged in", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+			container.addView(rateButton);
 		}
 
 		////////////////TEXTBOOKS//////////////////
@@ -190,5 +212,17 @@ public class EvaluationPage extends Activity {
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}
+	
+	public void goToRateProfessor(View view) {
+		Intent intent = new Intent(this, RateProfessorPage.class);
+		intent.putExtra(RatingsPage.INTENT_COURSE_NUMBER,
+				currentCourse.courseNum);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_FIRST_NAME,
+				currentCourse.professorFirstName);
+		intent.putExtra(RatingsPage.INTENT_PROFESSOR_LAST_NAME,
+				currentCourse.professorLastName);
+		this.startActivity(intent);
+	}
+
 }
 
