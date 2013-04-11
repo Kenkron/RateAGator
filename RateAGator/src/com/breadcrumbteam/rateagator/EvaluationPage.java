@@ -6,12 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Html;
+import android.text.Layout.Alignment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,19 +87,20 @@ public class EvaluationPage extends Activity {
 				float rating = (float) shownEvaluation.getResponses()[i];
 				rating = (float) (Math.round(rating*100.0)/100.0);
 
-				ViewGroup container = (ViewGroup) (findViewById(R.id.evaluationFieldList));
-
+				LinearLayout container = (LinearLayout) (findViewById(R.id.evaluationFieldList));
+				container.setOrientation(LinearLayout.VERTICAL);
+				
 				LinearLayout fullEval = new LinearLayout(this);
-
-				fullEval.setOrientation(LinearLayout.HORIZONTAL);
 
 				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
 				ratingBar.setNumStars(5);
 				ratingBar.setRating(rating);
 				ratingBar.setStepSize(0.1f);
+				
 
 				TextView newEvalLabel = new TextView(this);
 				newEvalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
+				newEvalLabel.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
 
 				fullEval.addView(newEvalLabel);
 				fullEval.addView(ratingBar);
@@ -123,11 +126,10 @@ public class EvaluationPage extends Activity {
 				//puts in 2 decimal points only
 				rating = (float) (Math.round(rating*100.0)/100.0);
 
-				ViewGroup container = (ViewGroup) (findViewById(R.id.ratingFieldList));
+				LinearLayout container = (LinearLayout) (findViewById(R.id.ratingFieldList));
+				container.setOrientation(LinearLayout.VERTICAL);
 
 				LinearLayout fullRating = new LinearLayout(this);
-
-				fullRating.setOrientation(LinearLayout.HORIZONTAL);
 
 				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
 				ratingBar.setNumStars(5);
@@ -136,6 +138,7 @@ public class EvaluationPage extends Activity {
 
 				TextView newRatingLabel = new TextView(this);
 				newRatingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
+				newRatingLabel.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
 
 				fullRating.addView(newRatingLabel);
 				fullRating.addView(ratingBar);
