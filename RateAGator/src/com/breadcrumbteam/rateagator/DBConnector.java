@@ -662,10 +662,10 @@ public class DBConnector {
 	//
 	//getTextbooks
 	//
-	public static ArrayList<String> getTextbooks(String cCode) {
+	public static ArrayList<String> getTextbooks(String fName, String lName, String cCode) {
 		ArrayList<String> textbooks = new ArrayList<String>();
 		errorOccurred = false;
-		Thread t = new Thread(new GetTextbooksConnect(cCode, textbooks));
+		Thread t = new Thread(new GetTextbooksConnect(fName, lName, cCode, textbooks));
 		t.start();
 
 		try {
@@ -683,7 +683,9 @@ public class DBConnector {
 	private static class GetTextbooksConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
 		private ArrayList<String> textbooks = null;
-		public GetTextbooksConnect(String cCode, ArrayList<String> textbooks) {
+		public GetTextbooksConnect(String fName, String lName, String cCode, ArrayList<String> textbooks) {
+			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
+			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
 			this.textbooks = textbooks;
 		}
