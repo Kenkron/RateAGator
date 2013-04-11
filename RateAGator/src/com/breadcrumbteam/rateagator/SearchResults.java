@@ -34,6 +34,11 @@ public class SearchResults extends Activity {
 	    /**
 	     * Keeps screen in portrait mode
 	     */
+		
+		//sets up help text
+	    MainActivity.setupBottomButtonHelpListeners(this);
+		MainActivity.setHelp(this, R.id.searchButton, "Search for a Professor or Course.");
+		
 	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		// Load in search results
