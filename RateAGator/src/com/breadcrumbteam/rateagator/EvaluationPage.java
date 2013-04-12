@@ -151,6 +151,7 @@ public class EvaluationPage extends Activity {
 
 				fullRating.addView(newRatingLabel);
 				fullRating.addView(ratingBar);
+				container.addView(fullRating);
 			}
 			Button rateButton = new Button(this);
 			rateButton.setText("Rate Professor");
