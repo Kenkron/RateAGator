@@ -96,4 +96,11 @@ public class Rating implements Serializable{
 		average.responses=averageResponses;
 		return average;
 	}
+	
+	public static Rating merge(Rating uno, Rating dos) {
+		ArrayList<Rating> r = new ArrayList<Rating>();
+		r.add(uno);
+		r.add(dos);
+		return Rating.merge(r);
+	}
 }
