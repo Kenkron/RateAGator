@@ -482,11 +482,11 @@ public class DBConnector {
 	}
 
 	//
-	//setRatings
+	//addRatings
 	//
-	public static void setRatings(String fName, String lName, String cCode, Rating newRating, Rating oldRating) {
+	public static void addRatings(String fName, String lName, String cCode, Rating r) {
 		errorOccurred = false;
-		Thread t = new Thread(new SetRatingsConnect(fName, lName, cCode, newRating, oldRating));
+		Thread t = new Thread(new AddRatingsConnect(fName, lName, cCode, r));
 		t.start();
 
 		try {
@@ -500,24 +500,30 @@ public class DBConnector {
 			return;
 		}
 	}
-	private static class SetRatingsConnect implements Runnable {
+	private static class AddRatingsConnect implements Runnable {
 		private ArrayList<String> paramList = new ArrayList<String>();
-		public SetRatingsConnect(String fName, String lName, String cCode, Rating newRating, Rating oldRating) {
+		public AddRatingsConnect(String fName, String lName, String cCode, Rating r) {
 			paramList.add("fname=" + fName.trim().replaceAll(" ", "%20"));
 			paramList.add("lname=" + lName.trim().replaceAll(" ", "%20"));
 			paramList.add("ccode=" + cCode.trim().replaceAll(" ", "%20"));
-
-			int responseCount = oldRating.getTotalRatingResponses();
-			paramList.add("Response=" + (responseCount+1));
-			for(int i = 0;i<Rating.DB_FIELD_NAMES.length;i++) {
-				double oldVal = oldRating.getRatingResponses()[i];
-				double newVal = (oldVal * responseCount + newRating.getRatingResponses()[i]) / (responseCount+1);
-				paramList.add(Rating.DB_FIELD_NAMES[i] + "=" + newVal);
+			
+			Rating oldRating = DBConnector.getRating(fName, lName, cCode);
+			if(oldRating != null && !DBConnector.hasErrorOccurred()) {
+				Rating combined = Rating.merge(r, oldRating);
+				
+				paramList.add("Response=" + combined.getTotalRatingResponses());
+				for(int i = 0;i<Rating.DB_FIELD_NAMES.length;i++) {
+					paramList.add(Rating.DB_FIELD_NAMES[i] + "=" + combined.getRatingResponses()[i]);
+				}
+			}
+			else {
+				errorOccurred = true;
 			}
 		}
 		@Override
 		public void run() {
 			//add parameters to the URL
+			if(errorOccurred) return;
 			String postURL = scriptLocation + "/addRatings.php" + convertParamList(paramList);
 
 			InputStream is = httpPost(postURL);
