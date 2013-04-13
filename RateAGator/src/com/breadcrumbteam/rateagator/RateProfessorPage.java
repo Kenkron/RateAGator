@@ -3,8 +3,6 @@ package com.breadcrumbteam.rateagator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -60,11 +58,17 @@ public class RateProfessorPage extends Activity {
 		submit.setText("Submit Rating");
 		submit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Rating r = new Rating(Rating.FIELD_NAMES.length);
+				Rating r = new Rating(1);
 				for(int i = 0;i<Rating.FIELD_NAMES.length;i++) {
-					r.addResponseValue(ratingBar[i].getNumStars());					
+					r.addResponseValue(ratingBar[i].getRating());					
 				}
 				DBConnector.addRatings(fName,lName,cCode, r);
+				if(DBConnector.hasErrorOccurred()) {
+					Toast.makeText(getBaseContext(), "DBConnection problem", Toast.LENGTH_SHORT).show();
+				}
+				else {
+					Toast.makeText(getBaseContext(), "Rating added", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		fullRate.addView(submit);
