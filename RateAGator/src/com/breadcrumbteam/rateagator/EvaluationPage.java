@@ -115,7 +115,7 @@ public class EvaluationPage extends Activity {
 				fullEval.addView(newEvalLabel);
 				fullEval.addView(ratingBar);
 
-				if (i != 7 && i != 8)
+				//if (i != 7 && i != 8)
 					container.addView(fullEval);
 			}
 		
@@ -153,6 +153,7 @@ public class EvaluationPage extends Activity {
 				fullRating.addView(ratingBar);
 				container.addView(fullRating);
 			}
+			final Context context = this;
 			Button rateButton = new Button(this);
 			rateButton.setText("Rate Professor");
 			rateButton.setOnClickListener(new OnClickListener() {
@@ -161,7 +162,34 @@ public class EvaluationPage extends Activity {
 						goToRateProfessor(v);
 					}
 					else {
-						Toast.makeText(getBaseContext(), "Must be logged in", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getBaseContext(), "Must be logged in", Toast.LENGTH_SHORT).show();
+						LayoutInflater factory = LayoutInflater.from(context);
+						final View alertTextAreas = factory.inflate(R.layout.alert_text_areas, null);
+						AlertDialog.Builder signInAlert = new AlertDialog.Builder(context);
+						signInAlert.setView(alertTextAreas);
+						signInAlert.setTitle("Log in to Rate Professor");
+						signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
+								EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
+								String username = usernameView.getText().toString().trim();
+								String password = passwordView.getText().toString().trim();
+								boolean isValid = DBConnector.isUFStudent(username, password);
+								if(isValid) {
+									goToRateProfessor(null);
+								}
+								else {
+									if(!username.equals("")) {
+										Toast.makeText(getBaseContext(), "Invalid username/password", Toast.LENGTH_SHORT).show();
+									}
+								}
+							}
+						});
+						signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+							}
+						});
+						signInAlert.show();
 					}
 				}
 			});
