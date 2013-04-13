@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
 			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas_checkbox, null);
 			AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
 			signInAlert.setView(alertTextAreas);
-			signInAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			signInAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					EditText usernameView = (EditText) alertTextAreas.findViewById(R.id.username);
 					EditText passwordView = (EditText) alertTextAreas.findViewById(R.id.password);
