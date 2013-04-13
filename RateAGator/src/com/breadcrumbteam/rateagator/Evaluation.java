@@ -17,8 +17,8 @@ public class Evaluation implements Serializable{
 			"Respect and concern for students",
 			"Stimulation of interest in course",
 			"Facilitation of learning",
-			"",
-			"",
+			"Enthusiasm for subject",
+			"Encouragement of independent thinking",
 			"Overall assessment of instructor"
 		};
 	
