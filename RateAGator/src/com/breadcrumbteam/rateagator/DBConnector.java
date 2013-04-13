@@ -511,7 +511,7 @@ public class DBConnector {
 			if(oldRating != null && !DBConnector.hasErrorOccurred()) {
 				Rating combined = Rating.merge(r, oldRating);
 				
-				paramList.add("Response=" + combined.getTotalRatingResponses());
+				paramList.add("Responded=" + combined.getTotalRatingResponses());
 				for(int i = 0;i<Rating.DB_FIELD_NAMES.length;i++) {
 					paramList.add(Rating.DB_FIELD_NAMES[i] + "=" + combined.getRatingResponses()[i]);
 				}
