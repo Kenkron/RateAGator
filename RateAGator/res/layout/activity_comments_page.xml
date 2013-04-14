@@ -12,8 +12,8 @@
     
     <ScrollView
         android:layout_width="match_parent"
-   		android:layout_height="match_parent"
-   		android:layout_weight="2">
+   		android:layout_height="0dp"
+   		android:layout_weight="4">
         <LinearLayout
         android:id="@+id/commentsList"
 	    android:layout_width="match_parent"
@@ -24,26 +24,22 @@
 	
 
 
+
+
+	        
 	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="3" >
-
-	        <EditText
-	            android:id="@+id/commentBox"
-	            android:layout_width="wrap_content"
-	            android:layout_height="fill_parent"
-	            android:ems="10"
-	            android:hint="Type a comment!"
-	            android:inputType="textMultiLine"/>
-
-    <Button
+	    android:layout_height="0dp"
+	    android:layout_weight="1">
+	    <Button
         android:id="@+id/addCommentButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="addComment"
-        android:text="Submit" />
+        android:onClick="addCommentPopup"
+        android:text="Add comment" />
 	</LinearLayout>
+
+
 
 
 <include
