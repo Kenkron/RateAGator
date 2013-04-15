@@ -109,8 +109,10 @@ public class CommentsPage extends Activity {
 							Toast.makeText(getBaseContext(), "Invalid username/password", Toast.LENGTH_SHORT).show();
 						}
 					}
-					else
+					else {
+						MainActivity.setUsername(username);
 						adb.show();
+					}
 				}
 			});
 			signInAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

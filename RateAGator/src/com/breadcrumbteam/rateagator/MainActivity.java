@@ -40,6 +40,9 @@ public class MainActivity extends Activity {
 	public static String getUsername() {
 		return username;
 	}
+	public static void setUsername(String s) {
+		username = s;
+	}
 	private Thread t1 = null;
 	private Thread t2 = null;
 
