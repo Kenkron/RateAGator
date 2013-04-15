@@ -102,21 +102,30 @@ public class EvaluationPage extends Activity {
 				
 				LinearLayout fullEval = new LinearLayout(this);
 
+				
 				RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
 				ratingBar.setNumStars(5);
 				ratingBar.setRating(rating);
 				ratingBar.setStepSize(0.1f);
 				
+				LinearLayout ratingBarLayout = new LinearLayout(this);
+				android.widget.LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
+				ratingBarLayout.setGravity(Gravity.LEFT);
+				ratingBarLayout.setLayoutParams(params);
+				ratingBarLayout.addView(ratingBar);
+				
 
-				TextView newEvalLabel = new TextView(this);
-				newEvalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
-				newEvalLabel.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
+				TextView evalLabel = new TextView(this);
+				evalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
 
-				fullEval.addView(newEvalLabel);
-				fullEval.addView(ratingBar);
-
-				//if (i != 7 && i != 8)
-					container.addView(fullEval);
+				LinearLayout evalLabelLayout = new LinearLayout(this);
+				evalLabelLayout.setGravity(Gravity.RIGHT);
+				evalLabelLayout.setLayoutParams(params);
+				evalLabelLayout.addView(evalLabel);
+				
+				fullEval.addView(evalLabelLayout);
+				fullEval.addView(ratingBarLayout);
+				container.addView(fullEval);
 			}
 		
 		
@@ -144,13 +153,24 @@ public class EvaluationPage extends Activity {
 				ratingBar.setNumStars(5);
 				ratingBar.setRating(rating);
 				ratingBar.setStepSize(0.1f);
+				
+				LinearLayout ratingBarLayout = new LinearLayout(this);
+				ratingBarLayout.setGravity(Gravity.LEFT);
+				android.widget.LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
+				ratingBarLayout.setLayoutParams(params);
+				ratingBarLayout.addView(ratingBar);
+				
 
-				TextView newRatingLabel = new TextView(this);
-				newRatingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
-				newRatingLabel.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
-
-				fullRating.addView(newRatingLabel);
-				fullRating.addView(ratingBar);
+				TextView ratingLabel = new TextView(this);
+				ratingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
+				
+				LinearLayout ratingLabelLayout = new LinearLayout(this);
+				ratingLabelLayout.setGravity(Gravity.RIGHT);
+				ratingLabelLayout.setLayoutParams(params);
+				ratingLabelLayout.addView(ratingLabel);
+				
+				fullRating.addView(ratingLabelLayout);
+				fullRating.addView(ratingBarLayout);
 				container.addView(fullRating);
 			}
 			final Context context = this;
