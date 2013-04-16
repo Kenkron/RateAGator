@@ -88,6 +88,7 @@
 
                     <!-- Textbooks -->
 
+					<!-- 
                     <TextView
                         android:id="@+id/textbookLabel"
                         android:layout_width="wrap_content"
@@ -96,7 +97,7 @@
                         android:layout_marginTop="10dip"
                         android:text="Textbook Links"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+ 					-->
                     <LinearLayout
                         android:id="@+id/textbookList"
                         android:layout_width="wrap_content"
@@ -122,6 +123,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
                     </LinearLayout>
+                    <Button
+						android:id="@+id/addCommentButton"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:onClick="addCommentPopup"
+						android:text="Add comment" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
