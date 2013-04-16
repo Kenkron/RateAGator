@@ -230,7 +230,9 @@ public class EvaluationPage extends Activity {
 					}
 				}
 			});
-			container.addView(rateButton);
+			if(!currentCourse.courseNum.equals("Average")) {
+				container.addView(rateButton);
+			}
 		}
 
 		////////////////TEXTBOOKS//////////////////
