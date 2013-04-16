@@ -60,7 +60,7 @@ public class RateProfessorPage extends Activity {
 			public void onClick(View v) {
 				Rating r = new Rating(1);
 				for(int i = 0;i<Rating.FIELD_NAMES.length;i++) {
-					r.addResponseValue(ratingBar[i].getRating());					
+					r.addResponseValue(ratingBar[i].getRating());
 				}
 				DBConnector.addRatings(fName,lName,cCode, r);
 				if(DBConnector.hasErrorOccurred()) {
