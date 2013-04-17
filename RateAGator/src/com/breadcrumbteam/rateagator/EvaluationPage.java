@@ -65,16 +65,6 @@ public class EvaluationPage extends Activity {
 		//sets up help text
 		MainActivity.setupBottomButtonHelpListeners(this);
 
-		((Button)findViewById(R.id.goComments)).setOnLongClickListener(new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				Toast.makeText(v.getContext(), "click to submit a comment", Toast.LENGTH_LONG).show();
-				Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-				vib.vibrate(250);
-				return false;
-			}
-		});
-
 		username = this.getIntent().getStringExtra(INTENT_USERNAME);
 		Log.i("#tardif", "username is: " + username);
 
@@ -402,25 +392,6 @@ public class EvaluationPage extends Activity {
 		//box.setText("");
 		Toast message = Toast.makeText(this, "Comment added", Toast.LENGTH_LONG);
 		message.show();
-	}
-
-	public void goToRatings(View view) {
-		Intent intent = new Intent(this, RatingsPage.class);
-		intent.putExtra(RatingsPage.INTENT_COURSE_NUMBER,
-				currentCourse.courseNum);
-		intent.putExtra(RatingsPage.INTENT_PROFESSOR_FIRST_NAME,
-				currentCourse.professorFirstName);
-		intent.putExtra(RatingsPage.INTENT_PROFESSOR_LAST_NAME,
-				currentCourse.professorLastName);
-		this.startActivity(intent);
-	}
-
-	public void goToComments(View view) {
-		Intent intent = new Intent(this, CommentsPage.class);
-		intent.putExtra("courseNum",currentCourse.courseNum);
-		intent.putExtra("fName",currentCourse.professorFirstName);
-		intent.putExtra("lName",currentCourse.professorLastName);
-		this.startActivity(intent);
 	}
 
 	public void goToLink(View v) {

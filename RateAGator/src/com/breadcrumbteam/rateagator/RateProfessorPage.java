@@ -75,17 +75,6 @@ public class RateProfessorPage extends Activity {
 		container.addView(fullRate);
 	}
 
-	public void goToComments(View view) {
-		Intent intent = new Intent(this, CommentsPage.class);
-		intent.putExtra("courseNum",
-				getIntent().getStringExtra(INTENT_COURSE_NUMBER));
-		intent.putExtra("fName",
-				getIntent().getStringExtra(INTENT_PROFESSOR_FIRST_NAME));
-		intent.putExtra("lName",
-				getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME));
-		this.startActivity(intent);
-	}
-
 	public void goToLink(View v) {
 		MainActivity.goToLink(v);
 	}
