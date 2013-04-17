@@ -124,6 +124,7 @@ public class MainActivity extends Activity {
 			LayoutInflater factory = LayoutInflater.from(this);
 			final View alertTextAreas = factory.inflate(R.layout.alert_text_areas_checkbox, null);
 			AlertDialog.Builder signInAlert = new AlertDialog.Builder(this);
+			signInAlert.setTitle("Sign in with GatorLink username/password");
 			signInAlert.setView(alertTextAreas);
 			signInAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
