@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#FA5B00"
     android:orientation="vertical" >
-
+    
     <!-- Top Bar -->
 
     <RelativeLayout
@@ -39,7 +39,7 @@
                     <!-- Evals -->
 
                     <TextView
-                        android:id="@+id/evaluationsLabel"
+                        android:id="@+id/evalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -47,22 +47,9 @@
                         android:text="Evaluations"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                    <LinearLayout
-                        android:id="@+id/evaluationFieldList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-                    </LinearLayout>
-
-                    <!-- 
-                    <RatingBar
-                        android:id="@+id/ratingBar1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5"
-                        android:rating="2.0"
-                        android:stepSize="0.1" />
-                    -->
+                    <include
+                        android:id="@+id/eval_list"
+                        layout="@layout/ratingbar_evals" />
 
                     <!-- Ratings -->
 
@@ -75,25 +62,12 @@
                         android:text="Ratings"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                    <LinearLayout
-                        android:id="@+id/ratingFieldList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-                    </LinearLayout>
+                    <include
+                        android:id="@+id/rating_list"
+                        layout="@layout/ratingbar_ratings" />
 
                     <!-- Textbooks -->
 
-					<!-- 
-                    <TextView
-                        android:id="@+id/textbookLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dip"
-                        android:text="Textbook Links"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
- 					-->
                     <LinearLayout
                         android:id="@+id/textbookList"
                         android:layout_width="wrap_content"
@@ -119,12 +93,13 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
                     </LinearLayout>
+
                     <Button
-						android:id="@+id/addCommentButton"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:onClick="addCommentPopup"
-						android:text="Add comment" />
+                        android:id="@+id/addCommentButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="addCommentPopup"
+                        android:text="Add comment" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>

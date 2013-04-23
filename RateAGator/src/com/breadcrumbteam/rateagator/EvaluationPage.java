@@ -10,26 +10,20 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.text.Html;
-import android.text.Layout.Alignment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,39 +83,65 @@ public class EvaluationPage extends Activity {
 				+ currentCourse.professorLastName + " "
 				+ currentCourse.courseNum);
 
-		for (int i = 0; i < shownEvaluation.getResponses().length; i++) {
-			float rating = (float) shownEvaluation.getResponses()[i];
+			
+		// Sorry this is so ugly, I couldn't think of a good way to combine strings
+		// and then reference them as ints from the R file
+		for(int i = 1; i < 11; i++) {
+			
+			float rating = (float) shownEvaluation.getResponses()[i - 1];
 			rating = (float) (Math.round(rating*100.0)/100.0);
-
-			LinearLayout container = (LinearLayout) (findViewById(R.id.evaluationFieldList));
-			container.setOrientation(LinearLayout.VERTICAL);
-
-			LinearLayout fullEval = new LinearLayout(this);
-
-
-			RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
-			ratingBar.setNumStars(5);
-			ratingBar.setRating(rating);
-			ratingBar.setStepSize(0.1f);
-
-			LinearLayout ratingBarLayout = new LinearLayout(this);
-			android.widget.LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
-			ratingBarLayout.setGravity(Gravity.LEFT);
-			ratingBarLayout.setLayoutParams(params);
-			ratingBarLayout.addView(ratingBar);
-
-
-			TextView evalLabel = new TextView(this);
-			evalLabel.setText(Evaluation.FIELD_NAMES[i] + ": ");
-
-			LinearLayout evalLabelLayout = new LinearLayout(this);
-			evalLabelLayout.setGravity(Gravity.RIGHT);
-			evalLabelLayout.setLayoutParams(params);
-			evalLabelLayout.addView(evalLabel);
-
-			fullEval.addView(evalLabelLayout);
-			fullEval.addView(ratingBarLayout);
-			container.addView(fullEval);
+			
+			if(i == 1) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar1);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText1) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 2) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar2);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText2) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 3) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar3);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText3) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 4) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar4);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText4) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 5) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar5);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText5) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 6) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar6);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText6) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 7) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar7);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText7) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 8) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar8);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText8) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 9) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar9);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText9) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			else if(i == 10) {
+				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar10);
+				ratingBar.setRating(rating);
+				((TextView) findViewById(R.id.evalText10) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
+			}
+			
 		}
 
 
@@ -134,46 +154,61 @@ public class EvaluationPage extends Activity {
 					.show();
 			//finish();
 		} else {
-			LinearLayout container = null;
+			LinearLayout container = (LinearLayout) findViewById(R.id.rating_list);
+			Log.i("#tardif", container.toString());
 			if(shownRating.getTotalRatingResponses() > 0) {
-				for (int i = 0; i < shownRating.getRatingResponses().length; i++) {
-					float rating = (float) shownRating.getRatingResponses()[i];
-
-					//puts in 2 decimal points only
+				// Sorry this is so ugly, I couldn't think of a good way to combine strings
+				// and then reference them as ints from the R file
+				for(int i = 1; i < 9; i++) {
+					
+					float rating = (float) shownRating.getRatingResponses()[i - 1];
 					rating = (float) (Math.round(rating*100.0)/100.0);
-
-					container = (LinearLayout) (findViewById(R.id.ratingFieldList));
-					container.setOrientation(LinearLayout.VERTICAL);
-					LinearLayout fullRating = new LinearLayout(this);
-
-					RatingBar ratingBar = new RatingBar(this, null, android.R.attr.ratingBarStyleSmall);
-					ratingBar.setNumStars(5);
-					ratingBar.setRating(rating);
-					ratingBar.setStepSize(0.1f);
-
-					LinearLayout ratingBarLayout = new LinearLayout(this);
-					ratingBarLayout.setGravity(Gravity.LEFT);
-					android.widget.LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
-					ratingBarLayout.setLayoutParams(params);
-					ratingBarLayout.addView(ratingBar);
-
-
-					TextView ratingLabel = new TextView(this);
-					ratingLabel.setText(Rating.FIELD_NAMES[i] + ": ");
-
-					LinearLayout ratingLabelLayout = new LinearLayout(this);
-					ratingLabelLayout.setGravity(Gravity.RIGHT);
-					ratingLabelLayout.setLayoutParams(params);
-					ratingLabelLayout.addView(ratingLabel);
-
-					fullRating.addView(ratingLabelLayout);
-					fullRating.addView(ratingBarLayout);
-					container.addView(fullRating);
+					
+					if(i == 1) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar1);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText1) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 2) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar2);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText2) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 3) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar3);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText3) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 4) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar4);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText4) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 5) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar5);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText5) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 6) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar6);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText6) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 7) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar7);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText7) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
+					else if(i == 8) {
+						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar8);
+						ratingBar.setRating(rating);
+						((TextView) findViewById(R.id.ratingText8) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
+					}
 				}
 			}
 			else {
-				container = (LinearLayout) (findViewById(R.id.ratingFieldList));
-				container.setOrientation(LinearLayout.VERTICAL);
+				( (LinearLayout) findViewById(R.id.rating_list)).removeAllViews();
+				
 				LinearLayout fullRating = new LinearLayout(this);
 				TextView ratingLabel = new TextView(this);
 				ratingLabel.setText("There aren't any ratings for this professor yet. ");
@@ -181,7 +216,7 @@ public class EvaluationPage extends Activity {
 				container.addView(fullRating);
 			}
 			final Context context = this;
-			Button rateButton = new Button(this);
+			Button rateButton = new Button(context);
 			rateButton.setText("Rate Professor");
 			rateButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
