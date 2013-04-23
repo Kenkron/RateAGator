@@ -18,14 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.breadcrumbteam.rateagator.CourseSet.SetType;
-
-import android.net.ConnectivityManager;
-import android.net.ParseException;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.util.Log;
 
 /**This object functions as an interface between the remote database and
  * the software on the local app.*/

@@ -1,17 +1,18 @@
 package com.breadcrumbteam.rateagator;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public class RateProfessorPage extends Activity {
 
 	public static final String INTENT_PROFESSOR_FIRST_NAME = "first name";
@@ -33,28 +34,23 @@ public class RateProfessorPage extends Activity {
 		lName = getIntent().getStringExtra(INTENT_PROFESSOR_LAST_NAME);
 		cCode = getIntent().getStringExtra(INTENT_COURSE_NUMBER);
 		
-		ViewGroup container = (ViewGroup) (findViewById(R.id.rateProfessorFieldList));
-		ratingBar = new RatingBar[Rating.FIELD_NAMES.length];
-		for(int i = 0;i<Rating.FIELD_NAMES.length;i++) {
-			TextView newRatingLabel = new TextView(this);
-			newRatingLabel.setText(Rating.FIELD_NAMES[i]);
+		for(int i = 1; i < 10;i++) {
+			// Get generated id for ratingBar
+			int barId = getResources().getIdentifier("ratingBar" + i, "id", getPackageName() );
+			// Get generated id for textView
+			int textId = getResources().getIdentifier("ratingText" + i, "id", getPackageName() );
 			
-			LinearLayout fullRate = new LinearLayout(this);
-			fullRate.setOrientation(LinearLayout.HORIZONTAL);
+			TextView newRatingLabel = (TextView) findViewById(textId);
+			newRatingLabel.setText(Rating.FIELD_NAMES[i - 1] + " : ");
 			
-			ratingBar[i] = new RatingBar(this, null, android.R.attr.ratingBarStyle);
-			ratingBar[i].setNumStars(5);
-			ratingBar[i].setRating(3);
-			ratingBar[i].setStepSize(1);
 			
-			fullRate.addView(newRatingLabel);
-			fullRate.addView(ratingBar[i]);
-			container.addView(fullRate);
+			RatingBar newRatingBar = (RatingBar) findViewById(barId);
+			newRatingBar.setNumStars(5);
+			newRatingBar.setRating(3);
+			newRatingBar.setStepSize(1);
 		}
-		LinearLayout fullRate = new LinearLayout(this);
-		fullRate.setOrientation(LinearLayout.HORIZONTAL);
 		
-		Button submit = new Button(this);
+		Button submit = (Button) findViewById(R.id.submitRating);
 		submit.setText("Submit Rating");
 		submit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -71,8 +67,6 @@ public class RateProfessorPage extends Activity {
 				}
 			}
 		});
-		fullRate.addView(submit);
-		container.addView(fullRate);
 	}
 
 	public void goToLink(View v) {

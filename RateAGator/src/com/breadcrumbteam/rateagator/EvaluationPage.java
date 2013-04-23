@@ -82,68 +82,19 @@ public class EvaluationPage extends Activity {
 				+ " "
 				+ currentCourse.professorLastName + " "
 				+ currentCourse.courseNum);
-
-			
-		// Sorry this is so ugly, I couldn't think of a good way to combine strings
-		// and then reference them as ints from the R file
+		
+		// Populate the evaluations from data we already have
 		for(int i = 1; i < 11; i++) {
-			
 			float rating = (float) shownEvaluation.getResponses()[i - 1];
 			rating = (float) (Math.round(rating*100.0)/100.0);
 			
-			if(i == 1) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar1);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText1) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 2) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar2);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText2) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 3) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar3);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText3) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 4) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar4);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText4) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 5) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar5);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText5) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 6) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar6);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText6) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 7) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar7);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText7) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 8) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar8);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText8) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 9) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar9);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText9) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			else if(i == 10) {
-				RatingBar ratingBar = (RatingBar) findViewById(R.id.evalRatingBar10);
-				ratingBar.setRating(rating);
-				((TextView) findViewById(R.id.evalText10) ).setText(Evaluation.FIELD_NAMES[i -1] + " : ");
-			}
-			
+			// Get generated id for ratingBar
+			int barId = getResources().getIdentifier("evalRatingBar" + i, "id", getPackageName() );
+			// Get generated id for textView
+			int textId = getResources().getIdentifier("evalText" + i, "id", getPackageName() );
+			( (RatingBar) findViewById(barId)).setRating(rating);
+			( (TextView) findViewById(textId)).setText(Evaluation.FIELD_NAMES[i - 1] + " : ");
 		}
-
 
 		///////////////// Get the ratings////////////////
 		shownRating = (Rating) getIntent().getSerializableExtra(INTENT_RATING);
@@ -157,58 +108,26 @@ public class EvaluationPage extends Activity {
 			LinearLayout container = (LinearLayout) findViewById(R.id.rating_list);
 			Log.i("#tardif", container.toString());
 			if(shownRating.getTotalRatingResponses() > 0) {
-				// Sorry this is so ugly, I couldn't think of a good way to combine strings
-				// and then reference them as ints from the R file
+				
+				// Populate the ratings from data we already have
 				for(int i = 1; i < 9; i++) {
-					
 					float rating = (float) shownRating.getRatingResponses()[i - 1];
 					rating = (float) (Math.round(rating*100.0)/100.0);
 					
-					if(i == 1) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar1);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText1) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 2) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar2);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText2) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 3) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar3);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText3) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 4) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar4);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText4) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 5) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar5);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText5) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 6) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar6);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText6) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 7) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar7);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText7) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
-					else if(i == 8) {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.rateRatingBar8);
-						ratingBar.setRating(rating);
-						((TextView) findViewById(R.id.ratingText8) ).setText(Rating.FIELD_NAMES[i -1] + " : ");
-					}
+					// Get generated id for ratingBar
+					int barId = getResources().getIdentifier("rateRatingBar" + i, "id", getPackageName() );
+					// Get generated id for textView
+					int textId = getResources().getIdentifier("ratingText" + i, "id", getPackageName() );
+					( (RatingBar) findViewById(barId)).setRating(rating);
+					( (TextView) findViewById(textId)).setText(Rating.FIELD_NAMES[i - 1] + " : ");
 				}
 			}
 			else {
+				// The views must be created in the XML layout in order to get the
+				// custom styling
 				( (LinearLayout) findViewById(R.id.rating_list)).removeAllViews();
 				
+				// Create button saying there are no ratings yet
 				LinearLayout fullRating = new LinearLayout(this);
 				TextView ratingLabel = new TextView(this);
 				ratingLabel.setText("There aren't any ratings for this professor yet. ");
@@ -342,7 +261,6 @@ public class EvaluationPage extends Activity {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 			}
 		});
