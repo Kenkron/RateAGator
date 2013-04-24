@@ -131,6 +131,7 @@ public class EvaluationPage extends Activity {
 					int barId = getResources().getIdentifier("rateRatingBar" + i, "id", getPackageName() );
 					// Get generated id for textView
 					int textId = getResources().getIdentifier("ratingText" + i, "id", getPackageName() );
+					( (RatingBar) findViewById(barId)).setEnabled(false);
 					( (RatingBar) findViewById(barId)).setRating(rating);
 					//prevents this rating bar from moving
 					//It's not pretty, but there was apparently no other way
@@ -222,13 +223,14 @@ public class EvaluationPage extends Activity {
 				String currentLink = textbooks.get(i);
 				if(currentLink.charAt(0) == 'h') {
 					String bookName = currentLink.split("com/")[1].split("/")[0].replace("-", " ");
-					tv = new TextView(this);
+					Button book = new Button(this);
 					String linkFormat = "<a href=\"" + currentLink + "\">" + bookName + "</a>";
-					tv.setText(Html.fromHtml(linkFormat));
-					tv.setMovementMethod(LinkMovementMethod.getInstance());
-					tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+					book.setText(Html.fromHtml(linkFormat));
+					book.setLinkTextColor(Color.BLACK);
+					book.setMovementMethod(LinkMovementMethod.getInstance());
+					book.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 							LayoutParams.WRAP_CONTENT));
-					ll.addView(tv);
+					ll.addView(book);
 				}
 			}
 		}
