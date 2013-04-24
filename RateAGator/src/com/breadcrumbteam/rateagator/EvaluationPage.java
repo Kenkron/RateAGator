@@ -60,7 +60,6 @@ public class EvaluationPage extends Activity {
 		MainActivity.setupBottomButtonHelpListeners(this);
 
 		username = this.getIntent().getStringExtra(INTENT_USERNAME);
-		Log.i("#tardif", "username is: " + username);
 
 		currentCourse=((Course)getIntent().getSerializableExtra(INTENT_COURSE));
 
@@ -359,6 +358,8 @@ public class EvaluationPage extends Activity {
 				currentCourse.professorFirstName);
 		intent.putExtra(RatingsPage.INTENT_PROFESSOR_LAST_NAME,
 				currentCourse.professorLastName);
+		intent.putExtra(INTENT_USERNAME,
+				this.getIntent().getStringExtra(INTENT_USERNAME));
 		this.startActivity(intent);
 	}
 
