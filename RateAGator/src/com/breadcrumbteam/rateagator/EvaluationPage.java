@@ -131,7 +131,6 @@ public class EvaluationPage extends Activity {
 					int barId = getResources().getIdentifier("rateRatingBar" + i, "id", getPackageName() );
 					// Get generated id for textView
 					int textId = getResources().getIdentifier("ratingText" + i, "id", getPackageName() );
-					( (RatingBar) findViewById(barId)).setEnabled(false);
 					( (RatingBar) findViewById(barId)).setRating(rating);
 					//prevents this rating bar from moving
 					//It's not pretty, but there was apparently no other way
