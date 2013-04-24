@@ -16,8 +16,10 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
@@ -92,6 +94,18 @@ public class EvaluationPage extends Activity {
 			// Get generated id for textView
 			int textId = getResources().getIdentifier("evalText" + i, "id", getPackageName() );
 			( (RatingBar) findViewById(barId)).setRating(rating);
+			//prevents this rating bar from moving
+			//It's not pretty, but there was apparently no other way
+			( (RatingBar) findViewById(barId)).setFocusable(false);
+			( (RatingBar) findViewById(barId)).setOnTouchListener(
+				new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					// TODO Auto-generated method stub
+					return true;
+				}
+			});
 			( (TextView) findViewById(textId)).setText(Evaluation.FIELD_NAMES[i - 1] + " : ");
 		}
 
@@ -118,6 +132,18 @@ public class EvaluationPage extends Activity {
 					// Get generated id for textView
 					int textId = getResources().getIdentifier("ratingText" + i, "id", getPackageName() );
 					( (RatingBar) findViewById(barId)).setRating(rating);
+					//prevents this rating bar from moving
+					//It's not pretty, but there was apparently no other way
+					( (RatingBar) findViewById(barId)).setFocusable(false);
+					( (RatingBar) findViewById(barId)).setOnTouchListener(
+						new OnTouchListener() {
+						
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							// TODO Auto-generated method stub
+							return true;
+						}
+					});
 					( (TextView) findViewById(textId)).setText(Rating.FIELD_NAMES[i - 1] + " : ");
 				}
 			}
